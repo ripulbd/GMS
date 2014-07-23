@@ -70,32 +70,10 @@ html
             p All other latest news.
         .content
           block content
-        #content_container
-          .contents
-            h3 Contents:
-            ul
-              li
-                a(href='#') First Link
-              li
-                a(href='#') Another Link
-              li
-                a(href='#') And Another
-              li
-                a(href='#') Last One
-        br
+        
+        block contents
         hr.separator
-        #content_container
-          .contents
-            h3 Contents:
-            ul
-              li
-                a(href='#') First Link
-              li
-                a(href='#') Another Link
-              li
-                a(href='#') And Another
-              li
-                a(href='#') Last One
+        block contents        
       #scroll
         a.top(title='Scroll to the top', href='#')
           img(src='images/top.png', alt='top')

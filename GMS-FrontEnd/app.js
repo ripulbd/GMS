@@ -9,6 +9,10 @@ var express = require('express')
   , http = require('http')
   , path = require('path');
 
+//Database
+var mongo = require('mongoskin');
+var db = mongo.db("mongodb://localhost:27017/gms", {native_parser:true});
+
 var app = express();
 
 // all environments
@@ -22,6 +26,12 @@ app.use(express.methodOverride());
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 
+//Make our db accessible to our router
+app.use(function(req,res,next){
+    req.db = db;
+    next();
+});
+
 // development only
 if ('development' == app.get('env')) {
   app.use(express.errorHandler());
@@ -32,7 +42,9 @@ app.get('/news', routes.news);
 app.get('/blog', routes.blog);
 app.get('/image', routes.image);
 app.get('/video', routes.video);
+app.get('/twitter', routes.twitter);
 app.get('/users', user.list);
+
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));

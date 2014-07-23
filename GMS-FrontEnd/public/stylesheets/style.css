@@ -291,10 +291,41 @@ nav {
   z-index: 100
 }
 
+#content_image{
+	padding-top: 10px;	
+	height: 120px;
+	width: 120px;
+	float: left;
+}
+
+#headline{
+	position: relative;
+	width: 500px;	
+	margin: 0 0 10px 130px;
+	padding-top: 10px;	
+}
+#source{
+	position: relative;
+	width: 500px;	
+	margin: 0 0 4px 130px;
+	padding-top: 4px;	
+}
+
+#more{
+	position: relative;
+	width: 500px;	
+	margin: 0 0 4px 130px;
+	padding-top: 4px;	
+}
+
+#h4_content{
+	width: 600px;
+}
+
 .contents { 
   text-align: left;
   width: 500px;
-  margin: 0 20px 15px 10px;
+  margin: 0 20px 10px 10px;
   float: left;;
   font-size: 120%;
   padding: 14px 0 0 0;  

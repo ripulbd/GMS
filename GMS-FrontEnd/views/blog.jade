@@ -1,8 +1,120 @@
-extends layout
-
-block content
-  h1= title  
-  p
-    |  Blog contents extracted from different sites are shown below:    
-
-    
+//doctype html
+//html
+//  head
+//    title= title
+//   link(rel='stylesheet', href='/stylesheets/style.css')
+//  body
+//    block content
+doctype html
+html
+  head
+    title Glasgow Memory Server (GMS)
+    //meta(name='description', content='website description')
+    //meta(name='keywords', content='website keywords, website keywords')
+    meta(http-equiv='content-type', content='text/html; charset=UTF-8')
+    link(rel='stylesheet', type='text/css', href='/stylesheets/style.css')
+    //modernizr enables HTML5 elements and feature detects 
+    script(type='text/javascript', src='javascripts/modernizr-1.5.min.js')
+  body
+    #bg
+      img(src='images/glasgow.jpg', alt='home')
+    #main
+      header
+        #logo
+          #logo_text
+            //
+               class="logo_colour", allows you to change the colour of the text 
+            h1
+              a(href='index.html') Glasgow Memory Server (GMS)            
+        nav
+          #menu_container
+            ul#menu-bar
+              li.active
+                a(href='/') Home
+              li
+                a(href='/news') News
+                ul
+                  li
+                    a(href='http://bbc.co.uk') BBC
+                  li
+                    a(href='#') Evening Mail
+              li
+                a(href='/blog') Blog
+                ul
+                  li
+                    a(href='#') Blogger
+                  li
+                    a(href='#') Wordpress
+              li
+                a(href='/image') Image
+                ul
+                  li
+                    a(href='#') Flickr
+                  li
+                    a(href='#') Instagram
+              li
+                a(href='/video') Video
+                ul
+                  li
+                    a(href='#') BBC
+                  li
+                    a(href='#') Youtube
+              li
+                a(href='/twitter') Twitter
+              li
+                a(href='#') Contact Us
+      #site_content
+        #sidebar_container
+          .sidebar
+            h3 Latest News
+            h4 News 1.
+            h5 News 1.
+            p All other latest news.
+        .content
+          h1= title
+          p
+            |  Blogs extracted from different sites are shown below:
+        - for (var x = 0; x < 2; x++)  		        
+          #content_container
+            .contents
+              h4#h4_content
+                strong Glasgow 2014: City set for Commonwealth Games opening ceremony
+              img#content_image(src='images/games.jpg', alt='Commonwealth Games')
+              #headline
+                | The Queen will formally open the 20th Commonwealth Games in Glasgow later, in front of a 40,000 crowd at Celtic Park.
+              #source
+                | Date: 23/07/2014
+              #source
+                | Source: BBC Website
+              #more
+                a(href='http://www.bbc.co.uk/news/uk-scotland-28419129') Read More
+          if (x < (2-1))
+            hr.separator
+                
+      #scroll
+        a.top(title='Scroll to the top', href='#')
+          img(src='images/top.png', alt='top')
+      footer
+        p
+          img(src='images/twitter.png', alt='twitter')
+          |  
+          img(src='images/facebook.png', alt='facebook')
+          |  
+          img(src='images/rss.png', alt='rss')
+        p
+          a(href='/') Home
+          | |
+          a(href='/news') News
+          | |
+          a(href='/blog') Blog
+          | |
+          a(href='/image') Image
+          | |
+          a(href='/video') Video
+          | |
+          a(href='/twitter') Twitter
+          | |
+          a(href='#') Contact Us        
+    //
+       javascript at the bottom for fast page loading 
+    script(type='text/javascript', src='javascripts/jquery.js')  

@@ -3,8 +3,18 @@
  * GET home page.
  */
 
-exports.index = function(req, res){
-  res.render('index', { title: 'Glasgow Memory Server (GMS): Home Page!!' });
+var mongo = require('mongodb');
+var monk = require('monk');
+var db = monk('localhost:27017/gmsTry');
+
+exports.index = function(req, res){	
+	var collection = db.get('gms');
+	collection.find({},{},function(e,docs){
+        res.render('index', {
+            "userlist" : docs
+        });
+    });
+  //res.render('index', { title: 'Glasgow Memory Server (GMS): Home Page!' });
 };
 
 exports.news = function(req, res){
@@ -21,4 +31,7 @@ exports.image = function(req, res){
 
 exports.video = function(req, res){
   res.render('video', { title: 'Glasgow Memory Server (GMS): Video' });
+};
+exports.twitter = function(req, res){
+  res.render('twitter', { title: 'Glasgow Memory Server (GMS): Twitter' });
 };

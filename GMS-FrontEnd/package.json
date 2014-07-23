@@ -7,6 +7,13 @@
   },
   "dependencies": {
     "express": "3.2.6",
-    "jade": "*"
+    "jade": "*",
+    "cookie-parser": "~1.0.1",
+    "body-parser": "~1.0.0",
+    "debug": "~0.7.4",
+    "mongodb": "*",
+    "morgan": "~1.0.0",
+    "mongoskin": "*",
+    "monk": "*"
   }
 }
