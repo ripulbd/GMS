@@ -25,7 +25,10 @@ html
             //
                class="logo_colour", allows you to change the colour of the text 
             h1
-              a(href='index.html') Glasgow Memory Server (GMS)            
+              a(href='index.html') Glasgow Memory Server (GMS)
+        form.form-wrapper.cf
+          input(type='text', placeholder='Search here...', required='required')
+          button(type='submit') Search            
         nav
           #menu_container
             ul#menu-bar
@@ -35,30 +38,30 @@ html
                 a(href='/news') News
                 ul
                   li
-                    a(href='http://bbc.co.uk') BBC
+                    a(href='/bbc') BBC
                   li
-                    a(href='#') Evening Mail
+                    a(href='/et') Evening Times
               li
                 a(href='/blog') Blog
                 ul
                   li
-                    a(href='#') Blogger
+                    a(href='/blogger') Blogger
                   li
-                    a(href='#') Wordpress
+                    a(href='/wordpress') Wordpress
               li
                 a(href='/image') Image
                 ul
                   li
-                    a(href='#') Flickr
+                    a(href='/imgur') imgur
                   li
-                    a(href='#') Instagram
+                    a(href='/flickr') flickr
               li
                 a(href='/video') Video
                 ul
                   li
-                    a(href='#') BBC
+                    a(href='/bbcvid') BBC
                   li
-                    a(href='#') Youtube
+                    a(href='/youtube') Youtube
               li
                 a(href='/twitter') Twitter
               li
@@ -82,7 +85,7 @@ html
             .contents
               h4#h4_content
                 strong #{user.headline}
-              img#content_image(src='images/games.jpg', alt='Commonwealth Games')
+              img#content_image(src='images/#{user.fileName}', alt='Commonwealth Games')
               #headline
                 | #{user.firstPara}
               #source

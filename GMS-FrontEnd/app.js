@@ -39,6 +39,15 @@ if ('development' == app.get('env')) {
 
 app.get('/', routes.index);
 app.get('/news', routes.news);
+app.get('/bbc', routes.bbc);
+app.get('/et', routes.et);
+app.get('/blogger', routes.blogger);
+app.get('/wordpress', routes.wordpress);
+app.get('/bbcvid', routes.bbcvid);
+app.get('/youtube', routes.youtube);
+app.get('/flickr', routes.flickr);
+app.get('/imgur', routes.imgur);
+app.get('/insta', routes.insta);
 app.get('/blog', routes.blog);
 app.get('/image', routes.image);
 app.get('/video', routes.video);
