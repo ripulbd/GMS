@@ -14,6 +14,7 @@ import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.DomElement;
 import com.gargoylesoftware.htmlunit.html.DomNode;
 import com.gargoylesoftware.htmlunit.html.DomNodeList;
+import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlDivision;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
@@ -93,9 +94,15 @@ public class News {
             		
             		NamedNodeMap attributes = node.getAttributes();
             		
-            		if(attributes.item(attributes.getLength() - 1).toString().contains("pluck-comm-hasReplies"))System.out.println("Got it:" + attributes.item(attributes.getLength() - 1));
+            		if(attributes.item(attributes.getLength() - 1).toString().contains("pluck-comm-hasReplies")){
+            			//System.out.println("Got it:" + attributes.item(attributes.getLength() - 1));
+            			if(tempNodes.size() > 0)hasReply = "has replies";
+            		}
             		
-            		if(tempNodes.size() > 0)hasReply = "has replies";
+            		//if(tempNodes.size() > 0)hasReply = "has replies";
+            		
+            		/*tempNodes = (List<DomNode>)  node.getByXPath(".//div[contains(@class, 'pluck-comm-show-hide-replies')]");
+            		if(tempNodes.size() > 0)hasReply = "has Reply";*/
             		
             		tempNodes = (List<DomNode>)  node.getByXPath(".//span[contains(@class, 'pluck-score-upvotes-display')]");
             		String upVotes = tempNodes.get(0).asText();
@@ -110,11 +117,11 @@ public class News {
                 	
                 	System.out.println("---------------------------------------------------------------------------------------");
             	}
-            	
-            	List<DomNode> replyNodes = (List<DomNode>)  node.getByXPath(".//h4[contains(@class, 'pluck-comm-hasReplies')]");
-            	
             }
             
+            HtmlAnchor a = page.getAnchorByHref("#");
+    		HtmlPage page3 = a.click();
+    		System.out.println(page3.getWebResponse().getContentAsString());
           //*[@id="pluck_comments_list_54160346"]/div[2]
             
             //div[contains(@class, 'header')]
