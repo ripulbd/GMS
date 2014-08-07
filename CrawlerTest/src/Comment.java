@@ -64,11 +64,11 @@ public class Comment {
 				returnString += "UserName:" + comment.getUserName() + ", TimeStamp:" + comment.getTimeStamp() + ", UpVote:" + comment.getUpVote() + ", DownVote:" + comment.getDownVote() + "\n";
 				returnString += "Reply Comment:\n";
 				returnString += "---------------------------------------\n";
-				returnString += comment.getCommentBody();
+				returnString += comment.getCommentBody() + "\n";
 				returnString += "---------------------------------------\n";
 			}
 		}
-		returnString += "[======================================================================================\n";
+		returnString += "======================================================================================]\n";
 		return returnString;
 	}
 }
