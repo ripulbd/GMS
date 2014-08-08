@@ -709,10 +709,10 @@ table tr td {
 }
 
 /* Form wrapper styling */
-.form-wrapper {
+.form-wrapper {	
     width: 450px;
     padding: 15px;
-    margin: 0 0 0 961px;
+    margin: 0 auto 0 961px;
     position: relative;
     /*background: #444;
     background: rgba(0,0,0,.2);

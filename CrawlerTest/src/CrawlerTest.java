@@ -1,4 +1,5 @@
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Reader;
@@ -12,6 +13,13 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+
+
+
+
+
+
 import javax.swing.text.BadLocationException;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
@@ -24,6 +32,7 @@ import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.w3c.dom.NamedNodeMap;
 import org.xml.sax.InputSource;
 
@@ -57,18 +66,43 @@ public class CrawlerTest {
 		Document doc = null;
 		ArrayList<Comment> comments = new ArrayList<Comment>();
 		String link = "http://www.scotsman.com/news/politics/top-stories/glasgow-2014-could-be-catalyst-for-euro-2024-bid-1-3496315";
+		//String link = "http://www.scotsman.com/news/scotland/glasgow-west";
 		//String link = "http://www.scotsman.com/news/politics/top-stories/labour-councils-used-public-cash-for-awards-trip-1-3498342";
 		//String link = "http://www.scotsman.com/news/politics/top-stories/plan-b-or-not-plan-b-salmond-rejects-the-question-1-3501684";
         try {
         	System.out.println("Fetching data....");
             doc = Jsoup.connect(link).get();
-            Element article = doc.getElementsByClass("article").first();
-            Element image = article.getElementsByTag("img").first();
-            Element story = article.getElementsByTag("div").get(article.getElementsByTag("div").size() - 1);
             
-            String totalStory = story.toString();
-            String mainStory = totalStory.substring(totalStory.indexOf("</p>") + 4);
-            mainStory = mainStory.substring(0, mainStory.lastIndexOf("</div>"));
+            //Element rssLinkElement = doc.select("a.rss").first();
+            //String rssLink = "http://www.scotsman.com" + rssLinkElement.attr("href");
+            //System.out.println("RSSLink:" + rssLink);
+            
+            //Document rssDoc = Jsoup.connect(rssLink).get();
+            
+            //rssDoc = Jsoup.parse(rssDoc.html());
+            //rssDoc = Jsoup.parse(rssDoc.html());
+            //System.out.println(StringEscapeUtils.unescapeHtml3(rssDoc.html()));
+            //System.out.println(rssDoc.html());
+            
+            /*for( Element item : rssDoc.select("item") ){
+            	String title = item.select("title").first().text(); // select the 'title' of the item
+            	if(title.contains("<![CDATA["))title = title.substring(title.indexOf("<![CDATA[") + "<![CDATA[".length(), title.lastIndexOf("]]>"));
+                String URL = item.select("link").first().nextSibling().toString().trim(); // select 'link' (-1-)
+
+                Document descr = Jsoup.parse(StringEscapeUtils.unescapeHtml4(item.select("description").first().toString()));
+                String timeStamp = item.select("pubDate").first().text(); // select 'link' (-1-)
+                timeStamp = timeStamp.substring(timeStamp.indexOf(", ") + 2, timeStamp.lastIndexOf(" +"));
+                System.out.println("-----------------------------------------");
+                System.out.println("Title:" + title);
+                System.out.println("Link:" + URL);
+                System.out.println("Description:" + descr.text());
+                System.out.println("PubDate:" + timeStamp);
+                //System.out.println();
+            }*/
+            
+            //retrieveMainStory(doc);
+            //retrieveImageAndStore(doc);
+            
             String docText = doc.html();
             elemKey = docText.substring(docText.indexOf("plckCommentOnKey: \"ELM.1") + "plckCommentOnKey: ".length() + 1);
             elemKey = elemKey.substring(0, elemKey.indexOf("\""));
@@ -95,18 +129,28 @@ public class CrawlerTest {
             WebClient webClient = new WebClient();
             webClient.getOptions().setThrowExceptionOnScriptError(false);
             webClient.getOptions().setThrowExceptionOnFailingStatusCode(false);
+            webClient.setJavaScriptTimeout(100000);
+            webClient.getOptions().setTimeout(100000);
             
             
-            
-            HtmlPage page = webClient.getPage(link);
+            HtmlPage page = webClient.getPage(link + "?plckOnPage=1");
             
             List<?> divs =page.getByXPath("//*[@class=\"pluck-comm-ReplyLevel-1\"]");            
             HtmlDivision div = (HtmlDivision) divs.get(0);
-
-            /*List<?> commentDivs = div.getByXPath(".//span[contains(@class, 'pluck-comm-comment-number-highlight')]");
-            HtmlSpan commentDiv = (HtmlSpan) commentDivs.get(0);
-            System.out.println("TempCommentCount:" + commentDiv.asText());*/
             
+            FileOutputStream out;
+    		try {
+    			out = (new FileOutputStream(new java.io.File("/home/ripul/git/response.txt")));
+    			out.write(page.asXml().getBytes());
+    	        out.close();
+    		} catch (FileNotFoundException e) {
+    			// TODO Auto-generated catch block
+    			e.printStackTrace();
+    		} catch (IOException e) {
+    			// TODO Auto-generated catch block
+    			e.printStackTrace();
+    		}
+
             DomNode commentCountNode = div.getFirstChild().getFirstChild();
             String commentNumber = commentCountNode.asText();
             
@@ -117,25 +161,40 @@ public class CrawlerTest {
             System.out.println("CommentCountFromHTML:" + commentCount + ", totalLoop:" + totalLoop);
             processComment(div, doc, webClient, comments);
             for(int i = 1; i <= totalLoop; i++){
+            	WebClient client2 = new WebClient();
+            	client2.getOptions().setThrowExceptionOnScriptError(false);
+            	client2.getOptions().setThrowExceptionOnFailingStatusCode(false);
             	System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-            	page = webClient.getPage(link + "?plckOnPage=" + (i + 1));       
-                divs =page.getByXPath("//*[@class=\"pluck-comm-ReplyLevel-1\"]");            
-                div = (HtmlDivision) divs.get(0);
-                processComment(div, doc, webClient, comments);
+            	page = client2.getPage(link + "?plckOnPage=" + (i + 1));
+            	System.out.println("Location:" + link + "?plckOnPage=" + (i + 1));
+        		try {
+        			out = (new FileOutputStream(new java.io.File("/home/ripul/git/response2.txt")));
+        			out.write(page.asXml().getBytes());
+        	        out.close();
+        		} catch (FileNotFoundException e) {
+        			// TODO Auto-generated catch block
+        			e.printStackTrace();
+        		} catch (IOException e) {
+        			// TODO Auto-generated catch block
+        			e.printStackTrace();
+        		}
+            	divs = page.getByXPath("//*[@class=\"pluck-comm-ReplyLevel-1\"]");
+                if(divs.size() > 0){
+                	div = (HtmlDivision) divs.get(0);
+                	processComment(div, doc, client2, comments);
+                }
+                
+                
             }
-            
-           for(Comment comment: comments){
-            	System.out.println(comment);
-            }
-            
-            System.out.println("Total comments:" + comments.size());
             
             
             /**
              * Code for retrieving image....
              */
             
-            /*String imageName = image.attr("src");
+            /*
+            Element image = article.getElementsByTag("img").first();
+            String imageName = image.attr("src");
             String imageLocation = "http://www.scotsman.com" + imageName;
             System.out.println("Image Loc: " + imageLocation);
             
@@ -154,9 +213,86 @@ public class CrawlerTest {
         }catch (IOException e3) {
             // TODO Auto-generated catch block
             e3.printStackTrace();
+        }/*catch (IndexOutOfBoundsException ie){
+        	
+        }*/
+        for(Comment comment: comments){
+        	System.out.println(comment);
         }
+        
+        System.out.println("Total comments:" + comments.size());
         System.out.println("Fetching finished....");
         
+	}
+	
+	static void retrieveImageAndStore(Document doc){
+		Element article = doc.getElementsByClass("article").first();
+		Element image = article.getElementsByTag("img").first();
+		Element captionElement = article.select("p.flt-l").first();
+		String caption = captionElement.text();
+		if(caption.contains(" Picture"))caption = caption.substring(0, caption.indexOf(" Picture"));
+        String imageName = image.attr("src");
+        String imageLocation = "http://www.scotsman.com" + imageName;
+        System.out.println("Image Loc: " + imageLocation);
+        
+        imageName = imageName.substring(imageName.lastIndexOf("/") + 1);
+        System.out.println("Image Name: " + imageName);
+        System.out.println("Image Caption: " + caption);
+        
+        Response resultImageResponse = null;
+		try {
+			resultImageResponse = Jsoup.connect(imageLocation).ignoreContentType(true).execute();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+        FileOutputStream out;
+		try {
+			out = (new FileOutputStream(new java.io.File(outputFolder + imageName)));
+			out.write(resultImageResponse.bodyAsBytes());
+	        out.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
+	}
+	static public String retrieveMainStory(Document doc){
+		String returnString = "";
+		
+		Element article = doc.getElementsByClass("article").first();
+        Element story = article.getElementsByTag("div").get(article.getElementsByTag("div").size() - 1);
+        
+        String totalStory = story.toString();
+        String mainStory = totalStory.substring(totalStory.indexOf("</p>") + 4);
+        mainStory = mainStory.substring(0, mainStory.lastIndexOf("</div>"));
+        String relatedStories = "";
+        if(mainStory.contains("<p><strong>SEE ALSO</strong></p>")){
+        	relatedStories = mainStory.substring(mainStory.indexOf("<p><strong>SEE ALSO</strong></p>") + "<p><strong>SEE ALSO</strong></p>".length());
+        	mainStory = mainStory.substring(0, mainStory.indexOf("<p><strong>SEE ALSO</strong></p>"));
+        }
+        
+        System.out.println("Main Story:");
+        
+        System.out.println(mainStory);
+        
+        if(relatedStories.length() > 3){
+        	System.out.println("Related Stories:");
+            System.out.println(relatedStories);
+            Document related = Jsoup.parse(relatedStories);
+            Elements relatedStoriesLinks = related.select("a");
+            for(Element elem: relatedStoriesLinks){
+            	String relatedStoriesLink = elem.attr("href");
+            	String relatedStoriesTitle = elem.text();
+            	System.out.println("Related Stories - Link:" + relatedStoriesLink + ", Title:" + relatedStoriesTitle);
+            }
+        }
+        
+		return returnString;
 	}
 
 	static public String returnAttribute(String xml){
@@ -216,8 +352,8 @@ public class CrawlerTest {
         		tempNodes = (List<DomNode>)  node.getByXPath(".//span[contains(@class, 'pluck-score-upvotes-display')]");
         		String upTempNodesString = tempNodes.get(0).asText();
         		String upVotes = upTempNodesString.substring(1, upTempNodesString.indexOf(")"));
-        		System.out.println("Main Comment Up Vote:" + upVotes);
-        		System.out.println("Main Comment down Vote:" + downVotes);
+        		//System.out.println("Main Comment Up Vote:" + upVotes);
+        		//System.out.println("Main Comment down Vote:" + downVotes);
         		
         		tempNodes = (List<DomNode>)  node.getByXPath(".//p[contains(@class, 'pluck-comm-timestamp')]");
             	String commentTimeStamp = timeStamp(tempNodes.get(0).asText());
@@ -230,7 +366,7 @@ public class CrawlerTest {
             	comment.setDownVote(Integer.parseInt(downVotes));
             	comment.setCommentBody(commentBody);
             	
-            	System.out.println("UserName:" + commentUserName + ", TimeStamp:" + commentTimeStamp + ", UpVote:" + upVotes + ", DownVote:" + downVotes);
+            	//System.out.println("UserName:" + commentUserName + ", TimeStamp:" + commentTimeStamp + ", UpVote:" + upVotes + ", DownVote:" + downVotes);
         	}
         	if(hasReply){
         		processCommentReplies(node, webClient, comment);

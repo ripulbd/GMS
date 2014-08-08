@@ -50,12 +50,17 @@ public class News {
 	private static String outputFolder = "/home/ripul/images/scotsman/";
 	
 	private String headline, timeStamp, mainStory, category, source, description, link;
-	private ArrayList<HashMap<String, String>> imageNameCaptions, videoNameCaption;
+	private ArrayList<HashMap<String, String>> imageNameCaption, videoNameCaption;
 	private ArrayList<String> relatedStoryLink, keywords;
 	private ArrayList<Comment> comments;
 	
 	public News(String link){
 		this.link = link;
+		imageNameCaption = new ArrayList<HashMap<String, String>>();
+		videoNameCaption = new ArrayList<HashMap<String, String>>();
+		relatedStoryLink = new ArrayList<String>();
+		keywords = new ArrayList<String>();
+		comments = new ArrayList<Comment>();
 	}
 	
 	public String getLink() {
@@ -113,6 +118,40 @@ public class News {
 	}
 	public void setComments(ArrayList<Comment> comments) {
 		this.comments = comments;
+	}
+
+	public ArrayList<HashMap<String, String>> getImageNameCaption() {
+		return imageNameCaption;
+	}
+
+	public void setImageNameCaption(
+			ArrayList<HashMap<String, String>> imageNameCaption) {
+		this.imageNameCaption = imageNameCaption;
+	}
+
+	public ArrayList<HashMap<String, String>> getVideoNameCaption() {
+		return videoNameCaption;
+	}
+
+	public void setVideoNameCaption(
+			ArrayList<HashMap<String, String>> videoNameCaption) {
+		this.videoNameCaption = videoNameCaption;
+	}
+
+	public ArrayList<String> getRelatedStoryLink() {
+		return relatedStoryLink;
+	}
+
+	public void setRelatedStoryLink(ArrayList<String> relatedStoryLink) {
+		this.relatedStoryLink = relatedStoryLink;
+	}
+
+	public ArrayList<String> getKeywords() {
+		return keywords;
+	}
+
+	public void setKeywords(ArrayList<String> keywords) {
+		this.keywords = keywords;
 	}
 	
 	
