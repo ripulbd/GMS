@@ -50,20 +50,22 @@ public class News {
 	private static String outputFolder = "/home/ripul/images/scotsman/";
 	
 	private String headline, timeStamp, mainStory, category, source, description, link;
-	private String [] imageNames, videoNames, keywords, relatedStoryLink;
+	private ArrayList<HashMap<String, String>> imageNameCaptions, videoNameCaption;
+	private ArrayList<String> relatedStoryLink, keywords;
+	private ArrayList<Comment> comments;
+	
+	public News(String link){
+		this.link = link;
+	}
+	
 	public String getLink() {
 		return link;
 	}
 	public void setLink(String link) {
 		this.link = link;
 	}
-	public String[] getRelatedStoryLink() {
-		return relatedStoryLink;
-	}
-	public void setRelatedStoryLink(String[] relatedStoryLink) {
-		this.relatedStoryLink = relatedStoryLink;
-	}
-	private ArrayList<Comment> comments;
+
+	
 	public static String getOutputFolder() {
 		return outputFolder;
 	}
@@ -105,24 +107,6 @@ public class News {
 	}
 	public void setDescription(String description) {
 		this.description = description;
-	}
-	public String[] getImageNames() {
-		return imageNames;
-	}
-	public void setImageNames(String[] imageNames) {
-		this.imageNames = imageNames;
-	}
-	public String[] getVideoNames() {
-		return videoNames;
-	}
-	public void setVideoNames(String[] videoNames) {
-		this.videoNames = videoNames;
-	}
-	public String[] getKeywords() {
-		return keywords;
-	}
-	public void setKeywords(String[] keywords) {
-		this.keywords = keywords;
 	}
 	public ArrayList<Comment> getComments() {
 		return comments;
