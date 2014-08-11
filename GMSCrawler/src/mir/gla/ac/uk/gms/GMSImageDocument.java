@@ -1,5 +1,12 @@
 package mir.gla.ac.uk.gms;
 
+/**
+ * This class implements an image web page
+ * @author 	Md. Sadek Ferdous
+ * @version 1.0
+ * @since 	11/08/2014
+ *
+ */
 public class GMSImageDocument extends GMSDocument {
 	
 	private String owner, ownerURL;

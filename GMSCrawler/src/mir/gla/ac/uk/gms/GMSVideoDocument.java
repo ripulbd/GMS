@@ -1,5 +1,13 @@
 package mir.gla.ac.uk.gms;
 
+/**
+ * This class represents a video page
+ * 
+ * @author 	Md. Sadek Ferdous
+ * @version 1.0
+ * @since 	11/08/2014
+ *
+ */
 public class GMSVideoDocument extends GMSDocument {
 	
 	private String owner, ownerURL;

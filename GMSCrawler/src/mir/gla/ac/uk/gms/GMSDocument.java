@@ -1,7 +1,14 @@
 package mir.gla.ac.uk.gms;
 
 import java.util.ArrayList;
-
+/**
+ * This abstract class represents an abstract document (a news page) for the Glasgow Memory Server.
+ * Each document should have a title, description, the timeStamp representing when it's been created, category, source, keywords and its URL.
+ * Each document many have comments represented by the array list of Comment. 
+ * @author 	Md. Sadek Ferdous
+ * @version 1.0
+ * @since   11/08/2014
+ */
 public abstract class GMSDocument {
 	
 	protected String title, description, timeStamp, category, source;

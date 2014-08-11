@@ -1,6 +1,16 @@
 package mir.gla.ac.uk.gms;
 import java.util.ArrayList;
 
+/**
+ * This class represents a comment. Each comment should have a name of the commenter, the timestamp representing when it's been created 
+ * and the body of the comment.
+ * Many news sites allow users to up vote or down vote a comment represented by the upVote and downVote variables.
+ * Each comment may have a list of replies, each reply is represented with a comment object. 
+ * @author 	Md. Sadek Ferdous
+ * @version 1.0
+ * @since 	11/08/2014
+ *
+ */
 public class CommentDocument {
 	private String userName, timeStamp, commentBody;
 	private int upVote, downVote;

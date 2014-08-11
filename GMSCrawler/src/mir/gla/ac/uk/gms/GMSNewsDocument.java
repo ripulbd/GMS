@@ -3,6 +3,15 @@ package mir.gla.ac.uk.gms;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * This class represents a new web site. It extends the abstract GMSDocument by adding the body of the news.
+ * Each news may have several images and their captions. Each news may have several videos and their captions.
+ * Some news have lists of related stories.
+ * @author 	Md. Sadek Ferdous
+ * @version 1.0
+ * @since 	11/08/2014
+ *
+ */
 public class GMSNewsDocument extends GMSDocument {
 	
 	private String mainStory;	
@@ -50,31 +59,30 @@ public class GMSNewsDocument extends GMSDocument {
 	@Override
 	public String toString(){
 		String returnString = "";
-		returnString += "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++";
+		returnString += "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
 		returnString += "++Title:" + title + "\n";
 		returnString += "++TimeStamp:" + timeStamp + "\n";
 		returnString += "++Description:" + description + "\n";
 		returnString += "++Main Story:\n++---------------\n" + mainStory + "\n++-----------------\n";
-		returnString += "++Title:" + title + "\n";
-		if(imageNameCaption.size()> 0){
+		if(imageNameCaption != null && imageNameCaption.size()> 0){
 			for(HashMap<String, String> tmpMap : imageNameCaption){
 				returnString += "++Image Name:" + tmpMap.get("name") + "\n";
 				returnString += "++Caption:" + tmpMap.get("caption") + "\n";
 			}
 		}
-		if(videoNameCaption.size()> 0){
+		if(videoNameCaption != null && videoNameCaption.size()> 0){
 			for(HashMap<String, String> tmpMap : imageNameCaption){
 				returnString += "++Image Name:" + tmpMap.get("name") + "\n";
 				returnString += "++Caption:" + tmpMap.get("caption") + "\n";
 			}
 		}
-		if(relatedStories.size()> 0){
-			for(HashMap<String, String> tmpMap : imageNameCaption){
+		if(relatedStories != null && relatedStories.size()> 0){
+			for(HashMap<String, String> tmpMap : relatedStories){
 				returnString += "++URL:" + tmpMap.get("url") + "\n";
 				returnString += "++Title:" + tmpMap.get("title") + "\n";
 			}
 		}
-		if(comments.size()> 0){
+		if(comments != null && comments.size()> 0){
 			for(CommentDocument commentDoc : comments){
 				returnString += commentDoc.toString();
 			}

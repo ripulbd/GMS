@@ -4,9 +4,11 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.StringTokenizer;
 import java.util.logging.Level;
 
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -25,6 +27,13 @@ import com.gargoylesoftware.htmlunit.html.DomNode;
 import com.gargoylesoftware.htmlunit.html.HtmlDivision;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
+/**
+ * This class implements the crawler for the www.scotsman.com.
+ * @author 	Md. Sadek Ferdous
+ * @version 1.0
+ * @since 	11/08/2014
+ *
+ */
 public class ScotsmanCrawler extends AbstractCrawler {
 
 	private ArrayList<HashMap<String, String>> urlInfos, relatedStories;
@@ -44,7 +53,7 @@ public class ScotsmanCrawler extends AbstractCrawler {
 		Document doc = null;
         System.out.println("Fetching RSS Link......");
         doc = Jsoup.connect(getMasterURL()).get();
-            
+        /*    
 		Element rssLinkElement = doc.select("a.rss").first();
 		String rssLink = "http://www.scotsman.com" + rssLinkElement.attr("href");
 
@@ -62,8 +71,15 @@ public class ScotsmanCrawler extends AbstractCrawler {
 			if(timeStamp.contains(" +"))timeStamp = timeStamp.substring(timeStamp.indexOf(", ") + 2, timeStamp.lastIndexOf(" +"));
 			else {
 				timeStamp = timeStamp.substring(timeStamp.indexOf(", ") + 2);
+				timeStamp = timeStamp.substring(0, timeStamp.lastIndexOf(":"));
+				ArrayList<String> tokenizedTime = new ArrayList<String>();
+				StringTokenizer st = new StringTokenizer(timeStamp);
+				while(st.hasMoreElements()){
+					tokenizedTime.add("" + st.nextElement());
+				}
+				
 			}
-			System.out.println(timeStamp);
+			//System.out.println(timeStamp);
 			HashMap<String, String> info = new HashMap<String, String>();
 			info.put("title", title);
 			info.put("url", URL);
@@ -71,14 +87,79 @@ public class ScotsmanCrawler extends AbstractCrawler {
 			info.put("timeStamp", timeStamp);
 			urlInfos.add(info);
 		}
-		System.out.println("RSS link fetch finished......");
+		System.out.println("RSS link fetch finished......");*/
+		
+		System.out.println("Fetching links from the home page......");
+		Elements articleLead = doc.select("article.lead-story");
+		
+		for(Element elem : articleLead){
+			int size = elem.select("a").size();
+			//System.out.println("Elem Size:" + size);
+			Element anchor = elem.select("a").get(1);
+			String title = anchor.text();
+			String URL = anchor.attr("href");
+			if(title.length() == 0)title = elem.select("a").get(2).text();
+			//System.out.println("Title:" + title);
+			//System.out.println("Link:" + URL);
+			if(!alreadyInList(title))crawURLsFromHomePage(title, URL);
+			else System.out.println("Title - " + title + " already in the list.");
+		}
+		
+		Elements articleElement = doc.select("article.teaser");
+		
+		for(Element elem : articleElement){
+			int size = elem.select("a").size();
+			//System.out.println("Elem Size:" + size);
+			Element anchor = elem.select("a").get(1);
+			String title = anchor.text();
+			String URL = anchor.attr("href");
+			if(title.length() == 0)title = elem.select("a").get(2).text();
+			//System.out.println("Title:" + title);
+			//System.out.println("Link:" + URL);
+			if(!alreadyInList(title))crawURLsFromHomePage(title, URL);
+			else System.out.println("Title - " + title + " already in the list.");
+		}
+		
+		System.out.println("Fetching links from the home page finished......");
 		return urlInfos;
 	}
-
+	
+	private void crawURLsFromHomePage(String title, String URL){
+		
+        Document doc; 
+        String description = "", timeStamp = "";
+		try {
+			doc = Jsoup.connect(URL).get();
+			description = doc.select("div.article-content").first().text();
+			description = description.substring(0, description.indexOf("."));
+			//System.out.println("Title:" + description);
+			timeStamp = doc.select("div.Updated").first().text();
+			timeStamp = timeStamp.substring(timeStamp.indexOf(" ") + 1);
+			//System.out.println("Time stamp:" + timeStamp);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		HashMap<String, String> info = new HashMap<String, String>();
+		info.put("title", title);
+		info.put("url", URL);
+		info.put("description", description);
+		info.put("timeStamp", timeStamp);
+		urlInfos.add(info);
+	}
+	
+	private boolean alreadyInList(String title){
+		for(HashMap<String, String> tmpMap : urlInfos){
+			if(tmpMap.get("title").equals(title))return true;
+		}
+		return false;
+	}
+	
 	@Override
 	public GMSNewsDocument crawlNews(HashMap<String, String> info) throws IOException{
 		// TODO Auto-generated method stub
 		String URL = info.get("url");
+		System.out.println("The link being retrieved is:" + URL);
 		scotsmanNews = new GMSNewsDocument(URL);
 		scotsmanNews.setCategory("news");
 		scotsmanNews.setDate(info.get("timeStamp"));
@@ -105,27 +186,46 @@ public class ScotsmanCrawler extends AbstractCrawler {
 		String returnString = "";
 		
 		Element article = doc.getElementsByClass("article").first();
-        Element image = article.getElementsByTag("img").first();
-        Element story = article.getElementsByTag("div").get(article.getElementsByTag("div").size() - 1);
+		Elements paragraph = article.getElementsByTag("p");
+		for(Element elem: paragraph){
+			if(elem.hasClass("flt-l"))continue;
+			if(elem.hasClass("cld"))continue;
+			if(elem.hasClass("del"))continue;
+			if(elem.hasClass("ico"))continue;
+			if(elem.toString().contains("PSTYLE=$ID/[No paragraph style]-->"))continue;
+			returnString += elem + "\n";
+		}
+        /*Element story = article.getElementsByTag("div").get(article.getElementsByTag("div").size() - 1);
         
         String totalStory = story.toString();
-        returnString = totalStory.substring(totalStory.indexOf("</p>") + 4);
-        returnString = returnString.substring(0, returnString.lastIndexOf("</div>"));
+        returnString = totalStory.substring(totalStory.indexOf("</p>") + 4);*/
+        //returnString = returnString.substring(0, returnString.lastIndexOf("</div>"));
         String relatedStoriesText = "";
+        boolean seeAlso = false;
         if(returnString.contains("<p><strong>SEE ALSO</strong></p>")){
         	relatedStoriesText = returnString.substring(returnString.indexOf("<p><strong>SEE ALSO</strong></p>") + "<p><strong>SEE ALSO</strong></p>".length());
+        	System.out.println("Related Stories Found:" + relatedStoriesText);
         	returnString = returnString.substring(0, returnString.indexOf("<p><strong>SEE ALSO</strong></p>"));
-        }
+        	seeAlso = true;
+        } 
         
+        if(!seeAlso){
+        	if(returnString.contains("<p><strong>SEE ALSO:</strong></p>")){
+            	relatedStoriesText = returnString.substring(returnString.indexOf("<p><strong>SEE ALSO:</strong></p>") + "<p><strong>SEE ALSO:</strong></p>".length());
+            	returnString = returnString.substring(0, returnString.indexOf("<p><strong>SEE ALSO:</strong></p>"));
+            	seeAlso = true;
+            }
+        }
         if(relatedStoriesText.length() > 3){
             Document related = Jsoup.parse(relatedStoriesText);
             Elements relatedStoriesLinks = related.select("a");
-            HashMap<String, String> tempRelated = new HashMap<String, String>();
             for(Element elem: relatedStoriesLinks){
+            	HashMap<String, String> tempRelated = new HashMap<String, String>();
             	String relatedStoriesLink = elem.attr("href");
             	String relatedStoriesTitle = elem.text();
             	tempRelated.put("url", relatedStoriesLink);
             	tempRelated.put("title", relatedStoriesTitle);
+            	System.out.println("Related Storied URL:" + relatedStoriesLink + ", Related Stories Title:" + relatedStoriesTitle);
             	this.relatedStories.add(tempRelated);
             }
         }
@@ -139,20 +239,58 @@ public class ScotsmanCrawler extends AbstractCrawler {
 		Element article = doc.getElementsByClass("article").first();
 		Element image = article.getElementsByTag("img").first();
 		Element captionElement = article.select("p.flt-l").first();
-		String caption = captionElement.text();
-		if(caption.contains(" Picture"))caption = caption.substring(0, caption.indexOf(" Picture"));
-        String imageName = image.attr("src");
-        String imageLocation = "http://www.scotsman.com" + imageName;
-        
-        imageName = imageName.substring(imageName.lastIndexOf("/") + 1);
-        Response resultImageResponse = null;
-		try {
-			resultImageResponse = Jsoup.connect(imageLocation).ignoreContentType(true).execute();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		if(image != null){
+			String caption = captionElement.text();
+			if(caption.contains(" Picture"))caption = caption.substring(0, caption.indexOf(" Picture"));
+	        String imageName = image.attr("src");
+	        String imageLocation = "http://www.scotsman.com" + imageName;
+	        
+	        imageName = imageName.substring(imageName.lastIndexOf("/") + 1);
+	        Response resultImageResponse = null;
+			try {
+				resultImageResponse = Jsoup.connect(imageLocation).ignoreContentType(true).execute();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			if(saveImage(resultImageResponse, imageLocAndCaption, imageName, caption)){
+				//System.out.println("main image Saved and caption added!");
+			}
+			
+			/**
+			 * The following code is to test if there is another image...
+			 */
+			Element anotherImageDiv = article.getElementsByClass("left").first();
+			
+			if(anotherImageDiv != null){
+				//System.out.println("Second Image found!");
+				Element anotherImage = anotherImageDiv.getElementsByTag("img").first();
+				String anotherImageName = anotherImage.attr("src");
+				String anotherImageLocation = "http://www.scotsman.com" + anotherImageName;
+				anotherImageName = anotherImageName.substring(anotherImageName.lastIndexOf("/") + 1);
+				//System.out.println("Another Image Location:" + anotherImageLocation + ", Another Image Name:" + anotherImageName);
+				Response anotherImageResponse = null;
+				try {
+					anotherImageResponse = Jsoup.connect(anotherImageLocation).ignoreContentType(true).execute();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				if(saveImage(anotherImageResponse, imageLocAndCaption, anotherImageName, "")){
+					System.out.println("another image Saved and caption added!");
+				}
+			}
 
+		} else {
+			System.out.println("There is no image, probably a video in this news.");
+		}
+		
+		
+        return imageLocAndCaption;
+	}
+	
+	private boolean saveImage(Response resultImageResponse, ArrayList<HashMap<String, String>> imageLocAndCaption,  String imageName, String caption){
+		boolean flag = false;
         FileOutputStream out;
 		try {
 			out = (new FileOutputStream(new java.io.File(outputFolder + imageName)));
@@ -162,6 +300,7 @@ public class ScotsmanCrawler extends AbstractCrawler {
 	        tmpHashMap.put("name", imageName);
 	        tmpHashMap.put("caption", caption);
 	        imageLocAndCaption.add(tmpHashMap);
+	        flag = true;
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -169,10 +308,9 @@ public class ScotsmanCrawler extends AbstractCrawler {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-        return imageLocAndCaption;
+
+		return flag;
 	}
-	
 	private ArrayList<CommentDocument> processComments(String URL, Document doc) throws IOException{
 		ArrayList<CommentDocument> commentList = new ArrayList<CommentDocument>();
 		
@@ -195,7 +333,14 @@ public class ScotsmanCrawler extends AbstractCrawler {
         
         HtmlPage page = webClient.getPage(URL + "?plckOnPage=1");
         
-        List<?> divs =page.getByXPath("//*[@class=\"pluck-comm-ReplyLevel-1\"]");            
+        List<?> divs =page.getByXPath("//*[@class=\"pluck-comm-ReplyLevel-1\"]");
+        if(divs.size() <= 0){
+        	/**
+        	 * No comments for this page, so no need to execute the following code and return with a null arraylist.
+        	 * 
+        	 */
+        	return null;
+        }
         HtmlDivision div = (HtmlDivision) divs.get(0);
         
         DomNode commentCountNode = div.getFirstChild().getFirstChild();
@@ -205,7 +350,7 @@ public class ScotsmanCrawler extends AbstractCrawler {
         int commentCount = Integer.parseInt(commentNumber); 
         
         int totalLoop = commentCount / 15;
-        System.out.println("CommentCountFromHTML:" + commentCount + ", totalLoop:" + totalLoop);
+        //System.out.println("CommentCountFromHTML:" + commentCount + ", totalLoop:" + totalLoop);
         processComment(div, doc, webClient, commentList, elemKey);
         for(int i = 1; i <= totalLoop; i++){
         	WebClient client2 = new WebClient();
@@ -213,16 +358,13 @@ public class ScotsmanCrawler extends AbstractCrawler {
         	client2.getOptions().setThrowExceptionOnFailingStatusCode(false);
         	System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
         	page = client2.getPage(URL + "?plckOnPage=" + (i + 1));
-        	System.out.println("Location:" + URL + "?plckOnPage=" + (i + 1));
+        	//System.out.println("Location:" + URL + "?plckOnPage=" + (i + 1));
         	divs = page.getByXPath("//*[@class=\"pluck-comm-ReplyLevel-1\"]");
             if(divs.size() > 0){
             	div = (HtmlDivision) divs.get(0);
             	processComment(div, doc, client2, commentList, elemKey);
             }
-            
-            
         }
-        
 		return commentList;
 	}
 	
@@ -276,8 +418,7 @@ public class ScotsmanCrawler extends AbstractCrawler {
         		tempNodes = (List<DomNode>)  node.getByXPath(".//span[contains(@class, 'pluck-score-upvotes-display')]");
         		String upTempNodesString = tempNodes.get(0).asText();
         		String upVotes = upTempNodesString.substring(1, upTempNodesString.indexOf(")"));
-        		//System.out.println("Main Comment Up Vote:" + upVotes);
-        		//System.out.println("Main Comment down Vote:" + downVotes);
+        		
         		
         		tempNodes = (List<DomNode>)  node.getByXPath(".//p[contains(@class, 'pluck-comm-timestamp')]");
             	String commentTimeStamp = timeStamp(tempNodes.get(0).asText());
@@ -290,7 +431,8 @@ public class ScotsmanCrawler extends AbstractCrawler {
             	comment.setDownVote(Integer.parseInt(downVotes));
             	comment.setCommentBody(commentBody);
             	
-            	//System.out.println("UserName:" + commentUserName + ", TimeStamp:" + commentTimeStamp + ", UpVote:" + upVotes + ", DownVote:" + downVotes);
+            	
+            	//System.out.println("Main Comment - UserName:" + commentUserName + ", TimeStamp:" + commentTimeStamp + ", UpVote:" + upVotes + ", DownVote:" + downVotes);
         	}
         	if(hasReply){
         		processCommentReplies(node, webClient, comment, elemKey);
@@ -370,6 +512,7 @@ public class ScotsmanCrawler extends AbstractCrawler {
                 		tempHashMap.put("userName", userName);
                 		tempHashMap.put("timeStamp", date);
                 		tempHashMap.put("replyText", replyText);
+                		//System.out.println("UserName:" + userName + ", TimeStamp:" + date + ", Reply Text:" + replyText);
                 		commentList.add(tempHashMap);
                 		replyComment.setUserName(userName);
                 		replyComment.setTimeStamp(date);
@@ -378,12 +521,26 @@ public class ScotsmanCrawler extends AbstractCrawler {
             		}
         		}
         	}
-        	List<Element> downList = replyDoc.select("span.pluck-thumb-down");
+        	List<Element> downList = replyDoc.select("div.pluck-comm-rate-controls");
+        	count = 0;
+        	if(downList.size() > 0) {
+        		String rateString = downList.get(0).text();
+        		ArrayList<HashMap<String, String>> rateList = parseRateString(rateString);
+            	for(HashMap<String, String> tmpMap : rateList){
+            		replyList.get(count).setUpVote(Integer.parseInt(tmpMap.get("up")));
+            		replyList.get(count).setDownVote(Integer.parseInt(tmpMap.get("down")));
+            	}
+        	}
+        	
+        	
+        	/*List<Element> downList = replyDoc.select("span.pluck-thumb-down");
         	count = 0;
         	String tempRateString = "";
         	boolean flag = false;
+        	System.out.println("Down List Size:" + downList.size());
         	for(Element elem: downList){
         		String rateString = elem.text();
+        		System.out.println("Rate String:\n" + rateString);
         		if(count == 0){
         			tempRateString = rateString;
         		}
@@ -396,8 +553,8 @@ public class ScotsmanCrawler extends AbstractCrawler {
             		up = up.substring(1, up.indexOf(")"));
             		commentList.get(count).put("downVote", down);
             		commentList.get(count).put("upVote", up);
-            		//System.out.println("Reply Comment Up Vote:" + up);
-            		//System.out.println("Reply Comment down Vote:" + down);
+            		System.out.println("Reply Comment Up Vote:" + up);
+            		System.out.println("Reply Comment down Vote:" + down);
             		replyList.get(count).setUpVote(Integer.parseInt(up));
             		replyList.get(count).setDownVote(Integer.parseInt(down));
             		count++;
@@ -410,7 +567,10 @@ public class ScotsmanCrawler extends AbstractCrawler {
         		int firstIndex = tempRateString.lastIndexOf("Please wait while we perform your request.<\\/div><\\/div> <\\/div> ") + "Please wait while we perform your request.<\\/div><\\/div> <\\/div> ".length();
         		String firstSubString = tempRateString.substring(firstIndex);
         		int lastIndex = firstSubString.indexOf("<\\/span><\\/a><\\/span>You voted<\\/span>");
+        		System.out.println("First Index:" + firstIndex + ", lastIndex:" + lastIndex);
+        		System.out.println("First Sub String:" + firstSubString);
         		String lastSubString = firstSubString.substring(0, lastIndex);
+        		System.out.println("Last Sub String:" + lastSubString);
         		
         		String down = lastSubString.substring(1, lastSubString.indexOf(")"));
         		String up = lastSubString.substring(lastSubString.lastIndexOf("(") + 1, lastSubString.lastIndexOf(")"));
@@ -418,11 +578,36 @@ public class ScotsmanCrawler extends AbstractCrawler {
         		commentList.get(count).put("upVote", up);
         		replyList.get(count).setUpVote(Integer.parseInt(up));
         		replyList.get(count).setDownVote(Integer.parseInt(down));
-    		}
+    		}*/
     	}
     	if(replyList.size()>0){
     		comment.setReplies(replyList);
     	}
+	}
+	
+	private ArrayList<HashMap<String,String>> parseRateString(String string){
+		ArrayList<HashMap<String, String>> listString = new ArrayList<HashMap<String, String>>();
+		String pattern = "<\\/span><\\/a><\\/span> (";
+		boolean flag = true;
+		while(flag){
+			HashMap<String, String> tmpMap = new HashMap<String, String>();
+			int loc = string.indexOf(pattern);
+			//System.out.println("Location:" + loc);
+			if(loc >= 0){
+				/*String firstNumber = string.substring(1, loc);
+				String secondNumber = string.substring(loc + pattern.length(), );*/
+				String subString = string.substring(loc - 3,  loc + pattern.length() + 2);
+				//System.out.println(subString);
+				//System.out.println("Number:" + subString.charAt(1) + " - " + subString.charAt(subString.length() - 2));
+				String down = "" + subString.charAt(1);
+				String up = "" + subString.charAt(subString.length() - 2);
+				tmpMap.put("up", up);
+				tmpMap.put("down", down);
+				string = string.substring(loc + pattern.length() + 2);
+				listString.add(tmpMap);
+			} else flag = false;
+		}
+		return listString;
 	}
 
 	@Override
