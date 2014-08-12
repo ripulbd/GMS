@@ -12,7 +12,7 @@ public class CrawlerTest {
 		
 		try {
 			ArrayList<HashMap<String, String>> urlInfos = scotsCrawler.crawlURLs();
-			GMSNewsDocument scotDoc = scotsCrawler.crawlNews(urlInfos.get(0));
+			GMSNewsDocument scotDoc = scotsCrawler.crawlNews(urlInfos.get(1));
 			System.out.println(scotDoc);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

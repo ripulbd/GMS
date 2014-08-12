@@ -62,19 +62,19 @@ public class GMSNewsDocument extends GMSDocument {
 				returnString += "++Caption:" + tmpMap.get("caption") + "\n";
 			}
 		}
-		if(videoNameCaption.size()> 0){
+		if(videoNameCaption != null && videoNameCaption.size()> 0){
 			for(HashMap<String, String> tmpMap : imageNameCaption){
 				returnString += "++Image Name:" + tmpMap.get("name") + "\n";
 				returnString += "++Caption:" + tmpMap.get("caption") + "\n";
 			}
 		}
-		if(relatedStories.size()> 0){
+		if(videoNameCaption != null && relatedStories.size()> 0){
 			for(HashMap<String, String> tmpMap : imageNameCaption){
 				returnString += "++URL:" + tmpMap.get("url") + "\n";
 				returnString += "++Title:" + tmpMap.get("title") + "\n";
 			}
 		}
-		if(comments.size()> 0){
+		if(comments != null && comments.size()> 0){
 			for(CommentDocument commentDoc : comments){
 				returnString += commentDoc.toString();
 			}

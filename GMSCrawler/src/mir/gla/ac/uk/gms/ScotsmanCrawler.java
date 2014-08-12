@@ -29,7 +29,8 @@ public class ScotsmanCrawler extends AbstractCrawler {
 
 	private ArrayList<HashMap<String, String>> urlInfos, relatedStories;
 	GMSNewsDocument scotsmanNews;
-	private String outputFolder = "/home/ripul/images/scotsman/";
+	//private String outputFolder = "/home/ripul/images/scotsman/";
+	private String outputFolder = "/Users/ripul/images/scotman";
 	
 	public ScotsmanCrawler(String masterURL) {
 		// TODO Auto-generated constructor stub
@@ -63,7 +64,7 @@ public class ScotsmanCrawler extends AbstractCrawler {
 			else {
 				timeStamp = timeStamp.substring(timeStamp.indexOf(", ") + 2);
 			}
-			System.out.println(timeStamp);
+			//System.out.println(timeStamp);
 			HashMap<String, String> info = new HashMap<String, String>();
 			info.put("title", title);
 			info.put("url", URL);
@@ -79,6 +80,7 @@ public class ScotsmanCrawler extends AbstractCrawler {
 	public GMSNewsDocument crawlNews(HashMap<String, String> info) throws IOException{
 		// TODO Auto-generated method stub
 		String URL = info.get("url");
+		System.out.println("URL:" + URL);
 		scotsmanNews = new GMSNewsDocument(URL);
 		scotsmanNews.setCategory("news");
 		scotsmanNews.setDate(info.get("timeStamp"));
@@ -88,6 +90,7 @@ public class ScotsmanCrawler extends AbstractCrawler {
 		
 		Document doc = Jsoup.connect(URL).get();
 		String mainStory = retrieveMainStory(doc);
+		
 		scotsmanNews.setMainStory(mainStory);
 		if(relatedStories.size() > 0){
 			scotsmanNews.setRelatedStories(relatedStories);
