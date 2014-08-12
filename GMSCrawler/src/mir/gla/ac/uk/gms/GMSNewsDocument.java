@@ -3,6 +3,15 @@ package mir.gla.ac.uk.gms;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * This class represents a new web site. It extends the abstract GMSDocument by adding the body of the news.
+ * Each news may have several images and their captions. Each news may have several videos and their captions.
+ * Some news have lists of related stories.
+ * @author 	Md. Sadek Ferdous
+ * @version 1.0
+ * @since 	11/08/2014
+ *
+ */
 public class GMSNewsDocument extends GMSDocument {
 	
 	private String mainStory;	
@@ -42,21 +51,19 @@ public class GMSNewsDocument extends GMSDocument {
 		return videoNameCaption;
 	}
 
-	public void setVideoNameCaption(
-			ArrayList<HashMap<String, String>> videoNameCaption) {
+	public void setVideoNameCaption(ArrayList<HashMap<String, String>> videoNameCaption) {
 		this.videoNameCaption = videoNameCaption;
 	}
 	
 	@Override
 	public String toString(){
 		String returnString = "";
-		returnString += "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++";
+		returnString += "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
 		returnString += "++Title:" + title + "\n";
 		returnString += "++TimeStamp:" + timeStamp + "\n";
 		returnString += "++Description:" + description + "\n";
 		returnString += "++Main Story:\n++---------------\n" + mainStory + "\n++-----------------\n";
-		returnString += "++Title:" + title + "\n";
-		if(imageNameCaption.size()> 0){
+		if(imageNameCaption != null && imageNameCaption.size()> 0){
 			for(HashMap<String, String> tmpMap : imageNameCaption){
 				returnString += "++Image Name:" + tmpMap.get("name") + "\n";
 				returnString += "++Caption:" + tmpMap.get("caption") + "\n";
@@ -68,8 +75,8 @@ public class GMSNewsDocument extends GMSDocument {
 				returnString += "++Caption:" + tmpMap.get("caption") + "\n";
 			}
 		}
-		if(videoNameCaption != null && relatedStories.size()> 0){
-			for(HashMap<String, String> tmpMap : imageNameCaption){
+		if(relatedStories != null && relatedStories.size()> 0){
+			for(HashMap<String, String> tmpMap : relatedStories){
 				returnString += "++URL:" + tmpMap.get("url") + "\n";
 				returnString += "++Title:" + tmpMap.get("title") + "\n";
 			}

@@ -25,5 +25,8 @@
 	<classpathentry kind="lib" path="libs/xalan-2.7.1.jar"/>
 	<classpathentry kind="lib" path="libs/xercesImpl-2.11.0.jar"/>
 	<classpathentry kind="lib" path="libs/xml-apis-1.4.01.jar"/>
+	<classpathentry kind="lib" path="libs/mongo-java-driver-2.12.3-javadoc.jar"/>
+	<classpathentry kind="lib" path="libs/mongo-java-driver-2.12.3-sources.jar"/>
+	<classpathentry kind="lib" path="libs/mongo-java-driver-2.12.3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
