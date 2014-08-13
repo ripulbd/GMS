@@ -13,6 +13,7 @@ import java.util.logging.Level;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.logging.LogFactory;
+import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
 import org.jsoup.Connection.Response;
 import org.jsoup.nodes.Document;
@@ -38,8 +39,8 @@ public class ScotsmanCrawler extends AbstractCrawler {
 
 	private ArrayList<HashMap<String, String>> urlInfos, relatedStories;
 	private GMSNewsDocument scotsmanNews;
-	//private String outputFolder = "/home/ripul/images/scotsman/";
-	private String outputFolder = "/Users/ripul/images/scotman";
+	private String outputFolder = "/home/ripul/images/scotsman/";
+	//private String outputFolder = "/Users/ripul/images/scotman";
 	private DBUtils dbUtils;
 	
 	public ScotsmanCrawler(String masterURL) {
@@ -151,6 +152,43 @@ public class ScotsmanCrawler extends AbstractCrawler {
 		urlInfos.add(info);
 	}
 	
+	public ArrayList<HashMap<String, String>> crawlRelatedStory(String tempTitle, String URL){
+		ArrayList<HashMap<String, String>> relatedStoryInfo = new ArrayList<HashMap<String, String>>();
+        Document doc; 
+        String description = "", timeStamp = "", title = "";
+		try {
+			doc = Jsoup.connect(URL).get();
+			Elements articleLead = doc.select("article.lead-story");
+			
+			for(Element elem : articleLead){
+				int size = elem.select("a").size();
+				//System.out.println("Elem Size:" + size);
+				Element anchor = elem.select("a").get(1);
+				title = anchor.text();
+				if(title.length() == 0)title = elem.select("a").get(2).text();
+			}
+			description = doc.select("div.article-content").first().text();
+			description = description.substring(0, description.indexOf("."));
+			timeStamp = doc.select("div.Updated").first().text();
+			timeStamp = timeStamp.substring(timeStamp.indexOf(" ") + 1);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if(alreadyInList(title)){
+			return null;
+		} else {
+			HashMap<String, String> info = new HashMap<String, String>();
+			info.put("title", title);
+			info.put("url", URL);
+			info.put("description", description);
+			info.put("timeStamp", timeStamp);
+			relatedStoryInfo.add(info);
+			return relatedStoryInfo;
+		}
+		
+	}
+	
 	private boolean alreadyInList(String title){
 		for(HashMap<String, String> tmpMap : urlInfos){
 			if(tmpMap.get("title").equals(title))return true;
@@ -208,7 +246,7 @@ public class ScotsmanCrawler extends AbstractCrawler {
         boolean seeAlso = false;
         if(returnString.contains("<p><strong>SEE ALSO</strong></p>")){
         	relatedStoriesText = returnString.substring(returnString.indexOf("<p><strong>SEE ALSO</strong></p>") + "<p><strong>SEE ALSO</strong></p>".length());
-        	System.out.println("Related Stories Found:" + relatedStoriesText);
+        	//System.out.println("Related Stories Found:" + relatedStoriesText);
         	returnString = returnString.substring(0, returnString.indexOf("<p><strong>SEE ALSO</strong></p>"));
         	seeAlso = true;
         } 
@@ -227,10 +265,13 @@ public class ScotsmanCrawler extends AbstractCrawler {
             	HashMap<String, String> tempRelated = new HashMap<String, String>();
             	String relatedStoriesLink = elem.attr("href");
             	String relatedStoriesTitle = elem.text();
-            	tempRelated.put("url", relatedStoriesLink);
-            	tempRelated.put("title", relatedStoriesTitle);
-            	System.out.println("Related Storied URL:" + relatedStoriesLink + ", Related Stories Title:" + relatedStoriesTitle);
-            	this.relatedStories.add(tempRelated);
+            	if(!relatedStoriesLink.contains("google-hangouts") && relatedStoriesLink.contains("scotsman.com")){
+            		tempRelated.put("url", relatedStoriesLink);
+                	tempRelated.put("title", relatedStoriesTitle);
+                	//System.out.println("Related Stories URL:" + relatedStoriesLink + ", Related Stories Title:" + relatedStoriesTitle);
+                	this.relatedStories.add(tempRelated);
+            	}
+            	
             }
         }
         
@@ -250,14 +291,20 @@ public class ScotsmanCrawler extends AbstractCrawler {
 	        String imageLocation = "http://www.scotsman.com" + imageName;
 	        
 	        imageName = imageName.substring(imageName.lastIndexOf("/") + 1);
+	        boolean imageFlag = false;
 	        Response resultImageResponse = null;
 			try {
 				resultImageResponse = Jsoup.connect(imageLocation).ignoreContentType(true).execute();
+				imageFlag = true;
+			} catch (HttpStatusException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			if(saveImage(resultImageResponse, imageLocAndCaption, imageName, caption)){
+			
+			if(imageFlag && saveImage(resultImageResponse, imageLocAndCaption, imageName, caption)){
 				//System.out.println("main image Saved and caption added!");
 			}
 			
@@ -274,13 +321,18 @@ public class ScotsmanCrawler extends AbstractCrawler {
 				anotherImageName = anotherImageName.substring(anotherImageName.lastIndexOf("/") + 1);
 				//System.out.println("Another Image Location:" + anotherImageLocation + ", Another Image Name:" + anotherImageName);
 				Response anotherImageResponse = null;
+				boolean anotherImageFlag = false;
 				try {
 					anotherImageResponse = Jsoup.connect(anotherImageLocation).ignoreContentType(true).execute();
+					anotherImageFlag = true;
+				} catch (HttpStatusException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				if(saveImage(anotherImageResponse, imageLocAndCaption, anotherImageName, "")){
+				if(anotherImageFlag && saveImage(anotherImageResponse, imageLocAndCaption, anotherImageName, "")){
 					System.out.println("another image Saved and caption added!");
 				}
 			}

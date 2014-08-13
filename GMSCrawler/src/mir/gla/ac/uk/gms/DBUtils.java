@@ -22,9 +22,9 @@ public class DBUtils {
 	private DBCollection table;
 	
 	public DBUtils(){
-		dbName = "test";
+		dbName = "gmsTry";
 		dbServer = "localhost";
-		collection = "document";
+		collection = "gmsNews";
 		MongoClient mongo;
 		try {
 			mongo = new MongoClient(this.dbServer, 27017);
