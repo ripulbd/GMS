@@ -1,0 +1,45 @@
+"title" : 
+"description" : 
+"timeStamp" : 
+"category" : 
+"url" : 
+"source" : 
+"mainStory" : 
+"images" : [
+		{
+			"name" : "1774337206.jpg",
+			"caption" : "Former chief Andreana Adamson in front of The State Hospital at Carstairs."
+		}
+	]
+"comments" : [
+			{
+				"userName" : "Prof 51",
+				"timeStamp" : "18:55 12/08/2014",
+				"upVote" : 1,
+				"downVote" : 0,
+				"commentBody" : "Anti semitism is alive and well in the UK."
+			},
+			{
+				"userName" : "Prof 51",
+				"timeStamp" : "18:55 12/08/2014",
+				"upVote" : 1,
+				"downVote" : 0,
+				"commentBody" : "Anti semitism is alive and well in the UK."
+				"replies": [
+							{
+								"userName" : "Prof 51",
+								"timeStamp" : "18:55 12/08/2014",
+								"upVote" : 1,
+								"downVote" : 0,
+								"commentBody" : "Anti semitism is alive and well in the UK."
+							},
+							{
+								"userName" : "Prof 51",
+								"timeStamp" : "18:55 12/08/2014",
+								"upVote" : 1,
+								"downVote" : 0,
+								"commentBody" : "Anti semitism is alive and well in the UK."
+							},
+				]
+			},
+]

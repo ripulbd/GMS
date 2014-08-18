@@ -40,6 +40,7 @@ if ('development' == app.get('env')) {
 app.get('/', routes.index);
 app.get('/news', routes.news);
 app.get('/bbc', routes.bbc);
+app.get('/scotsman', routes.scotsman);
 app.get('/et', routes.et);
 app.get('/blogger', routes.blogger);
 app.get('/wordpress', routes.wordpress);
@@ -52,6 +53,7 @@ app.get('/blog', routes.blog);
 app.get('/image', routes.image);
 app.get('/video', routes.video);
 app.get('/twitter', routes.twitter);
+app.post('/detailNews', routes.detailNews);
 app.get('/users', user.list);
 
 

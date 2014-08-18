@@ -78,20 +78,18 @@ html
         .content
           h1= title
           p
-            |  #{minihead}
+            h4 #{minihead}
         - var length = Object.keys(userlist).length;
         each user, i in userlist  		        
           #content_container
             .contents
               h4#h4_content
-                strong #{user.title}
-              img#content_image(src='/images/#{user.images[0].name}', alt='Commonwealth Games')
-              #headline
-                | #{user.description}
-              #source
-                | Date: #{user.timeStamp}
-              #source
-                | Source: #{user.source} Website
+                strong Title: #{user.title}
+              | Date: #{user.timeStamp}
+              p
+                | Main Story: 
+              p
+                #{user.mainStory} 
               #more
                 a(href='#{user.url}') Read More
           if(i < length - 1)

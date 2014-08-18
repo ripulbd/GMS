@@ -7,9 +7,7 @@ import java.net.MalformedURLException;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 
@@ -37,94 +35,96 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
  * @since 	11/08/2014
  *
  */
-public class ScotsmanCrawler extends AbstractCrawler {
+public class CopyOfScotsmanCrawler extends AbstractCrawler {
 
 	private ArrayList<HashMap<String, String>> urlInfos, relatedStories;
 	private GMSNewsDocument scotsmanNews;
-	//private String outputFolder = "/home/ripul/images/scotsman/";
-	private String outputFolder = "/Users/ripul/images/scotman/";
+	private String outputFolder = "/home/ripul/images/scotsman/";
+	//private String outputFolder = "/Users/ripul/images/scotman";
 	private DBUtils dbUtils;
-	private Queue<String> urlQueue;
 	
-	public ScotsmanCrawler(String masterURL) {
+	public CopyOfScotsmanCrawler(String masterURL) {
 		// TODO Auto-generated constructor stub
 		super(masterURL);
 		urlInfos = new ArrayList<HashMap<String, String>>();
 		relatedStories = new ArrayList<HashMap<String, String>>();
 		dbUtils = new DBUtils();
-		urlQueue = new LinkedList<String>();
-		urlQueue.add(masterURL);
 	}
 	
 	@Override
-	public ArrayList<HashMap<String, String>> crawlURLs() throws IOException, HttpStatusException {
+	public ArrayList<HashMap<String, String>> crawlURLs() throws IOException {
 		// TODO Auto-generated method stub
-		System.out.println("URLs being fetched....");
-		while(!urlQueue.isEmpty()){
-			Document doc = null;
-	        //System.out.println("Fetching RSS Link......");
-	        String currentURL = urlQueue.remove();
-	        System.out.println("Current URL:" + currentURL);
-	        doc = Jsoup.connect(currentURL).get();
+		Document doc = null;
+        System.out.println("Fetching RSS Link......");
+        doc = Jsoup.connect(getMasterURL()).get();
+        /*    
+		Element rssLinkElement = doc.select("a.rss").first();
+		String rssLink = "http://www.scotsman.com" + rssLinkElement.attr("href");
+
+		Document rssDoc = Jsoup.connect(rssLink).get();
+
+		for (Element item : rssDoc.select("item")) {
+			String title = item.select("title").first().text();
 			
-			//System.out.println("Fetching links from the home page......");
-			Elements articleLead = doc.select("article.lead-story");
-			if(currentURL.equals("http://www.scotsman.com/news/scotland/glasgow-west")){
-				for(Element elem : articleLead){
-					int size = elem.select("a").size();
-					//System.out.println("Article Lead Elem Size:" + size);
-					Element anchor = elem.select("a").get(1);
-					String title = anchor.text();
-					String URL = anchor.attr("href");
-					if(title.length() == 0)title = elem.select("a").get(2).text();
-					//System.out.println("Article Lead Title:" + title);
-					//System.out.println("Article Lead Link:" + URL);
-					urlQueue.add(URL);
-					
-					if(!alreadyInList(URL)){
-						//crawURLsFromHomePage(title, URL);
-						
-						HashMap<String, String> info = new HashMap<String, String>();
-						info.put("url", URL);
-						urlInfos.add(info);
-						
-						retrieveRelatedStory(URL);
-					}
-					else System.out.println("Title - " + title + " already in the list.");
+			if (title.contains("<![CDATA[")) title = title.substring(title.indexOf("<![CDATA[") + "<![CDATA[".length(), title.lastIndexOf("]]>"));
+			String URL = item.select("link").first().nextSibling().toString().trim(); // select 'link' (-1-)
+
+			Document descr = Jsoup.parse(StringEscapeUtils.unescapeHtml4(item.select("description").first().toString()));
+			String timeStamp = item.select("pubDate").first().text();
+			
+			if(timeStamp.contains(" +"))timeStamp = timeStamp.substring(timeStamp.indexOf(", ") + 2, timeStamp.lastIndexOf(" +"));
+			else {
+				timeStamp = timeStamp.substring(timeStamp.indexOf(", ") + 2);
+				timeStamp = timeStamp.substring(0, timeStamp.lastIndexOf(":"));
+				ArrayList<String> tokenizedTime = new ArrayList<String>();
+				StringTokenizer st = new StringTokenizer(timeStamp);
+				while(st.hasMoreElements()){
+					tokenizedTime.add("" + st.nextElement());
 				}
 				
-				Elements articleElement = doc.select("article.teaser");
-				
-				for(Element elem : articleElement){
-					int size = elem.select("a").size();
-					//System.out.println("Elem Size:" + size);
-					Element anchor = elem.select("a").get(1);
-					String title = anchor.text();
-					String URL = anchor.attr("href");
-					if(title.length() == 0)title = elem.select("a").get(2).text();
-					//System.out.println("Title:" + title);
-					//System.out.println("Other Home Page Links:" + URL);
-					urlQueue.add(URL);
-					if(!alreadyInList(URL)){
-						crawURLsFromHomePage(title, URL);
-						retrieveRelatedStory(URL);
-					}
-					else System.out.println("Title - " + title + " already in the list.");
-				}
-			} else {
-				if(!alreadyInList(currentURL)){
-					HashMap<String, String> tempRelated = new HashMap<String, String>();
-					tempRelated.put("url", currentURL);
-					urlInfos.add(tempRelated);
-					retrieveRelatedStory(currentURL);
-				}
-				retrieveRelatedStory(currentURL);
 			}
-			
+			//System.out.println(timeStamp);
+			HashMap<String, String> info = new HashMap<String, String>();
+			info.put("title", title);
+			info.put("url", URL);
+			info.put("description", descr.text());
+			info.put("timeStamp", timeStamp);
+			urlInfos.add(info);
+		}
+		System.out.println("RSS link fetch finished......");*/
+		
+		System.out.println("Fetching links from the home page......");
+		Elements articleLead = doc.select("article.lead-story");
+		
+		for(Element elem : articleLead){
+			int size = elem.select("a").size();
+			//System.out.println("Elem Size:" + size);
+			Element anchor = elem.select("a").get(1);
+			String title = anchor.text();
+			String URL = anchor.attr("href");
+			if(title.length() == 0)title = elem.select("a").get(2).text();
+			//System.out.println("Title:" + title);
+			//System.out.println("Link:" + URL);
+			if(!alreadyInList(title))crawURLsFromHomePage(title, URL);
+			else System.out.println("Title - " + title + " already in the list.");
 		}
 		
+		Elements articleElement = doc.select("article.teaser");
 		
-		System.out.println("URLs fetching finished......");
+		for(Element elem : articleElement){
+			int size = elem.select("a").size();
+			//System.out.println("Elem Size:" + size);
+			Element anchor = elem.select("a").get(1);
+			String title = anchor.text();
+			String URL = anchor.attr("href");
+			if(title.length() == 0)title = elem.select("a").get(2).text();
+			//System.out.println("Title:" + title);
+			//System.out.println("Link:" + URL);
+			if(!alreadyInList(title))crawURLsFromHomePage(title, URL);
+			else System.out.println("Title - " + title + " already in the list.");
+		}
+		
+		System.out.println("Fetching links from the home page finished......");
 		return urlInfos;
 	}
 	
@@ -152,7 +152,7 @@ public class ScotsmanCrawler extends AbstractCrawler {
 		urlInfos.add(info);
 	}
 	
-	/*public ArrayList<HashMap<String, String>> crawlRelatedStory(String URL){
+	public ArrayList<HashMap<String, String>> crawlRelatedStory(String tempTitle, String URL){
 		ArrayList<HashMap<String, String>> relatedStoryInfo = new ArrayList<HashMap<String, String>>();
         Document doc; 
         String description = "", timeStamp = "", title = "";
@@ -187,11 +187,11 @@ public class ScotsmanCrawler extends AbstractCrawler {
 			return relatedStoryInfo;
 		}
 		
-	}*/
+	}
 	
-	private boolean alreadyInList(String URL){
+	private boolean alreadyInList(String title){
 		for(HashMap<String, String> tmpMap : urlInfos){
-			if(tmpMap.get("url").equals(URL))return true;
+			if(tmpMap.get("title").equals(title))return true;
 		}
 		return false;
 	}
@@ -203,26 +203,12 @@ public class ScotsmanCrawler extends AbstractCrawler {
 		System.out.println("The link being retrieved is:" + URL);
 		scotsmanNews = new GMSNewsDocument(URL);
 		scotsmanNews.setCategory("news");
-		
+		scotsmanNews.setDate(info.get("timeStamp"));
+		scotsmanNews.setDescription(info.get("description"));
 		scotsmanNews.setSource("http://www.scotsman.com");
+		scotsmanNews.setTitle(info.get("title"));
 		
 		Document doc = Jsoup.connect(URL).get();
-		
-		
-		String description = "", timeStamp = "";
-		
-		
-		String title = doc.select("h1#content").first().text();
-		scotsmanNews.setTitle(title);
-		
-		description = doc.select("div.article-content").first().text();
-		description = description.substring(0, description.indexOf("."));
-		scotsmanNews.setDescription(description);
-		
-		timeStamp = doc.select("div.Updated").first().text();
-		timeStamp = timeStamp.substring(timeStamp.indexOf(" ") + 1);
-		scotsmanNews.setDate(timeStamp);
-		
 		String mainStory = retrieveMainStory(doc);
 		
 		scotsmanNews.setMainStory(mainStory);
@@ -236,98 +222,6 @@ public class ScotsmanCrawler extends AbstractCrawler {
 		scotsmanNews.setComments(commentList);
 		
 		return scotsmanNews;
-	}
-	private void retrieveRelatedStory(String URL){
-		
-		Document doc = null;
-		String returnString = "";
-		try {
-			doc = Jsoup.connect(URL).get();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		Element article = doc.getElementsByClass("article").first();
-		Elements paragraph = article.getElementsByTag("p");
-		for(Element elem: paragraph){
-			if(elem.hasClass("flt-l"))continue;
-			if(elem.hasClass("cld"))continue;
-			if(elem.hasClass("del"))continue;
-			if(elem.hasClass("ico"))continue;
-			if(elem.toString().contains("PSTYLE=$ID/[No paragraph style]-->"))continue;
-			returnString += elem + "\n";
-		}
-        String relatedStoriesText = "";
-        boolean seeAlso = false;
-        if(returnString.contains("SEE ALSO")){
-        	if(returnString.contains("<p><strong>SEE ALSO</strong></p>")){
-            	relatedStoriesText = returnString.substring(returnString.indexOf("<p><strong>SEE ALSO</strong></p>") + "<p><strong>SEE ALSO</strong></p>".length());
-            	returnString = returnString.substring(0, returnString.indexOf("<p><strong>SEE ALSO</strong></p>"));
-            	seeAlso = true;
-            } 
-        	if(!seeAlso){
-            	if(returnString.contains("<p><strong>SEE ALSO </strong></p>")){
-                	relatedStoriesText = returnString.substring(returnString.indexOf("<p><strong>SEE ALSO </strong></p>") + "<p><strong>SEE ALSO </strong></p>".length());
-                	returnString = returnString.substring(0, returnString.indexOf("<p><strong>SEE ALSO </strong></p>"));
-                	seeAlso = true;
-                }
-            }
-            if(!seeAlso){
-            	if(returnString.contains("<p><strong>SEE ALSO:</strong></p>")){
-                	relatedStoriesText = returnString.substring(returnString.indexOf("<p><strong>SEE ALSO:</strong></p>") + "<p><strong>SEE ALSO:</strong></p>".length());
-                	returnString = returnString.substring(0, returnString.indexOf("<p><strong>SEE ALSO:</strong></p>"));
-                	seeAlso = true;
-                }
-            } 
-            if(!seeAlso){
-            	if(returnString.contains("<p><strong>SEE ALSO: </strong></p>")){
-                	relatedStoriesText = returnString.substring(returnString.indexOf("<p><strong>SEE ALSO: </strong></p>") + "<p><strong>SEE ALSO: </strong></p>".length());
-                	returnString = returnString.substring(0, returnString.indexOf("<p><strong>SEE ALSO: </strong></p>"));
-                	seeAlso = true;
-                }
-            }
-            if(!seeAlso){
-            	if(returnString.contains("<p>SEE ALSO</p>")){
-                	relatedStoriesText = returnString.substring(returnString.indexOf("<p>SEE ALSO</p>") + "<p>SEE ALSO</p>".length());
-                	returnString = returnString.substring(0, returnString.indexOf("<p>SEE ALSO</p>"));
-                	seeAlso = true;
-                }
-            }
-            if(!seeAlso){
-            	if(returnString.contains("<p>SEE ALSO: </p>")){
-                	relatedStoriesText = returnString.substring(returnString.indexOf("<p>SEE ALSO: </p>") + "<p>SEE ALSO: </p>".length());
-                	returnString = returnString.substring(0, returnString.indexOf("<p>SEE ALSO: </p>"));
-                	seeAlso = true;
-                }
-            }
-            if(!seeAlso){
-            	if(returnString.contains("<p>SEE ALSO:</p>")){
-                	relatedStoriesText = returnString.substring(returnString.indexOf("<p>SEE ALSO:</p>") + "<p>SEE ALSO:</p>".length());
-                	returnString = returnString.substring(0, returnString.indexOf("<p>SEE ALSO:</p>"));
-                	seeAlso = true;
-                }
-            }
-            //<p>SEE ALSO: </p>
-            if(!seeAlso){
-            	System.out.println("See Also found, but could not parse the link:" + URL);
-            	System.out.println("Return String" + returnString);
-            }
-            if(relatedStoriesText.length() > 3){
-                Document related = Jsoup.parse(relatedStoriesText);
-                Elements relatedStoriesLinks = related.select("a");
-                for(Element elem: relatedStoriesLinks){
-                	String relatedStoriesLink = elem.attr("href");
-                	if(relatedStoriesLink.equals("http://www.scotsman.com/sport/commonwealth-games/top-stories"))continue;
-                	if(!relatedStoriesLink.contains("google-hangouts") && relatedStoriesLink.contains("scotsman.com")){
-                		if(!alreadyInList(relatedStoriesLink)){
-                			urlQueue.add(relatedStoriesLink);
-                			System.out.println("The related link being added:" + relatedStoriesLink);
-                		}
-                	}
-                	
-                }
-            }
-        }
 	}
 	
 	private String retrieveMainStory(Document doc){
@@ -358,48 +252,12 @@ public class ScotsmanCrawler extends AbstractCrawler {
         } 
         
         if(!seeAlso){
-        	if(returnString.contains("<p><strong>SEE ALSO </strong></p>")){
-            	relatedStoriesText = returnString.substring(returnString.indexOf("<p><strong>SEE ALSO </strong></p>") + "<p><strong>SEE ALSO </strong></p>".length());
-            	returnString = returnString.substring(0, returnString.indexOf("<p><strong>SEE ALSO </strong></p>"));
-            	seeAlso = true;
-            }
-        }
-        if(!seeAlso){
         	if(returnString.contains("<p><strong>SEE ALSO:</strong></p>")){
             	relatedStoriesText = returnString.substring(returnString.indexOf("<p><strong>SEE ALSO:</strong></p>") + "<p><strong>SEE ALSO:</strong></p>".length());
             	returnString = returnString.substring(0, returnString.indexOf("<p><strong>SEE ALSO:</strong></p>"));
             	seeAlso = true;
             }
-        } 
-        if(!seeAlso){
-        	if(returnString.contains("<p><strong>SEE ALSO: </strong></p>")){
-            	relatedStoriesText = returnString.substring(returnString.indexOf("<p><strong>SEE ALSO: </strong></p>") + "<p><strong>SEE ALSO: </strong></p>".length());
-            	returnString = returnString.substring(0, returnString.indexOf("<p><strong>SEE ALSO: </strong></p>"));
-            	seeAlso = true;
-            }
         }
-        if(!seeAlso){
-        	if(returnString.contains("<p>SEE ALSO</p>")){
-            	relatedStoriesText = returnString.substring(returnString.indexOf("<p>SEE ALSO</p>") + "<p>SEE ALSO</p>".length());
-            	returnString = returnString.substring(0, returnString.indexOf("<p>SEE ALSO</p>"));
-            	seeAlso = true;
-            }
-        }
-        if(!seeAlso){
-        	if(returnString.contains("<p>SEE ALSO: </p>")){
-            	relatedStoriesText = returnString.substring(returnString.indexOf("<p>SEE ALSO: </p>") + "<p>SEE ALSO: </p>".length());
-            	returnString = returnString.substring(0, returnString.indexOf("<p>SEE ALSO: </p>"));
-            	seeAlso = true;
-            }
-        }
-        if(!seeAlso){
-        	if(returnString.contains("<p>SEE ALSO:</p>")){
-            	relatedStoriesText = returnString.substring(returnString.indexOf("<p>SEE ALSO:</p>") + "<p>SEE ALSO:</p>".length());
-            	returnString = returnString.substring(0, returnString.indexOf("<p>SEE ALSO:</p>"));
-            	seeAlso = true;
-            }
-        }
-        
         if(relatedStoriesText.length() > 3){
             Document related = Jsoup.parse(relatedStoriesText);
             Elements relatedStoriesLinks = related.select("a");
@@ -416,7 +274,7 @@ public class ScotsmanCrawler extends AbstractCrawler {
             	
             }
         }
-        //System.out.println("Main story:" + returnString);
+        
 		return returnString;
 	}
 	

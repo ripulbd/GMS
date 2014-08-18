@@ -6,9 +6,10 @@
 var mongo = require('mongodb');
 var monk = require('monk');
 var db = monk('localhost:27017/gmsTry');
+var collectionName = "gmsNews";
 
 exports.index = function(req, res){	
-	var collection = db.get('gms');
+	var collection = db.get(collectionName);
 	collection.find({},{},function(e,docs){
 		var fileName = docs['fileName'];
         res.render('index', {
@@ -21,7 +22,7 @@ exports.index = function(req, res){
 
 exports.news = function(req, res){
 	
-	var collection = db.get('gms');
+	var collection = db.get(collectionName);
 	collection.find({category: 'news'},{},function(e,docs){
 		var fileName = docs['fileName'];
         res.render('news', {
@@ -34,9 +35,27 @@ exports.news = function(req, res){
   //res.render('news', { title: 'Glasgow Memory Server (GMS): News' });
 };
 
+exports.detailNews = function(req, res){
+	
+	var collection = db.get(collectionName);
+	var query = req.body.query;
+	console.log("Query:" + query);
+	collection.find({title: query},{},function(e,docs){
+		var fileName = docs['fileName'];
+        res.render('detailNews', {
+            "userlist" : docs,
+            "fileName" : fileName,
+            "query"	: query,
+            "title" : "Glasgow Memory Server (GMS): Detail news",
+            "minihead" : "Detail news follows:"
+        });
+    });
+  //res.render('news', { title: 'Glasgow Memory Server (GMS): News' });
+};
+
 exports.bbc = function(req, res){
 	//find({gender: 'f'});
-	var collection = db.get('gms');
+	var collection = db.get(collectionName);
 	collection.find({source: 'BBC'},{},function(e,docs){
 		var fileName = docs['fileName'];
         res.render('news', {
@@ -49,9 +68,24 @@ exports.bbc = function(req, res){
   //res.render('news', { title: 'Glasgow Memory Server (GMS): News' });
 };
 
+exports.scotsman = function(req, res){
+	//find({gender: 'f'});
+	var collection = db.get(collectionName);
+	collection.find({source: 'http://www.scotsman.com'},{},function(e,docs){
+		var fileName = docs['fileName'];
+        res.render('news', {
+            "userlist" : docs,
+            "fileName" : fileName,
+            "title" : "Glasgow Memory Server (GMS): News",
+            "minihead" : "News contents extracted from the Scotsman are shown below:"
+        });
+    });
+  //res.render('news', { title: 'Glasgow Memory Server (GMS): News' });
+};
+
 exports.et = function(req, res){
 	//find({gender: 'f'});
-	var collection = db.get('gms');
+	var collection = db.get(collectionName);
 	collection.find({source: 'Evening Times'},{},function(e,docs){
 		var fileName = docs['fileName'];
         res.render('news', {
@@ -77,7 +111,7 @@ exports.wordpress = function(req, res){
 };
 
 exports.image = function(req, res){
-	var collection = db.get('gms');
+	var collection = db.get(collectionName);
 	collection.find({category: 'image'},{},function(e,docs){
 		var fileName = docs['fileName'];
         res.render('image', {
@@ -91,7 +125,7 @@ exports.image = function(req, res){
 };
 
 exports.flickr = function(req, res){
-	var collection = db.get('gms');
+	var collection = db.get(collectionName);
 	collection.find({source: 'Flickr'},{},function(e,docs){
 		var fileName = docs['fileName'];
         res.render('image', {
@@ -105,7 +139,7 @@ exports.flickr = function(req, res){
 };
 
 exports.imgur = function(req, res){
-	var collection = db.get('gms');
+	var collection = db.get(collectionName);
 	collection.find({source: 'imgur.com'},{},function(e,docs){
 		var fileName = docs['fileName'];
         res.render('image', {
