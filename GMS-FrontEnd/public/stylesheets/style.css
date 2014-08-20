@@ -299,6 +299,10 @@ nav {
 	float: left;
 }
 
+#detail_image{
+	padding-top: 10px;	
+}
+
 #headline{
 	position: relative;
 	width: 500px;	
@@ -315,7 +319,14 @@ nav {
 #more{
 	position: relative;
 	width: 500px;	
-	margin: 0 0 4px 130px;
+	margin: 0 0 0px 130px;
+	padding-top: 4px;	
+}
+
+#detail_more{
+	position: relative;
+	width: 500px;	
+	margin: 0 0 0px 0px;
 	padding-top: 4px;	
 }
 
@@ -331,7 +342,15 @@ nav {
   font-size: 120%;
   padding: 14px 0 0 0;  
   }
-  
+.details { 
+  text-align: left;
+  width: 660px;
+  margin: 0 20px 10px 10px;
+  float: left;;
+  font-size: 120%;
+  padding: 14px 0 0 0;  
+  }
+    
 .contents ul { 
   margin: 2px 0 22px 0px;
   color: #000 ;
@@ -500,7 +519,37 @@ footer a:hover {
   margin: 0 0 0 20px;
   color: #FFFFFF;
 }
-  
+
+.inner { 
+  height: 0;
+  border-top: 1px solid #D9D5CF;
+  border-bottom: 1px solid #FFF;  
+  float: left;
+  width: 650px;
+  margin: 0 0 0 0;
+  color: #FFFFFF;
+}
+
+.inner_comment { 
+  height: 0;
+  border-top: 1px solid #E71C0A;
+  border-bottom: 1px solid #FFF;  
+  float: left;
+  width: 650px;
+  margin: 0 0 0 0;
+  color: #FFFFFF;
+}
+
+.inner_comment_replies { 
+  height: 0;
+  border-top: 1px solid #4031AA;
+  border-bottom: 1px solid #FFF;  
+  float: left;
+  width: 650px;
+  margin: 0 0 0 0;
+  color: #FFFFFF;
+}
+
 table { 
   margin: 10px 0 30px 0;
 }

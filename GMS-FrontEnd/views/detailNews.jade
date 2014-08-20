@@ -82,14 +82,54 @@ html
         - var length = Object.keys(userlist).length;
         each user, i in userlist  		        
           #content_container
-            .contents
+            .details
               h4#h4_content
                 strong Title: #{user.title}
               | Date: #{user.timeStamp}
               p Main Story: 
-              p!= #{user.mainStory} 
-              #more
-                a(href='#{user.url}') Read More
+              p!= user.mainStory
+              hr.inner
+              p Related Images:
+              p
+                each image in user.images
+                  img#detail_image(src='/images/#{image.name}', alt='Commonwealth Games')
+                  br
+                  | #{image.caption}
+              hr.inner
+              h3 Comments:
+              hr.inner_comment
+              if user.comments
+                - var comLength = Object.keys(user.comments).length;
+                if(comLength > 1)
+                  each comment, j in user.comments
+                    h4 Comment - #{j}
+                    p Name: #{comment.userName}
+                    p Time Stamp: #{comment.timeStamp}
+                    p UpVote: #{comment.upVote}
+                    p DownVote: #{comment.downVote}
+                    p Comment Text: #{comment.commentBody}
+                    hr.inner_comment_replies
+                    if(comment.replies)
+                      - var comReplyLength = Object.keys(comment.replies).length;
+                      each reply, k in comment.replies
+                        h4 Comment Reply - #{k}
+                        p Name: #{reply.userName}
+                        p Time Stamp: #{reply.timeStamp}
+                        p UpVote: #{reply.upVote}
+                        p DownVote: #{reply.downVote}
+                        p Comment Text: #{reply.commentBody}
+                        if(k < comReplyLength - 1)
+                          hr.inner_comment_replies  
+                    else
+                      p This comment has no replies
+                    if(j < comLength - 1)
+                      hr.inner_comment
+              else
+                p This news has no comments!
+              hr.inner  
+              #detail_more
+                a(href='#{user.url}') Original Article
+                
           if(i < length - 1)
             hr.separator 
       #scroll
