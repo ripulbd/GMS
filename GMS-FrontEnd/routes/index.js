@@ -42,6 +42,7 @@ exports.detailNews = function(req, res){
 	console.log("Query:" + query);
 	collection.find({title: query},{},function(e,docs){
 		var fileName = docs['fileName'];
+		console.log("Main Story:" + docs[0].mainStory);
         res.render('detailNews', {
             "userlist" : docs,
             "fileName" : fileName,

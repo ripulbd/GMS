@@ -41,8 +41,8 @@ public class ScotsmanCrawler extends AbstractCrawler {
 
 	private ArrayList<HashMap<String, String>> urlInfos, relatedStories;
 	private GMSNewsDocument scotsmanNews;
-	//private String outputFolder = "/home/ripul/images/scotsman/";
-	private String outputFolder = "/Users/ripul/images/scotman/";
+	private String outputFolder = "/home/ripul/images/scotsman/";
+	//private String outputFolder = "/Users/ripul/images/scotman/";
 	private DBUtils dbUtils;
 	private Queue<String> urlQueue;
 	
