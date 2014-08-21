@@ -88,7 +88,8 @@ html
               .contents
                 h4#h4_content
                   strong #{user.title}
-                img#content_image(src='/images/#{user.images[0].name}', alt='Commonwealth Games')
+                if(user.images)
+                  img#content_image(src='/images/#{user.images[0].name}', alt='Commonwealth Games')
                 #headline
                   | #{user.description}
                 #source

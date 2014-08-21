@@ -32,7 +32,7 @@ public class DBUtils {
 			/**** Get database ****/
 			// if database doesn't exists, MongoDB will create it for you
 			DB db = mongo.getDB(this.dbName);
-			db.dropDatabase();
+			//db.dropDatabase();
 			/**** Get collection ****/
 			// if collection doesn't exists, MongoDB will create it for you
 			table = db.getCollection(this.collection);

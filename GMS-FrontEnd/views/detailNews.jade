@@ -91,10 +91,11 @@ html
               hr.inner
               p Related Images:
               p
-                each image in user.images
-                  img#detail_image(src='/images/#{image.name}', alt='Commonwealth Games')
-                  br
-                  | #{image.caption}
+                if(user.images)
+                  each image in user.images
+                    img#detail_image(src='/images/#{image.name}', alt='Commonwealth Games')
+                    br
+                    | #{image.caption}
               hr.inner
               h3 Comments:
               hr.inner_comment
@@ -102,7 +103,7 @@ html
                 - var comLength = Object.keys(user.comments).length;
                 if(comLength > 1)
                   each comment, j in user.comments
-                    h4 Comment - #{j}
+                    h4 Comment - #{j + 1}
                     p Name: #{comment.userName}
                     p Time Stamp: #{comment.timeStamp}
                     p UpVote: #{comment.upVote}
@@ -112,7 +113,7 @@ html
                     if(comment.replies)
                       - var comReplyLength = Object.keys(comment.replies).length;
                       each reply, k in comment.replies
-                        h4 Comment Reply - #{k}
+                        h4 Comment Reply - #{k + 1}
                         p Name: #{reply.userName}
                         p Time Stamp: #{reply.timeStamp}
                         p UpVote: #{reply.upVote}

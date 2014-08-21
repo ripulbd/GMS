@@ -41,8 +41,8 @@ public class CrawlerTest {
 				System.out.println("Added URL:" + tmpHashMap.get("url"));
 				GMSNewsDocument scotDoc = scotsCrawler.crawlNews(tmpHashMap);
 				System.out.println(scotDoc);
-				if(count == 5)break;
-				count++;
+				//if(count == 5)break;
+				//count++;
 				//listOfDoc.add(scotDoc);
 				scotsCrawler.store();
 			}

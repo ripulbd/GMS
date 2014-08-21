@@ -39,12 +39,15 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
  */
 public class ScotsmanCrawler extends AbstractCrawler {
 
+	/**
+	 * urlInfos is a list containing URLs to be crawled.relatedStories is a list of relatedStories in each news document.
+	 */
 	private ArrayList<HashMap<String, String>> urlInfos, relatedStories;
-	private GMSNewsDocument scotsmanNews;
-	private String outputFolder = "/home/ripul/images/scotsman/";
+	private GMSNewsDocument scotsmanNews; 							//a news document...
+	private String outputFolder = "/home/ripul/images/scotsman/"; 	//where the images will be stored...
 	//private String outputFolder = "/Users/ripul/images/scotman/";
-	private DBUtils dbUtils;
-	private Queue<String> urlQueue;
+	private DBUtils dbUtils;										//the database utility class
+	private Queue<String> urlQueue;									//queue of the URLs to be crawled...
 	
 	public ScotsmanCrawler(String masterURL) {
 		// TODO Auto-generated constructor stub
@@ -56,6 +59,16 @@ public class ScotsmanCrawler extends AbstractCrawler {
 		urlQueue.add(masterURL);
 	}
 	
+	/**
+	 * This method crawls all URLs from the master URL using the queue.
+	 * 
+	 * Each news link is retrieved from the master URL at first and put into the queue. In addition, the related stories in each link
+	 * is retrieved and put into the queue for checking. Then each link is removed from the queue and is checked if the link is already
+	 * in the database. If no, it is inserted into the list.
+	 * 
+	 * @return	an array list containing the URLs to be crawled
+	 * 
+	 */
 	@Override
 	public ArrayList<HashMap<String, String>> crawlURLs() throws IOException, HttpStatusException {
 		// TODO Auto-generated method stub
@@ -79,7 +92,7 @@ public class ScotsmanCrawler extends AbstractCrawler {
 					if(title.length() == 0)title = elem.select("a").get(2).text();
 					//System.out.println("Article Lead Title:" + title);
 					//System.out.println("Article Lead Link:" + URL);
-					urlQueue.add(URL);
+					if(!dbUtils.find("url", URL))urlQueue.add(URL);
 					
 					if(!alreadyInList(URL)){
 						//crawURLsFromHomePage(title, URL);
@@ -104,11 +117,15 @@ public class ScotsmanCrawler extends AbstractCrawler {
 					if(title.length() == 0)title = elem.select("a").get(2).text();
 					//System.out.println("Title:" + title);
 					//System.out.println("Other Home Page Links:" + URL);
-					urlQueue.add(URL);
-					if(!alreadyInList(URL)){
+					if(!dbUtils.find("url", URL)){
+						urlQueue.add(URL);
 						crawURLsFromHomePage(title, URL);
 						retrieveRelatedStory(URL);
 					}
+					/*if(!alreadyInList(URL)){
+						crawURLsFromHomePage(title, URL);
+						retrieveRelatedStory(URL);
+					}*/
 					else System.out.println("Title - " + title + " already in the list.");
 				}
 			} else {
@@ -128,6 +145,11 @@ public class ScotsmanCrawler extends AbstractCrawler {
 		return urlInfos;
 	}
 	
+	/**
+	 * The method is used for retrieving URLs from the Homepage of the Scotsman.
+	 * @param title	The title of each news
+	 * @param URL	The URL of each news
+	 */
 	private void crawURLsFromHomePage(String title, String URL){
 		
         Document doc; 
@@ -189,6 +211,11 @@ public class ScotsmanCrawler extends AbstractCrawler {
 		
 	}*/
 	
+	/**
+	 * The method checks if a URL is already in the list of the URLs that need to be crawled
+	 * @param URL	
+	 * @return	TRUE if it is in the list, false otherwise
+	 */
 	private boolean alreadyInList(String URL){
 		for(HashMap<String, String> tmpMap : urlInfos){
 			if(tmpMap.get("url").equals(URL))return true;
@@ -196,6 +223,12 @@ public class ScotsmanCrawler extends AbstractCrawler {
 		return false;
 	}
 	
+	/**
+	 * Crawls contents from a link and builds up a news document which is then returned.
+	 * 
+	 * @param info	a hashmap containing the URL of the news
+	 * @return		a news document with the contents
+	 */
 	@Override
 	public GMSNewsDocument crawlNews(HashMap<String, String> info) throws IOException{
 		// TODO Auto-generated method stub
@@ -237,6 +270,11 @@ public class ScotsmanCrawler extends AbstractCrawler {
 		
 		return scotsmanNews;
 	}
+	
+	/**
+	 * Retrieves related stories from a URL and inserts them in to the relatedStories list.  
+	 * @param URL	the URL from which the related stories need to be fetched.
+	 */
 	private void retrieveRelatedStory(String URL){
 		
 		Document doc = null;
@@ -307,10 +345,9 @@ public class ScotsmanCrawler extends AbstractCrawler {
                 	seeAlso = true;
                 }
             }
-            //<p>SEE ALSO: </p>
             if(!seeAlso){
-            	System.out.println("See Also found, but could not parse the link:" + URL);
-            	System.out.println("Return String" + returnString);
+            	//System.out.println("See Also found, but could not parse the link:" + URL);
+            	//System.out.println("Return String" + returnString);
             }
             if(relatedStoriesText.length() > 3){
                 Document related = Jsoup.parse(relatedStoriesText);
@@ -320,8 +357,8 @@ public class ScotsmanCrawler extends AbstractCrawler {
                 	if(relatedStoriesLink.equals("http://www.scotsman.com/sport/commonwealth-games/top-stories"))continue;
                 	if(!relatedStoriesLink.contains("google-hangouts") && relatedStoriesLink.contains("scotsman.com")){
                 		if(!alreadyInList(relatedStoriesLink)){
-                			urlQueue.add(relatedStoriesLink);
-                			System.out.println("The related link being added:" + relatedStoriesLink);
+                			if(!dbUtils.find("url", URL))urlQueue.add(relatedStoriesLink);
+                			//System.out.println("The related link being added:" + relatedStoriesLink);
                 		}
                 	}
                 	
@@ -330,6 +367,11 @@ public class ScotsmanCrawler extends AbstractCrawler {
         }
 	}
 	
+	/**
+	 * Retrieves the main story of the of the news along with the related stories
+	 * @param doc
+	 * @return
+	 */
 	private String retrieveMainStory(Document doc){
 		String returnString = "";
 		
@@ -420,6 +462,11 @@ public class ScotsmanCrawler extends AbstractCrawler {
 		return returnString;
 	}
 	
+	/**
+	 * Retrieve images from the news and store them with captions in the local storage.
+	 * @param doc
+	 * @return
+	 */
 	private ArrayList<HashMap<String, String>> retrieveImageAndStore(Document doc){
 		ArrayList<HashMap<String, String>> imageLocAndCaption = new ArrayList<HashMap<String, String>>();
 		
@@ -475,18 +522,26 @@ public class ScotsmanCrawler extends AbstractCrawler {
 					e.printStackTrace();
 				}
 				if(anotherImageFlag && saveImage(anotherImageResponse, imageLocAndCaption, anotherImageName, "")){
-					System.out.println("another image Saved and caption added!");
+					//System.out.println("another image Saved and caption added!");
 				}
 			}
 
 		} else {
-			System.out.println("There is no image, probably a video in this news.");
+			//System.out.println("There is no image, probably a video in this news.");
 		}
 		
 		
         return imageLocAndCaption;
 	}
 	
+	/**
+	 * Stores the image in the specifica location
+	 * @param resultImageResponse
+	 * @param imageLocAndCaption
+	 * @param imageName
+	 * @param caption
+	 * @return
+	 */
 	private boolean saveImage(Response resultImageResponse, ArrayList<HashMap<String, String>> imageLocAndCaption,  String imageName, String caption){
 		boolean flag = false;
         FileOutputStream out;
@@ -509,6 +564,15 @@ public class ScotsmanCrawler extends AbstractCrawler {
 
 		return flag;
 	}
+	
+	/**
+	 * Processes comments in the news...
+	 * 
+	 * @param URL
+	 * @param doc
+	 * @return
+	 * @throws IOException
+	 */
 	private ArrayList<CommentDocument> processComments(String URL, Document doc) throws IOException{
 		ArrayList<CommentDocument> commentList = new ArrayList<CommentDocument>();
 		
@@ -573,6 +637,11 @@ public class ScotsmanCrawler extends AbstractCrawler {
     	return returnString;
     }
 	
+	/**
+	 * Converts a time stamp string into a specific format.
+	 * @param timeDate
+	 * @return
+	 */
 	private String timeStamp(String timeDate){
 		String returnString = "";
 		String time = timeDate.substring(0, timeDate.indexOf(" "));
@@ -593,6 +662,14 @@ public class ScotsmanCrawler extends AbstractCrawler {
 		return returnString;
 	}
 	
+	/**
+	 * Processes a single comment with its replies
+	 * @param div
+	 * @param doc
+	 * @param webClient
+	 * @param comments
+	 * @param elemKey
+	 */
 	private void processComment(HtmlDivision div, Document doc, WebClient webClient, ArrayList<CommentDocument> comments, String elemKey){
 		List<DomNode> commentNodes= (List<DomNode>)div.getByXPath("//div[contains(@class, 'pluck-comm-single-comment-top')]");
         for(DomNode node : commentNodes){
@@ -641,6 +718,13 @@ public class ScotsmanCrawler extends AbstractCrawler {
 	
 	}
 	
+	/**
+	 * Processes the comment replies of a comment.
+	 * @param node
+	 * @param webClient
+	 * @param comment
+	 * @param elemKey
+	 */
 	private void processCommentReplies(DomNode node, WebClient webClient, CommentDocument comment, String elemKey){
 		DomNode tempNode = node.getFirstChild();
 		String parentID = returnAttribute(tempNode.asXml());
@@ -729,60 +813,17 @@ public class ScotsmanCrawler extends AbstractCrawler {
             		replyList.get(count).setDownVote(Integer.parseInt(tmpMap.get("down")));
             	}
         	}
-        	
-        	
-        	/*List<Element> downList = replyDoc.select("span.pluck-thumb-down");
-        	count = 0;
-        	String tempRateString = "";
-        	boolean flag = false;
-        	System.out.println("Down List Size:" + downList.size());
-        	for(Element elem: downList){
-        		String rateString = elem.text();
-        		System.out.println("Rate String:\n" + rateString);
-        		if(count == 0){
-        			tempRateString = rateString;
-        		}
-        		if(rateString.length() > 0){
-        			
-            		String down = rateString.substring(0, rateString.indexOf("<\\/"));
-            		down = down.substring(1, down.indexOf(")"));
-            		rateString = rateString.substring(rateString.indexOf("<\\/"));
-            		String up = rateString.substring(rateString.indexOf("span> ") + 6, rateString.indexOf(")<\\/span>") + 1);
-            		up = up.substring(1, up.indexOf(")"));
-            		commentList.get(count).put("downVote", down);
-            		commentList.get(count).put("upVote", up);
-            		System.out.println("Reply Comment Up Vote:" + up);
-            		System.out.println("Reply Comment down Vote:" + down);
-            		replyList.get(count).setUpVote(Integer.parseInt(up));
-            		replyList.get(count).setDownVote(Integer.parseInt(down));
-            		count++;
-        		} else{
-        			flag = true;
-        		}
-        	}
-        	
-        	if(flag){
-        		int firstIndex = tempRateString.lastIndexOf("Please wait while we perform your request.<\\/div><\\/div> <\\/div> ") + "Please wait while we perform your request.<\\/div><\\/div> <\\/div> ".length();
-        		String firstSubString = tempRateString.substring(firstIndex);
-        		int lastIndex = firstSubString.indexOf("<\\/span><\\/a><\\/span>You voted<\\/span>");
-        		System.out.println("First Index:" + firstIndex + ", lastIndex:" + lastIndex);
-        		System.out.println("First Sub String:" + firstSubString);
-        		String lastSubString = firstSubString.substring(0, lastIndex);
-        		System.out.println("Last Sub String:" + lastSubString);
-        		
-        		String down = lastSubString.substring(1, lastSubString.indexOf(")"));
-        		String up = lastSubString.substring(lastSubString.lastIndexOf("(") + 1, lastSubString.lastIndexOf(")"));
-        		commentList.get(count).put("downVote", down);
-        		commentList.get(count).put("upVote", up);
-        		replyList.get(count).setUpVote(Integer.parseInt(up));
-        		replyList.get(count).setDownVote(Integer.parseInt(down));
-    		}*/
     	}
     	if(replyList.size()>0){
     		comment.setReplies(replyList);
     	}
 	}
 	
+	/**
+	 * Parse rating data from the rating string. The rating string contains the HTML output of a jQuery request.
+	 * @param string	HTML response of the jQuery request
+	 * @return			an array list containing the upvote and the downvote of a comment
+	 */
 	private ArrayList<HashMap<String,String>> parseRateString(String string){
 		ArrayList<HashMap<String, String>> listString = new ArrayList<HashMap<String, String>>();
 		String pattern = "<\\/span><\\/a><\\/span> (";
@@ -807,7 +848,10 @@ public class ScotsmanCrawler extends AbstractCrawler {
 		}
 		return listString;
 	}
-
+	
+	/**
+	 * Stores a news document in the db.
+	 */
 	@Override
 	public void store() {
 		// TODO Auto-generated method stub
