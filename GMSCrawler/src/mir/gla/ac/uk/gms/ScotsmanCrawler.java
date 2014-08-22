@@ -73,6 +73,7 @@ public class ScotsmanCrawler extends AbstractCrawler {
 	public ArrayList<HashMap<String, String>> crawlURLs() throws IOException, HttpStatusException {
 		// TODO Auto-generated method stub
 		System.out.println("URLs being fetched....");
+		int count = 0;
 		while(!urlQueue.isEmpty()){
 			Document doc = null;
 	        //System.out.println("Fetching RSS Link......");
@@ -85,22 +86,16 @@ public class ScotsmanCrawler extends AbstractCrawler {
 			if(currentURL.equals("http://www.scotsman.com/news/scotland/glasgow-west")){
 				for(Element elem : articleLead){
 					int size = elem.select("a").size();
-					//System.out.println("Article Lead Elem Size:" + size);
 					Element anchor = elem.select("a").get(1);
 					String title = anchor.text();
 					String URL = anchor.attr("href");
 					if(title.length() == 0)title = elem.select("a").get(2).text();
-					//System.out.println("Article Lead Title:" + title);
-					//System.out.println("Article Lead Link:" + URL);
 					if(!dbUtils.find("url", URL))urlQueue.add(URL);
 					
 					if(!alreadyInList(URL)){
-						//crawURLsFromHomePage(title, URL);
-						
 						HashMap<String, String> info = new HashMap<String, String>();
 						info.put("url", URL);
 						urlInfos.add(info);
-						
 						retrieveRelatedStory(URL);
 					}
 					else System.out.println("Title - " + title + " already in the list.");
@@ -110,17 +105,15 @@ public class ScotsmanCrawler extends AbstractCrawler {
 				
 				for(Element elem : articleElement){
 					int size = elem.select("a").size();
-					//System.out.println("Elem Size:" + size);
 					Element anchor = elem.select("a").get(1);
 					String title = anchor.text();
 					String URL = anchor.attr("href");
 					if(title.length() == 0)title = elem.select("a").get(2).text();
-					//System.out.println("Title:" + title);
-					//System.out.println("Other Home Page Links:" + URL);
 					if(!dbUtils.find("url", URL)){
 						urlQueue.add(URL);
-						crawURLsFromHomePage(title, URL);
+						crawURLsFromHomePage(title, URL, count);
 						retrieveRelatedStory(URL);
+						count++;
 					}
 					/*if(!alreadyInList(URL)){
 						crawURLsFromHomePage(title, URL);
@@ -146,11 +139,11 @@ public class ScotsmanCrawler extends AbstractCrawler {
 	}
 	
 	/**
-	 * The method is used for retrieving URLs from the Homepage of the Scotsman.
+	 * The method is used for retrieving infos regarding a URL from that URL.
 	 * @param title	The title of each news
 	 * @param URL	The URL of each news
 	 */
-	private void crawURLsFromHomePage(String title, String URL){
+	private void crawURLsFromHomePage(String title, String URL, int count){
 		
         Document doc; 
         String description = "", timeStamp = "";
@@ -172,6 +165,17 @@ public class ScotsmanCrawler extends AbstractCrawler {
 		info.put("description", description);
 		info.put("timeStamp", timeStamp);
 		urlInfos.add(info);
+		/**
+		 * The following code implements the politeness policy. It pauses for 20 seconds
+		 * after crawling 10 URLs  
+		 */
+		if(count % 10 == 0){
+			try {
+			    Thread.sleep(20000);                 
+			} catch(InterruptedException ex) {
+			    Thread.currentThread().interrupt();
+			}
+		}
 	}
 	
 	/*public ArrayList<HashMap<String, String>> crawlRelatedStory(String URL){
@@ -852,7 +856,6 @@ public class ScotsmanCrawler extends AbstractCrawler {
 	/**
 	 * Stores a news document in the db.
 	 */
-	@Override
 	public void store() {
 		// TODO Auto-generated method stub
 		if(!dbUtils.find("title", scotsmanNews.getTitle()))dbUtils.addDocument(scotsmanNews);

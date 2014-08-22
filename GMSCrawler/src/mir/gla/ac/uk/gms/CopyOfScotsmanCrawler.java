@@ -666,7 +666,6 @@ public class CopyOfScotsmanCrawler extends AbstractCrawler {
 		return listString;
 	}
 
-	@Override
 	public void store() {
 		// TODO Auto-generated method stub
 		if(!dbUtils.find("title", scotsmanNews.getTitle()))dbUtils.addDocument(scotsmanNews);

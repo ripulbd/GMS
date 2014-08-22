@@ -43,5 +43,5 @@ public abstract class AbstractCrawler {
 	// the abstract class will be used to retrieve news and other related info from a URL 
 	public abstract GMSDocument crawlNews(HashMap<String, String> info) throws IOException;
 	// the abstract class to for storing everything into the database
-	public abstract void store();
+	//public abstract void store(GMSDocument doc);
 }

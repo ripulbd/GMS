@@ -93,7 +93,7 @@ html
               p
                 if(user.images)
                   each image in user.images
-                    img#detail_image(src='/images/#{image.name}', alt='Commonwealth Games')
+                    img#detail_image(src='/images/#{image.name}', alt='#{image.caption}')
                     br
                     | #{image.caption}
               hr.inner

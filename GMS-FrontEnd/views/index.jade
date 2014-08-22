@@ -89,7 +89,7 @@ html
                 h4#h4_content
                   strong #{user.title}
                 if(user.images)
-                  img#content_image(src='/images/#{user.images[0].name}', alt='Commonwealth Games')
+                  img#content_image(src='/images/#{user.images[0].name}', alt='#{user.images[0].caption}')
                 #headline
                   | #{user.description}
                 #source

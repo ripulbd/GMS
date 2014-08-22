@@ -36,7 +36,7 @@ public class CrawlerTest {
 			tmpHashMap.put("description", "Dummy Description....");
 			urlInfos.add(tmpHashMap);*/
 			System.out.println("Total News Fetched:" + urlInfos.size());
-			int count = 0;
+			int count = 0, pauseCount = 0;
 			for(HashMap<String, String> tmpHashMap : urlInfos){
 				System.out.println("Added URL:" + tmpHashMap.get("url"));
 				GMSNewsDocument scotDoc = scotsCrawler.crawlNews(tmpHashMap);
@@ -45,6 +45,19 @@ public class CrawlerTest {
 				//count++;
 				//listOfDoc.add(scotDoc);
 				scotsCrawler.store();
+				pauseCount++;
+				count++;
+				/**
+				 * The following code implements the politeness policy. It pauses for 20 seconds
+				 * after crawling 10 URLs 
+				 */
+				if(pauseCount % 10 == 0){
+					try {
+					    Thread.sleep(20000);                 
+					} catch(InterruptedException ex) {
+					    Thread.currentThread().interrupt();
+					}
+				}
 			}
 			
 			/*System.out.println("Finished fethcing and storing all news from the homepage, now fetching news from all related stories:"); 

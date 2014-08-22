@@ -80,23 +80,37 @@ html
           p
             |  #{minihead}
         - var length = Object.keys(userlist).length;
-        each user, i in userlist  		        
-          #content_container
-            .contents
-              h4#h4_content
-                strong #{user.title}
-              if(user.images)
-                img#content_image(src='/images/#{user.images[0].name}', alt='Commonwealth Games')
-              #headline
-                | #{user.description}
-              #source
-                | Date: #{user.timeStamp}
-              #source
-                | Source: #{user.source} Website
-              #more
-                a(href='#{user.url}') Read More
-          if(i < length - 1)
-            hr.separator 
+        each user, i in userlist
+          - var st = 'readMore' + i;
+          form(name=st id=st method='post' action='/detailNews')  		        
+            #content_container
+              .contents
+                h4#h4_content
+                  strong #{user.title}
+                if(user.images)
+                  img#content_image(src='/images/#{user.images[0].name}', alt='#{user.images[0].caption}')
+                #headline
+                  | #{user.description}
+                #source
+                  | Date: #{user.timeStamp}
+                #source
+                  | Source: #{user.source} Website
+                #more
+                  //a(href='#{user.url}') Read More
+                  //a(href='/detailNews') Read More
+                  input(type='hidden', name='query', value='#{user.title}')
+                  - var sbmtForm = 'document.' + st +'.submit()';
+                  //a(href='#' onclick='submitform(readMore0)') Read More
+                  a(href='#' onclick=sbmtForm) Read More
+            if(i < length - 1)
+              hr.separator                 
+        script.
+          function submitform(formName)
+            {
+              alert(formName);
+              document.formName.submit();
+              //document.getElementById(formName).submit();
+            } 
       #scroll
         a.top(title='Scroll to the top', href='#')
           img(src='images/top.png', alt='top')
