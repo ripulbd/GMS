@@ -123,19 +123,36 @@ public class ETCrawler extends AbstractCrawler {
 		} catch (IOException e){
 			
 		}
+		String commentNumText = "Loading";
 		
 		if(imageNameCaption != null)etNews.setImageNameCaption(imageNameCaption);
-		HtmlPage page = webClient.getPage(URL);
+		while(commentNumText.equals("Loading")){
+			HtmlPage page = webClient.getPage(URL);
+			
+			List<?> divs =page.getByXPath("//div[@class=\"article-comments\"]");
+	        HtmlDivision div = (HtmlDivision) divs.get(0);
+	        commentNumText = div.asText();
+	        commentNumText = commentNumText.substring(0, commentNumText.indexOf(" "));
+	        System.out.println("CommentNumText:" + commentNumText);
+	        System.out.println("Found Loading, trying out again!");
+	        
+	        /**
+			 * The following code implements the politeness policy. It pauses for 10 seconds
+			 * after crawling each URL as per the policy of the robots.txt
+			 */
+			try {
+			    Thread.sleep(10000);                 
+			} catch(InterruptedException ex) {
+			    Thread.currentThread().interrupt();
+			}
+		}
 		
-		List<?> divs =page.getByXPath("//div[@class=\"article-comments\"]");
-        HtmlDivision div = (HtmlDivision) divs.get(0);
-        String commentNumText = div.asText();
-        commentNumText = commentNumText.substring(0, commentNumText.indexOf(" "));
-        int commentNumber = Integer.parseInt(commentNumText);
+		int commentNumber = Integer.parseInt(commentNumText);
         System.out.println("Comment Number:" + commentNumText);
         if(commentNumber > 0){
         	processComment(URL, etNews);
         }
+		
 		return etNews;
 	}
 	
