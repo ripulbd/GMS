@@ -101,7 +101,7 @@ html
               hr.inner_comment
               if user.comments
                 - var comLength = Object.keys(user.comments).length;
-                if(comLength > 1)
+                if(comLength > 0)
                   each comment, j in user.comments
                     h4 Comment - #{j + 1}
                     p Name: #{comment.userName}

@@ -124,7 +124,7 @@ public class ETCrawler extends AbstractCrawler {
 			
 		}
 		String commentNumText = "Loading";
-		
+		int loopCounter = 0;
 		if(imageNameCaption != null)etNews.setImageNameCaption(imageNameCaption);
 		while(commentNumText.equals("Loading")){
 			HtmlPage page = webClient.getPage(URL);
@@ -134,17 +134,19 @@ public class ETCrawler extends AbstractCrawler {
 	        commentNumText = div.asText();
 	        commentNumText = commentNumText.substring(0, commentNumText.indexOf(" "));
 	        System.out.println("CommentNumText:" + commentNumText);
-	        System.out.println("Found Loading, trying out again!");
-	        
-	        /**
-			 * The following code implements the politeness policy. It pauses for 10 seconds
-			 * after crawling each URL as per the policy of the robots.txt
-			 */
-			try {
-			    Thread.sleep(10000);                 
-			} catch(InterruptedException ex) {
-			    Thread.currentThread().interrupt();
-			}
+	        if(commentNumText.equals("Loading")){
+	        	if(loopCounter == 5)break;
+	        	System.out.println("Found Loading, trying out again!");
+	        	/**
+				 * The following code implements the politeness policy. It pauses for 10 seconds
+				 * after crawling each URL as per the policy of the robots.txt
+				 */
+				try {
+				    Thread.sleep(10000);                 
+				} catch(InterruptedException ex) {
+				    Thread.currentThread().interrupt();
+				}
+	        }
 		}
 		
 		int commentNumber = Integer.parseInt(commentNumText);

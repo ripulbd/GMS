@@ -21,6 +21,17 @@ public class ETCrawlerTest {
 		ETCrawler etCrawler = new ETCrawler("http://www.eveningtimes.co.uk/news");
 		
 		try {
+			/*String tmpURL = "http://www.eveningtimes.co.uk/news/u/michelle-mone-banned-for-six-months-after-speeding-on-m77.1408708353";
+			
+			HashMap<String, String> tmpHashMap = new HashMap<String, String>();
+			tmpHashMap.put("url", tmpURL);
+			tmpHashMap.put("title", "Michelle Mone banned for six months after speeding on M77");
+			
+			System.out.println("Added URL:" + tmpHashMap.get("url"));
+			GMSNewsDocument etDoc = (GMSNewsDocument) etCrawler.crawlNews(tmpHashMap);
+			System.out.println(etDoc);
+			etCrawler.store(etDoc);*/
+			
 			ArrayList<HashMap<String, String>> urlInfos = etCrawler.crawlURLs();
 			System.out.println("Total News Fetched:" + urlInfos.size());
 			int pauseCount = 0;
@@ -39,13 +50,6 @@ public class ETCrawlerTest {
 				} catch(InterruptedException ex) {
 				    Thread.currentThread().interrupt();
 				}
-				/*if(pauseCount % 10 == 0){
-					try {
-					    Thread.sleep(20000);                 
-					} catch(InterruptedException ex) {
-					    Thread.currentThread().interrupt();
-					}
-				}*/
 			}
 		} catch (HttpStatusException e) {
 			// TODO Auto-generated catch block

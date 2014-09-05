@@ -51,12 +51,10 @@ public class CrawlerTest {
 				 * The following code implements the politeness policy. It pauses for 20 seconds
 				 * after crawling 10 URLs 
 				 */
-				if(pauseCount % 10 == 0){
-					try {
-					    Thread.sleep(20000);                 
-					} catch(InterruptedException ex) {
-					    Thread.currentThread().interrupt();
-					}
+				try {
+					Thread.sleep(5000);
+				} catch (InterruptedException ex) {
+					Thread.currentThread().interrupt();
 				}
 			}
 			
