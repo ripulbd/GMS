@@ -180,7 +180,7 @@ func scotmanHandler(w http.ResponseWriter, r *http.Request) {
 	renderTemplate(w, "news", &topPage)
 }
 
-func DrHandler(w http.ResponseWriter, r *http.Request) {
+func drHandler(w http.ResponseWriter, r *http.Request) {
 	session, err := mgo.Dial("localhost")
 	if err != nil {
 		panic(err)
@@ -228,8 +228,10 @@ func main() {
 	http.HandleFunc("/", makeHandler(indexHandler))
 	http.HandleFunc("/et", makeHandler(etHandler))
 	http.HandleFunc("/scotsman", makeHandler(scotmanHandler))
+	http.HandleFunc("/dr", makeHandler(drHandler))
 	http.HandleFunc("/detailNews", makeHandler(detailNewsHandler))	
 	http.Handle("/resources/", http.StripPrefix("/resources/", http.FileServer(http.Dir("resources"))))
+	http.Handle("/resources/images/", http.StripPrefix("/resources/images/", http.FileServer(http.Dir("/home/ripul/resources/images/"))))
 
 	if *addr {
 		l, err := net.Listen("tcp", "127.0.0.1:0")
