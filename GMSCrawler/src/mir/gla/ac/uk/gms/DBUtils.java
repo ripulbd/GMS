@@ -3,10 +3,15 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.bson.io.BasicOutputBuffer;
+
 import com.mongodb.BasicDBObject;
+import com.mongodb.CommandResult;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+import com.mongodb.DefaultDBEncoder;
 import com.mongodb.MongoClient;
 import com.mongodb.util.JSON;
 
@@ -20,6 +25,7 @@ public class DBUtils {
 	private DB db;
 	private MongoClient mongo;
 	private DBCollection table;
+	private long totalSize, totalNumber;
 	
 	public DBUtils(){
 		dbName = "gmsTry";
@@ -31,7 +37,7 @@ public class DBUtils {
 			
 			/**** Get database ****/
 			// if database doesn't exists, MongoDB will create it for you
-			DB db = mongo.getDB(this.dbName);
+			db = mongo.getDB(this.dbName);
 			//db.dropDatabase();
 			/**** Get collection ****/
 			// if collection doesn't exists, MongoDB will create it for you
@@ -188,4 +194,47 @@ public class DBUtils {
 		return false;
 	}
 	
+	public long totalSize(){
+		CommandResult re = db.getCollection(this.collection).getStats();
+		/*for(String k: re.keySet()){
+			System.out.println(k+"="+re.get(k) );
+		    totalSize++;
+		}*/
+		//totalSize = re.getInt("size") / 1024;
+		totalSize = re.getInt("size");
+		return totalSize;
+	}
+	
+	public long totalNumber(){
+		CommandResult re = db.getCollection(this.collection).getStats();
+		/*for(String k: re.keySet()){
+			System.out.println(k+"="+re.get(k) );
+		}*/
+		totalNumber = re.getInt("count");
+		return totalNumber;
+	}
+	
+	public long totalNumber(String source){
+		BasicDBObject searchQuery = new BasicDBObject();
+		searchQuery.put("source", source);
+	 
+		DBCursor cursor = table.find(searchQuery);
+		return cursor.count();
+	}
+	
+	public long totalSize(String source){
+		BasicDBObject searchQuery = new BasicDBObject();
+		searchQuery.put("source", source);
+	 
+		DBCursor cursor = table.find(searchQuery);
+		int size = 0;
+		while(cursor.hasNext()){
+			DBObject dbObject = cursor.next();
+			size += DefaultDBEncoder.FACTORY.create().writeObject(new BasicOutputBuffer(), dbObject);
+		}
+		
+		//size = size / 1024;
+		
+		return size;
+	}
 }

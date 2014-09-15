@@ -45,7 +45,7 @@ public class BBCCrawler extends AbstractCrawler {
 	private ArrayList<HashMap<String, String>> urlInfos, relatedStories;
 	private GMSNewsDocument bbcNews; 							//a news document...
 	//private String outputFolder = "C:/Users/soumc/Downloads"; 	//where the images will be stored...
-	private String outputFolder = "/Users/ripul/images/bbc/";
+	private String outputFolder = "/home/ripul/images/bbc/";
 	private DBUtils dbUtils;										//the database utility class
 	private Queue<String> urlQueue;									//queue of the URLs to be crawled...
 	
@@ -330,10 +330,10 @@ private void retrieveRelatedStory(String URL){
 			String relatedtitle=e.text();
 			//relatedlink= "www.bbc.co.uk" +relatedlink;
 			
-			 if(relatedlink.equals("http://www.bbc.co.uk/sport/live/rugby-union/27447986"))continue;
-			 if(relatedlink.equals("http://www.bbc.co.uk/sport/live/rugby-union/27604419"))continue;
-			 if(relatedlink.equals("http://www.bbc.co.uk/sport/0/get-inspired/23179331"))continue;
-			 if(relatedlink.equals("http://www.bbc.co.uk/sport/0/get-inspired/23152583"))continue;
+			// if(relatedlink.equals("http://www.bbc.co.uk/sport/live/rugby-union/27447986"))continue;
+			 //if(relatedlink.equals("http://www.bbc.co.uk/sport/live/rugby-union/27604419"))continue;
+			 //if(relatedlink.equals("http://www.bbc.co.uk/sport/0/get-inspired/23179331"))continue;
+			// if(relatedlink.equals("http://www.bbc.co.uk/sport/0/get-inspired/23152583"))continue;
 			//if(!alreadyInList(relatedlink)){
 			if(!dbUtils.find("url", relatedlink)){
 				urlQueue.add(relatedlink);
@@ -362,11 +362,12 @@ private void retrieveRelatedStory(String URL){
 			String relatedtitle = e.text();
 			//relatedlink= "www.bbc.co.uk" +relatedlink;
 			//System.out.println(relatedlink);
-			if(!alreadyInList(relatedlink)){
+			if(!dbUtils.find("url", relatedlink)){
 				urlQueue.add(relatedlink);
 				// add the links to urlinfo because this is being used in main function to crawl urls
 				HashMap<String, String> info1 = new HashMap<String, String>();
 				info1.put("url", relatedlink);
+				info1.put("title", relatedtitle);
 				urlInfos.add(info1);
 				//System.out.println ("related link added to queue");
 			}
@@ -577,7 +578,7 @@ if (exec==0 && el3!=null){
 			
 	//System.out.println("name is" +image_name);
 		int indexname = imageName1.lastIndexOf("/");
-        String imageName= imageName1.substring(indexname+1,imageName1.length());
+        String imageName= "bbc_"+imageName1.substring(indexname+1,imageName1.length());
         String caption= im.select("p.caption").text();
         if (caption.isEmpty()) caption = im.select("img").attr("alt");
         // System.out.println(name1);

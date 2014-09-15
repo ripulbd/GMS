@@ -203,6 +203,28 @@ func drHandler(w http.ResponseWriter, r *http.Request) {
 	renderTemplate(w, "news", &topPage)
 }
 
+func bbcHandler(w http.ResponseWriter, r *http.Request) {
+	session, err := mgo.Dial("localhost")
+	if err != nil {
+		panic(err)
+	}
+	defer session.Close()
+
+	// Optional. Switch the session to a monotonic behavior.
+	session.SetMode(mgo.Monotonic, true)
+
+	c := session.DB("gmsTry").C("gmsNews")
+
+	result := []Page{}
+	err = c.Find(bson.M{"source": "http://www.bbc.co.uk"}).All(&result)
+	
+	if err != nil {
+		log.Fatal(err)
+	}
+	topPage := TopPage{"News contents extracted from BBC are shown below:", result}
+	
+	renderTemplate(w, "news", &topPage)
+}
 
 //source: ''
 
@@ -228,6 +250,7 @@ func main() {
 	http.HandleFunc("/", makeHandler(indexHandler))
 	http.HandleFunc("/et", makeHandler(etHandler))
 	http.HandleFunc("/scotsman", makeHandler(scotmanHandler))
+	http.HandleFunc("/bbc", makeHandler(bbcHandler))
 	http.HandleFunc("/dr", makeHandler(drHandler))
 	http.HandleFunc("/detailNews", makeHandler(detailNewsHandler))	
 	http.Handle("/resources/", http.StripPrefix("/resources/", http.FileServer(http.Dir("resources"))))
