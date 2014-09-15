@@ -180,6 +180,30 @@ func scotmanHandler(w http.ResponseWriter, r *http.Request) {
 	renderTemplate(w, "news", &topPage)
 }
 
+func DrHandler(w http.ResponseWriter, r *http.Request) {
+	session, err := mgo.Dial("localhost")
+	if err != nil {
+		panic(err)
+	}
+	defer session.Close()
+
+	// Optional. Switch the session to a monotonic behavior.
+	session.SetMode(mgo.Monotonic, true)
+
+	c := session.DB("gmsTry").C("gmsNews")
+
+	result := []Page{}
+	err = c.Find(bson.M{"source": "http://www.dailyrecord.co.uk"}).All(&result)
+	
+	if err != nil {
+		log.Fatal(err)
+	}
+	topPage := TopPage{"News contents extracted from DailyRecord are shown below:", result}
+	
+	renderTemplate(w, "news", &topPage)
+}
+
+
 //source: ''
 
 var validPath = regexp.MustCompile("^/(index|save|view)$")
