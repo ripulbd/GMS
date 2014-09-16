@@ -302,7 +302,9 @@ nav {
 }
 
 #detail_image{
-	padding-top: 10px;	
+	padding-top: 10px;
+	height: 300px;
+	width: 450px;	
 }
 
 #headline{

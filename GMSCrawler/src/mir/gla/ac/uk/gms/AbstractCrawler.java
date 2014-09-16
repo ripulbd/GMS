@@ -15,7 +15,7 @@ import java.util.HashMap;
 public abstract class AbstractCrawler {
 	
 	// The master URL represents the home page of each source
-	private String masterURL;
+	protected String masterURL;
 	
 	/**
 	 * The constructor for being initialised with the master URL

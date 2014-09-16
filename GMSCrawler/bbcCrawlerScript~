@@ -1,0 +1,6 @@
+#!/bin/bash
+
+cd /home/ripul/git/GMSCrawler/src
+javac -classpath '.:/home/ripul/git/GMSCrawler/libs/*' mir/gla/ac/uk/gms/DrTest.java
+
+java -classpath '.:/home/ripul/git/GMSCrawler/libs/*' mir/gla/ac/uk/gms/DrTest > /home/ripul/tmp/DrCrawler

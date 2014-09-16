@@ -78,6 +78,11 @@ public class ScotsmanCrawler extends AbstractCrawler {
 			Document doc = null;
 	        //System.out.println("Fetching RSS Link......");
 	        String currentURL = urlQueue.remove();
+	        //if(currentURL.equals("http://www.scotsman.com/video/News/catalans-rallying-cry-for-independence-3779918781001"))continue;
+	        if(currentURL.equals("http://www.scotsman.com/scottish-independence/polls"))continue;
+	        if(currentURL.contains("http://www.scotsman.com/video/"))continue;
+	        
+	        
 	        System.out.println("Current URL:" + currentURL);
 	        doc = Jsoup.connect(currentURL).get();
 			
@@ -483,7 +488,7 @@ public class ScotsmanCrawler extends AbstractCrawler {
 	        String imageName = image.attr("src");
 	        String imageLocation = "http://www.scotsman.com" + imageName;
 	        
-	        imageName = imageName.substring(imageName.lastIndexOf("/") + 1);
+	        imageName = "scot_" + imageName.substring(imageName.lastIndexOf("/") + 1);
 	        boolean imageFlag = false;
 	        Response resultImageResponse = null;
 			try {

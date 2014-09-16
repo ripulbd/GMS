@@ -22,17 +22,18 @@ import org.jsoup.HttpStatusException;
  * @since 	11/08/2014
  *
  */
-public class CrawlerTest {
+public class DrTest {
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		ScotsmanCrawler scotsCrawler = new ScotsmanCrawler("http://www.scotsman.com/news/scotland/glasgow-west");
-		ArrayList<GMSNewsDocument> listOfDoc = new ArrayList<GMSNewsDocument>();
+		DrCrawler drCrawler = new DrCrawler("http://www.dailyrecord.co.uk/all-about/glasgow?all=true");
 		
 		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 		Calendar cal = Calendar.getInstance();
 		
-		System.out.println("##############-[Scotsman crawling starts at:" + dateFormat.format(cal.getTime()) + "]-##############");
+		System.out.println("##############-[DR crawling starts at:" + dateFormat.format(cal.getTime()) + "]-##############");
+		
+		ArrayList<GMSNewsDocument> listOfDoc = new ArrayList<GMSNewsDocument>();
 		
 		//video news: http://www.scotsman.com/what-s-on/music/piping-festival-aims-to-use-glasgow-2014-momentum-1-3502847
 		//Tow image news:http://www.scotsman.com/lifestyle/heritage/glasgow-to-recognise-slave-trade-links-1-3497713
@@ -41,7 +42,7 @@ public class CrawlerTest {
 		//http://www.scotsman.com/sport/commonwealth-games-day-11-and-closing-ceremony-1-3487434 commotwealth URL
 		
 		try {
-			ArrayList<HashMap<String, String>> urlInfos = scotsCrawler.crawlURLs();
+			ArrayList<HashMap<String, String>> urlInfos = drCrawler.crawlURLs();
 			//ArrayList<HashMap<String, String>> urlInfos = new ArrayList<HashMap<String, String>>();
 			/*HashMap<String, String> tmpHashMap = new HashMap<String, String>();
 			tmpHashMap.put("url", "http://www.scotsman.com/news/politics/top-stories/glasgow-2014-alex-salmond-hails-gallus-games-1-3497971");
@@ -52,22 +53,24 @@ public class CrawlerTest {
 			int count = 0, pauseCount = 0;
 			for(HashMap<String, String> tmpHashMap : urlInfos){
 				System.out.println("Added URL:" + tmpHashMap.get("url"));
-				GMSNewsDocument scotDoc = scotsCrawler.crawlNews(tmpHashMap);
-				System.out.println(scotDoc);
+							GMSNewsDocument scotDoc = drCrawler.crawlNews(tmpHashMap);
+							System.out.println(scotDoc);
 				//if(count == 5)break;
 				//count++;
 				//listOfDoc.add(scotDoc);
-				scotsCrawler.store();
+								drCrawler.store(scotDoc);
 				pauseCount++;
 				count++;
 				/**
 				 * The following code implements the politeness policy. It pauses for 20 seconds
 				 * after crawling 10 URLs 
 				 */
-				try {
-					Thread.sleep(5000);
-				} catch (InterruptedException ex) {
-					Thread.currentThread().interrupt();
+				if(pauseCount % 10 == 0){
+					try {
+					    Thread.sleep(20000);                 
+					} catch(InterruptedException ex) {
+					    Thread.currentThread().interrupt();
+					}
 				}
 			}
 			
@@ -94,7 +97,7 @@ public class CrawlerTest {
 			 * Now, copy the newly saved images from the java image folder to the Go-Lang image folder 
 			 */
 			if(urlInfos.size() > 0) {
-				File srcFolder = new File("/home/ripul/images/scotsman/");
+				File srcFolder = new File("/home/ripul/images/dr/");
 		    	File destFolder = new File("/home/ripul/resources/images/");
 		    	
 		    	System.out.println("Copying is starting...");
@@ -125,7 +128,7 @@ public class CrawlerTest {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println("##############-[Scotsman crawling ends at:" + dateFormat.format(cal.getTime()) + "]-##############");
+		System.out.println("##############-[DR crawling ends at:" + dateFormat.format(cal.getTime()) + "]-##############");
 	}
 	
 	public static void copyFolder(File src, File dest)

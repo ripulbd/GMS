@@ -1,0 +1,6 @@
+#!/bin/bash
+
+cd /home/ripul/git/GMSCrawler/src
+javac -classpath '.:/home/ripul/git/GMSCrawler/libs/*' mir/gla/ac/uk/gms/BBCCrawlerTest.java
+
+java -classpath '.:/home/ripul/git/GMSCrawler/libs/*' mir/gla/ac/uk/gms/BBCCrawlerTest > /home/ripul/tmp/BBCCrawler

@@ -6,7 +6,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 
 import org.jsoup.HttpStatusException;
@@ -26,6 +29,10 @@ public class BBCCrawlerTest {
 		BBCCrawler bbcCrawler = new BBCCrawler("http://www.bbc.co.uk/news/scotland/glasgow_and_west/");
 		ArrayList<GMSNewsDocument> listOfDoc = new ArrayList<GMSNewsDocument>();
 		
+		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		Calendar cal = Calendar.getInstance();
+		
+		System.out.println("##############-[BBC crawling starts at:" + dateFormat.format(cal.getTime()) + "]-##############");
 		try {
 			ArrayList<HashMap<String, String>> urlInfos = bbcCrawler.crawlURLs();
 			System.out.println("Total News Fetched:" + urlInfos.size());
@@ -57,29 +64,32 @@ public class BBCCrawlerTest {
 			/**
 			 * Now, copy the newly saved images from the java image folder to the Go-Lang image folder 
 			 */
-			File srcFolder = new File("/home/ripul/images/bbc/");
-	    	File destFolder = new File("/home/ripul/resources/images/");
-	    	
-	    	System.out.println("Copying is starting...");
-	    	//make sure source exists
-	    	if(!srcFolder.exists()){
-	 
-	           System.out.println("Directory does not exist.");
-	           //just exit
-	           System.exit(0);
-	 
-	        }else{
-	 
-	           try{
-	        	copyFolder(srcFolder,destFolder);
-	           }catch(IOException e){
-	        	e.printStackTrace();
-	        	//error, just exit
-	                System.exit(0);
-	           }
-	        }
-	 
-	    	System.out.println("Coying is Done!");
+			if(urlInfos.size() > 0) {
+				File srcFolder = new File("/home/ripul/images/bbc/");
+		    	File destFolder = new File("/home/ripul/resources/images/");
+		    	
+		    	System.out.println("Copying is starting...");
+		    	//make sure source exists
+		    	if(!srcFolder.exists()){
+		 
+		           System.out.println("Directory does not exist.");
+		           //just exit
+		           System.exit(0);
+		 
+		        }else{
+		 
+		           try{
+		        	copyFolder(srcFolder,destFolder);
+		           }catch(IOException e){
+		        	e.printStackTrace();
+		        	//error, just exit
+		                System.exit(0);
+		           }
+		        }
+		 
+		    	System.out.println("Coying is Done!");
+			}
+			
 		} catch (HttpStatusException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -87,6 +97,7 @@ public class BBCCrawlerTest {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		System.out.println("##############-[BBC crawling starts at:" + dateFormat.format(cal.getTime()) + "]-##############");
 	}
 	
 	public static void copyFolder(File src, File dest)
@@ -128,7 +139,7 @@ public class BBCCrawlerTest {
 	 
 	    	        in.close();
 	    	        out.close();
-	    	        System.out.println("File copied from " + src + " to " + dest);
+	    	        //System.out.println("File copied from " + src + " to " + dest);
 	    	}
 	    }
 
