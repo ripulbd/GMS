@@ -95,15 +95,21 @@ public class ScotsmanCrawler extends AbstractCrawler {
 					String title = anchor.text();
 					String URL = anchor.attr("href");
 					if(title.length() == 0)title = elem.select("a").get(2).text();
-					if(!dbUtils.find("url", URL))urlQueue.add(URL);
-					
-					if(!alreadyInList(URL)){
+					if(!dbUtils.find("url", URL)){
+						urlQueue.add(URL);
 						HashMap<String, String> info = new HashMap<String, String>();
 						info.put("url", URL);
 						urlInfos.add(info);
 						retrieveRelatedStory(URL);
 					}
-					else System.out.println("Title - " + title + " already in the list.");
+					
+					/*if(!alreadyInList(URL)){
+						HashMap<String, String> info = new HashMap<String, String>();
+						info.put("url", URL);
+						urlInfos.add(info);
+						retrieveRelatedStory(URL);
+					}
+					else System.out.println("Title - " + title + " already in the list.");*/
 				}
 				
 				Elements articleElement = doc.select("article.teaser");
@@ -124,7 +130,7 @@ public class ScotsmanCrawler extends AbstractCrawler {
 						crawURLsFromHomePage(title, URL);
 						retrieveRelatedStory(URL);
 					}*/
-					else System.out.println("Title - " + title + " already in the list.");
+					//else System.out.println("Title - " + title + " already in the list.");
 				}
 			} else {
 				if(!alreadyInList(currentURL)){

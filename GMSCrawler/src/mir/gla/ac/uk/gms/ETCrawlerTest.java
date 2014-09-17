@@ -51,7 +51,7 @@ public class ETCrawlerTest {
 			for(HashMap<String, String> tmpHashMap : urlInfos){
 				System.out.println("Added URL:" + tmpHashMap.get("url"));
 				GMSNewsDocument etDoc = (GMSNewsDocument) etCrawler.crawlNews(tmpHashMap);
-				System.out.println(etDoc);
+				//System.out.println(etDoc);
 				etCrawler.store(etDoc);
 				pauseCount++;
 				/**
@@ -99,6 +99,7 @@ public class ETCrawlerTest {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		cal = Calendar.getInstance();
 		System.out.println("##############-[ET crawling starts at:" + dateFormat.format(cal.getTime()) + "]-##############");
 	}
 	

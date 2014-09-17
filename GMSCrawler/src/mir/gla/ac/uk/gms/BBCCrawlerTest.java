@@ -40,7 +40,7 @@ public class BBCCrawlerTest {
 			for(HashMap<String, String> tmpHashMap : urlInfos){
 				System.out.println("Added URL:" + tmpHashMap.get("url"));
 				GMSNewsDocument bbcDoc = (GMSNewsDocument) bbcCrawler.crawlNews(tmpHashMap);
-				System.out.println(bbcDoc);
+				//System.out.println(bbcDoc);
 				bbcCrawler.store(bbcDoc);
 				pauseCount++;
 				/**
@@ -97,6 +97,7 @@ public class BBCCrawlerTest {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		cal = Calendar.getInstance();
 		System.out.println("##############-[BBC crawling starts at:" + dateFormat.format(cal.getTime()) + "]-##############");
 	}
 	

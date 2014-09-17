@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import org.bson.io.BasicOutputBuffer;
 
+import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.CommandResult;
 import com.mongodb.DB;
@@ -214,6 +215,10 @@ public class DBUtils {
 		return totalNumber;
 	}
 	
+	public DBCollection getTable() {
+		return table;
+	}
+
 	public long totalNumber(String source){
 		BasicDBObject searchQuery = new BasicDBObject();
 		searchQuery.put("source", source);
@@ -236,5 +241,61 @@ public class DBUtils {
 		//size = size / 1024;
 		
 		return size;
+	}
+	
+	public long totalSizeEachElement(String URL){
+		BasicDBObject searchQuery = new BasicDBObject();
+		searchQuery.put("url", URL);
+	 
+		DBCursor cursor = table.find(searchQuery);
+		int size = 0;
+		while(cursor.hasNext()){
+			DBObject dbObject = cursor.next();
+			size += DefaultDBEncoder.FACTORY.create().writeObject(new BasicOutputBuffer(), dbObject);
+		}
+		return size;
+	}
+	
+	public long totalNumberEachDate(String date){
+		BasicDBObject searchQuery = new BasicDBObject();
+		searchQuery.put("timeStamp", java.util.regex.Pattern.compile(date));
+	 
+		DBCursor cursor = table.find(searchQuery);
+		
+		return cursor.count();
+	}
+	
+	public long totalNumberEachDate(String date, String source){
+		BasicDBObject searchQuery = new BasicDBObject();
+		searchQuery.put("timeStamp", java.util.regex.Pattern.compile(date));
+		searchQuery.put("source", source);
+	 
+		DBCursor cursor = table.find(searchQuery);
+		
+		return cursor.count();
+	}
+	
+	public ArrayList<String> imageName(String URL){
+		ArrayList<String> tempList = new ArrayList<String>();
+		
+		BasicDBObject searchQuery = new BasicDBObject();
+		searchQuery.put("url", URL);
+	 
+		DBCursor cursor = table.find(searchQuery);
+		while(cursor.hasNext()){
+			DBObject dbObject = cursor.next();
+			BasicDBList list = (BasicDBList) dbObject.get("images");
+			
+
+			// optional: break it into a native java array
+			BasicDBObject[] lightArr = list.toArray(new BasicDBObject[0]);
+			for (BasicDBObject dbObj : lightArr) {
+				// shows each item from the lights array
+				String name = dbObj.getString("name");
+				tempList.add(name);
+			}
+			
+		}
+		return tempList;
 	}
 }

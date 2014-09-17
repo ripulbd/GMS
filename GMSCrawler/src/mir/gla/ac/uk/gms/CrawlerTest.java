@@ -53,7 +53,7 @@ public class CrawlerTest {
 			for(HashMap<String, String> tmpHashMap : urlInfos){
 				System.out.println("Added URL:" + tmpHashMap.get("url"));
 				GMSNewsDocument scotDoc = scotsCrawler.crawlNews(tmpHashMap);
-				System.out.println(scotDoc);
+				//System.out.println(scotDoc);
 				//if(count == 5)break;
 				//count++;
 				//listOfDoc.add(scotDoc);
@@ -125,6 +125,7 @@ public class CrawlerTest {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		cal = Calendar.getInstance();
 		System.out.println("##############-[Scotsman crawling ends at:" + dateFormat.format(cal.getTime()) + "]-##############");
 	}
 	

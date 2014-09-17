@@ -56,6 +56,7 @@ public class BBCCrawler extends AbstractCrawler {
 		relatedStories = new ArrayList<HashMap<String, String>>();
 		dbUtils = new DBUtils();
 		urlQueue = new LinkedList<String>();
+		
 		urlQueue.add(masterURL);
 	}
 	
@@ -86,7 +87,7 @@ public class BBCCrawler extends AbstractCrawler {
 	        if(currentURL.equals("http://www.bbc.co.uk/news/scotland/glasgow_and_west/"))
 	        {
 	   
-	        
+	        /*
 	        	String URL=doc.select("div [id=top-story]").select("a.story").first().attr("abs:href");
 	        	String title = doc.select("div [id=top-story]").select("a.story").first().text();
 	        	//System.out.println (URL);
@@ -144,12 +145,12 @@ public class BBCCrawler extends AbstractCrawler {
 			       
 				}  
 				
-				    
+				*/    
 			
 				Elements elsport = doc.select ("div.featured-site-top-stories").select("ul").select ("li").select("a.story");
 				for (Element a:elsport){
-					  URL= a.attr("abs:href");
-					  title= a.text();
+					 String URL= a.attr("abs:href");
+					  String title= a.text();
 					 System.out.println(URL);
 					
 					 if(!dbUtils.find("url", URL) ){
@@ -278,8 +279,28 @@ public GMSNewsDocument crawlNews(HashMap<String, String> info) throws IOExceptio
 	description = doc.select("div.story-body").select("p.introduction").text();
 	bbcNews.setDescription(description);
 	
-	timeStamp = doc.select("span.date").text();
-	bbcNews.setDate(timeStamp);
+	 	String timeStamp1 = doc.select("meta[name=OriginalPublicationDate]").attr("content");
+	 	if(!timeStamp1.isEmpty()){
+		//System.out.println(timeStamp);
+		String first=timeStamp1.substring(0,4);
+		String sec=timeStamp1.substring(5,7);
+		String thi=timeStamp1.substring(8,10);
+		timeStamp=thi+"/"+sec+"/"+first;
+		bbcNews.setDate(timeStamp);
+	 	}
+	 	
+	 	else {
+	 		String timeStamp2 = doc.select("meta[name=DCTERMS.created]").attr("content");
+	 		//System.out.println(timeStamp);
+	 		int index=timeStamp2.lastIndexOf("T");
+			String first=timeStamp2.substring(0,4);
+			String sec=timeStamp2.substring(5,7);
+			String thi=timeStamp2.substring(8,10);
+			timeStamp=thi+"/"+sec+"/"+first;
+			//System.out.println(timeStamp);
+			bbcNews.setDate(timeStamp);
+		 
+	 	}
 	
 	String mainStory = retrieveMainStory(doc);
 	bbcNews.setMainStory(mainStory);
@@ -330,11 +351,11 @@ private void retrieveRelatedStory(String URL){
 			String relatedtitle=e.text();
 			//relatedlink= "www.bbc.co.uk" +relatedlink;
 			
-			// if(relatedlink.equals("http://www.bbc.co.uk/sport/live/rugby-union/27447986"))continue;
-			 //if(relatedlink.equals("http://www.bbc.co.uk/sport/live/rugby-union/27604419"))continue;
-			 //if(relatedlink.equals("http://www.bbc.co.uk/sport/0/get-inspired/23179331"))continue;
-			// if(relatedlink.equals("http://www.bbc.co.uk/sport/0/get-inspired/23152583"))continue;
-			//if(!alreadyInList(relatedlink)){
+			if(relatedlink.equals("http://www.bbc.co.uk/sport/live/rugby-union/27447986"))continue;
+			 if(relatedlink.equals("http://www.bbc.co.uk/sport/live/rugby-union/27604419"))continue;
+			 if(relatedlink.equals("http://www.bbc.co.uk/sport/0/get-inspired/23179331"))continue;
+			 if(relatedlink.equals("http://www.bbc.co.uk/sport/0/get-inspired/23152583"))continue;
+			if(!alreadyInList(relatedlink)){
 			if(!dbUtils.find("url", relatedlink)){
 				urlQueue.add(relatedlink);
 				HashMap<String, String> info1 = new HashMap<String, String>();
@@ -350,7 +371,7 @@ private void retrieveRelatedStory(String URL){
 		}
 	}
 		
-			
+	}		
 	if (x1==0 && relatednews!=null){
 		
 	if (reltext.equals("Related Stories"))
@@ -362,12 +383,11 @@ private void retrieveRelatedStory(String URL){
 			String relatedtitle = e.text();
 			//relatedlink= "www.bbc.co.uk" +relatedlink;
 			//System.out.println(relatedlink);
-			if(!dbUtils.find("url", relatedlink)){
+			if(!alreadyInList(relatedlink)){
 				urlQueue.add(relatedlink);
 				// add the links to urlinfo because this is being used in main function to crawl urls
 				HashMap<String, String> info1 = new HashMap<String, String>();
 				info1.put("url", relatedlink);
-				info1.put("title", relatedtitle);
 				urlInfos.add(info1);
 				//System.out.println ("related link added to queue");
 			}
@@ -375,8 +395,10 @@ private void retrieveRelatedStory(String URL){
 		}
 		
 	}
+	
 	}
-	}
+	
+}
 
 
 /**
@@ -546,6 +568,7 @@ if (el1!=null){
         String imageName = "bbc_"+ imageName1.substring(indexname+1,imageName1.length());
 		 //System.out.println(imageName);
           String caption= im.select("span").text();
+          if (caption.isEmpty())caption= im.select("img").attr("alt");
           //System.out.println("caption is:" +caption);
                    
          boolean imageFlag = false;
@@ -665,3 +688,7 @@ public void store(GMSNewsDocument doc) {
 	
 
 }
+
+
+
+	

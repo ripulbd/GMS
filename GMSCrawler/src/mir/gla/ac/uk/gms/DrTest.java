@@ -54,7 +54,7 @@ public class DrTest {
 			for(HashMap<String, String> tmpHashMap : urlInfos){
 				System.out.println("Added URL:" + tmpHashMap.get("url"));
 							GMSNewsDocument scotDoc = drCrawler.crawlNews(tmpHashMap);
-							System.out.println(scotDoc);
+							//System.out.println(scotDoc);
 				//if(count == 5)break;
 				//count++;
 				//listOfDoc.add(scotDoc);
@@ -65,13 +65,13 @@ public class DrTest {
 				 * The following code implements the politeness policy. It pauses for 20 seconds
 				 * after crawling 10 URLs 
 				 */
-				if(pauseCount % 10 == 0){
+				//if(pauseCount % 10 == 0){
 					try {
-					    Thread.sleep(20000);                 
+					    Thread.sleep(5000);                 
 					} catch(InterruptedException ex) {
 					    Thread.currentThread().interrupt();
 					}
-				}
+				//}
 			}
 			
 			/*System.out.println("Finished fethcing and storing all news from the homepage, now fetching news from all related stories:"); 
@@ -128,6 +128,7 @@ public class DrTest {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		cal = Calendar.getInstance();
 		System.out.println("##############-[DR crawling ends at:" + dateFormat.format(cal.getTime()) + "]-##############");
 	}
 	

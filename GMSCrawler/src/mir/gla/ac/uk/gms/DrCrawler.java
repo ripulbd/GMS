@@ -61,7 +61,7 @@ public class DrCrawler extends AbstractCrawler {
 	 */
 	private ArrayList<HashMap<String, String>> urlInfos, relatedStories;
 	private GMSNewsDocument DrNews; 							//a news document...
-	//private String outputFolder = "C:/Users/hridds.hridds-PC/dr/"; 	//where the images will be stored...
+	//private String outputFolder = "C:/Users/soumc/Downloads"; 	//where the images will be stored...
 	private String outputFolder = "/home/ripul/images/dr/";
 	private DBUtils dbUtils;										//the database utility class
 	private Queue<String> urlQueue;	
@@ -109,14 +109,26 @@ public class DrCrawler extends AbstractCrawler {
 		// TODO Auto-generated method stub
 		ArrayList<HashMap<String, String>> urlInfos = new ArrayList<HashMap<String, String>>();
 		Document doc = null;
+		Document doc1 = null;
+		Document doc2 = null;
 		
 		doc = Jsoup.connect(masterURL).get();
+		String URL= doc.select("div.teaser-info").select("h3").select("a").attr("abs:href");
+		String title = doc.select("div.teaser-info").select("h3").select("a").text();
+		if(!dbUtils.find("url", URL)){
+			HashMap<String, String> tmpMap = new HashMap<String, String>();
+			tmpMap.put("title", title);
+			tmpMap.put("url", URL);
+			urlInfos.add(tmpMap);
+			count++;
+		}
+				
 		Elements links1 = doc.getElementsByTag("h2");
 	    Elements mainlinks = links1.select("a");
 	    for(Element elem : mainlinks){
 			int size = elem.select("a").size();
-			String title = elem.text();
-			String URL = elem.attr("href");
+			title = elem.text();
+			URL = elem.attr("href");
 					
 			if(!dbUtils.find("url", URL)){
 				HashMap<String, String> tmpMap = new HashMap<String, String>();
@@ -128,6 +140,45 @@ public class DrCrawler extends AbstractCrawler {
 			
 			//if(elem.hasClass("views-row-last"))break;
 		}
+	    
+	    doc1 = Jsoup.connect("http://www.dailyrecord.co.uk/all-about/glasgow?pageNumber=2&all=true").get();
+		Elements links2 = doc1.getElementsByTag("h2");
+	    Elements mainlinks1 = links2.select("a");
+	    for(Element elem : mainlinks1){
+			int size = elem.select("a").size();
+			 title = elem.text();
+		URL = elem.attr("href");
+					
+			if(!dbUtils.find("url", URL)){
+				HashMap<String, String> tmpMap = new HashMap<String, String>();
+				tmpMap.put("title", title);
+				tmpMap.put("url", URL);
+				urlInfos.add(tmpMap);
+				count++;
+			}
+			
+			//if(elem.hasClass("views-row-last"))break;
+		}
+	    
+	    doc2 = Jsoup.connect("http://www.dailyrecord.co.uk/all-about/glasgow?pageNumber=3&all=true").get();
+	  		Elements links3 = doc2.getElementsByTag("h2");
+	  	    Elements mainlinks2 = links3.select("a");
+	  	    for(Element elem : mainlinks2){
+	  			int size = elem.select("a").size();
+	  			 title = elem.text();
+	  			 URL = elem.attr("href");
+	  					
+	  			if(!dbUtils.find("url", URL)){
+	  				HashMap<String, String> tmpMap = new HashMap<String, String>();
+	  				tmpMap.put("title", title);
+	  				tmpMap.put("url", URL);
+	  				urlInfos.add(tmpMap);
+	  				count++;
+	  			}
+	  			
+	  			//if(elem.hasClass("views-row-last"))break;
+	  		}
+	  	    
 		
 		return urlInfos;
 	}
@@ -208,9 +259,11 @@ public class DrCrawler extends AbstractCrawler {
 		description = doc.select("div.lead-text").text();
 		DrNews.setDescription(description);
 		
-		timeStamp = doc.select("meta[property=article:published_time").attr("content");
-		int pos=timeStamp.indexOf("T");
-		timeStamp= timeStamp.substring(0, pos);
+		String timeStamp1 = doc.select("meta[property=article:published_time").attr("content");
+		String first=timeStamp1.substring(0,4);
+		String sec=timeStamp1.substring(5,7);
+		String thi=timeStamp1.substring(8,10);
+		 timeStamp=thi+"/"+sec+"/"+first;
 		DrNews.setDate(timeStamp);
 		
 		String mainStory = retrieveMainStory(doc);
@@ -409,7 +462,7 @@ public class DrCrawler extends AbstractCrawler {
 	                					
 	                					JsonElement elem1 = arr.get(i); 
 	                					JsonObject tempObj1 = elem1.getAsJsonObject();
-	                					String url1= tempObj1.get("galleryUrl").getAsString();
+	                					String url1= tempObj1.get("lowResUrl").getAsString();
 	                					String imageLocation =  url1;	
 	                					int indexname = url1.lastIndexOf("/");
 	                					String imageName= "dr_"+url1.substring(indexname+1,url1.length());

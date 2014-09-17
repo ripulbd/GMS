@@ -1,6 +1,7 @@
 package mir.gla.ac.uk.gms;
 
 import java.io.File;
+import java.util.ArrayList;
 
 public class StatModule {
 
@@ -55,6 +56,38 @@ public class StatModule {
 		System.out.println("Total Number ET:" + dbUtil.totalNumber("Evening Times"));
 		System.out.println("Total Number Scotsman:" + dbUtil.totalNumber("http://www.scotsman.com"));
 		
+		//String URL = "http://www.scotsman.com/news/scotland/top-stories/scottish-house-prices-put-homes-out-of-reach-1-3516207";
+		String URL = "http://www.dailyrecord.co.uk/entertainment/celebrity/glasgow-sons-anarchy-star-tommy-4256082";
+		long elementSize = dbUtil.totalSizeEachElement(URL);
+		ArrayList<String> imageList = dbUtil.imageName(URL);
+		
+		long imageSize = imageSize(imageList);
+		System.out.println("--------------------------------------------------------------------------------");
+		System.out.printf("Total Size of the element, without images: %d Bytes, %.2fKB, %.2fMB, with images: %d Bytes, %.2fKB, %.2fMB\n", elementSize, (double) elementSize / 1024, (double) elementSize / (1024 * 1024), (elementSize + imageSize), (double) (elementSize + imageSize) / 1024, (double) (elementSize + imageSize) / (1024 * 1024));
+		System.out.println("--------------------------------------------------------------------------------");
+		String date = "16/09/2014";
+		
+		long numberPerDate = dbUtil.totalNumberEachDate(date);
+		
+		System.out.printf("Total Number of news on %s is: %d\n", date, numberPerDate);
+		
+		String scotsman = "http://www.scotsman.com";
+		String et = "Evening Times";
+		String bbc = "http://www.bbc.co.uk";
+		String dr = "http://www.dailyrecord.co.uk";
+		
+		long scotDateNumber = dbUtil.totalNumberEachDate(date, scotsman);
+		long etDateNumber = dbUtil.totalNumberEachDate(date, et);
+		long bbcDateNumber = dbUtil.totalNumberEachDate(date, bbc);
+		long drDateNumber = dbUtil.totalNumberEachDate(date, dr);
+		
+		System.out.printf("Total Number of news of %s on %s is: %d\n", scotsman, date, scotDateNumber);
+		System.out.printf("Total Number of news of %s on %s is: %d\n", et, date, etDateNumber);
+		System.out.printf("Total Number of news of %s on %s is: %d\n", bbc, date, bbcDateNumber);
+		System.out.printf("Total Number of news of %s on %s is: %d\n", dr, date, drDateNumber);
+		
+		//http://www.scotsman.com/news/scotland/top-stories/scottish-house-prices-put-homes-out-of-reach-1-3516207
+		
 	}
 	
 	public static long folderSize(File directory) {
@@ -64,6 +97,15 @@ public class StatModule {
 	            length += file.length();
 	        else
 	            length += folderSize(file);
+	    }
+	    return length;
+	}
+	
+	public static long imageSize(ArrayList<String> imageList) {
+	    long length = 0;
+	    for(String image : imageList){
+	    	File file = new File("/home/ripul/resources/images/" + image);
+	    	length += file.length();
 	    }
 	    return length;
 	}
