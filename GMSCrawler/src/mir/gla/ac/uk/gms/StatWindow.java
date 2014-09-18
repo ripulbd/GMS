@@ -11,6 +11,7 @@ import java.awt.Dimension;
 
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
+import javax.swing.text.DateFormatter;
 
 import java.awt.BorderLayout;
 
@@ -22,10 +23,26 @@ import javax.swing.JLabel;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.StringTokenizer;
 
 import javax.swing.JTextPane;
+
+import com.michaelbaranov.microba.calendar.DatePicker;
+
+import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
+import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
+import net.sourceforge.jdatepicker.impl.UtilDateModel;
 
 public class StatWindow {
 
@@ -72,7 +89,7 @@ public class StatWindow {
 		frmGmsStatistics = new JFrame();
 		frmGmsStatistics.setResizable(false);
 		frmGmsStatistics.setTitle("GMS - Statistics");
-		frmGmsStatistics.setBounds(100, 100, 1260, 580);
+		frmGmsStatistics.setBounds(100, 100, 1260, 747);
 		frmGmsStatistics.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		JPanel panel = new JPanel();
@@ -509,31 +526,35 @@ public class StatWindow {
 		panelIndividualNews.add(textPaneDate);
 		
 		JLabel lblNewsSizewithout = new JLabel("News Size:");
-		lblNewsSizewithout.setBounds(12, 113, 91, 26);
+		lblNewsSizewithout.setBounds(12, 120, 91, 26);
 		panelIndividualNews.add(lblNewsSizewithout);
 		
 		final JTextPane textPaneNewsSize = new JTextPane();
 		textPaneNewsSize.setText("");
-		textPaneNewsSize.setBounds(92, 113, 181, 26);
+		textPaneNewsSize.setBounds(92, 113, 190, 40);
 		panelIndividualNews.add(textPaneNewsSize);
 		
 		JLabel lblImageSizes = new JLabel("Image Size:");
-		lblImageSizes.setBounds(275, 113, 82, 26);
+		lblImageSizes.setBounds(284, 120, 82, 26);
 		panelIndividualNews.add(lblImageSizes);
 		
 		final JTextPane textPaneImageSize = new JTextPane();
 		textPaneImageSize.setText("");
-		textPaneImageSize.setBounds(362, 113, 181, 26);
+		textPaneImageSize.setBounds(365, 113, 188, 40);
 		panelIndividualNews.add(textPaneImageSize);
 		
 		JLabel lblTotalSize = new JLabel("Total Size:");
-		lblTotalSize.setBounds(550, 113, 82, 26);
+		lblTotalSize.setBounds(553, 120, 82, 26);
 		panelIndividualNews.add(lblTotalSize);
 		
 		final JTextPane textPaneTotalSize = new JTextPane();
 		textPaneTotalSize.setText("");
-		textPaneTotalSize.setBounds(637, 113, 181, 26);
+		textPaneTotalSize.setBounds(630, 113, 190, 40);
 		panelIndividualNews.add(textPaneTotalSize);
+		
+		JSeparator separator_4 = new JSeparator();
+		separator_4.setBounds(8, 403, 1248, 2);
+		panel.add(separator_4);
 		
 		comboBoxEachNews.addActionListener(new ActionListener() {
 			
@@ -542,10 +563,178 @@ public class StatWindow {
 				// TODO Auto-generated method stub
 				JComboBox cb = (JComboBox) e.getSource();
 				String source = (String) cb.getSelectedItem();
+				HashMap<String, String> tmpMap = dbUtil.returnURL(source);
+				String timeStamp = tmpMap.get("timeStamp");
+				String URL = tmpMap.get("url");
+				ArrayList<String> imageNameList = dbUtil.imageName(URL);
+				
+				long elementSize = dbUtil.totalSizeEachElement(URL);
+				
+				long imageSize = imageSize(imageNameList);
+				
+				textPaneDate.setText(timeStamp);
+				textPaneTitle.setText(source);
+				textPaneNewsSize.setText(String.format("%dBytes, %.2fKB, %.2fMB\n", elementSize , (double) elementSize  / 1024,(double) elementSize / (1024 * 1024)));
+				textPaneImageSize.setText(String.format("%dBytes, %.2fKB, %.2fMB\n", imageSize, (double) imageSize / 1024,(double) imageSize / (1024 * 1024)));
+				textPaneTotalSize.setText(String.format("%dBytes, %.2fKB, %.2fMB\n", (imageSize + elementSize), (double) (imageSize + elementSize) / 1024,(double) (imageSize + elementSize) / (1024 * 1024)));
+				
 			}
 			
 			
 		});
+		
+		/**
+		 * Calendar Stat Panel Starts here....
+		 */
+		JPanel panelCalendarStat = new JPanel();
+		panelCalendarStat.setLayout(null);
+		panelCalendarStat.setBounds(8, 410, 1245, 300);
+		TitledBorder titledBorderCalenderPanel = new TitledBorder("Stat using Calendar:");
+		panelCalendarStat.setBorder(titledBorderCalenderPanel);
+		
+		/*UtilDateModel model = new UtilDateModel();
+		JDatePanelImpl datePanel = new JDatePanelImpl(model);
+		JDatePickerImpl datePicker = new JDatePickerImpl(datePanel);
+		panelCalendarStat.add(datePicker);*/
+		
+		/*UtilDateModel model = new UtilDateModel();
+		model.setDate(1990, 8, 24);
+		model.setSelected(true);
+		
+		
+		JDatePanelImpl datePanel = new JDatePanelImpl(model);
+		
+		JDatePickerImpl datePicker = new JDatePickerImpl(datePanel, new DateLabelFormatter());*/
+		
+		panel.add(panelCalendarStat);
+		final DatePicker  datePicker = new DatePicker(new Date());
+		
+		datePicker.setBounds(129, 25, 180, 22);
+		panelCalendarStat.add(datePicker);
+		datePicker.setVisible(true);
+		datePicker.setEnabled(true);
+		
+		
+		JLabel lblChooseADate = new JLabel("Choose a date:");
+		lblChooseADate.setBounds(10, 25, 116, 22);
+		panelCalendarStat.add(lblChooseADate);
+		
+		JLabel lblTotalNewsOn = new JLabel("Total News on this date:");
+		lblTotalNewsOn.setBounds(10, 63, 174, 22);
+		panelCalendarStat.add(lblTotalNewsOn);
+		
+		final JTextPane textPaneDateTotal = new JTextPane();
+		textPaneDateTotal.setBounds(187, 64, 122, 21);
+		panelCalendarStat.add(textPaneDateTotal);
+		
+		JLabel lblTotalNewsOf = new JLabel("Total News of ");
+		lblTotalNewsOf.setBounds(10, 112, 107, 22);
+		panelCalendarStat.add(lblTotalNewsOf);
+		
+		final JComboBox comboBoxDateFile = new JComboBox(sourceStrings);
+		comboBoxDateFile.setBounds(118, 111, 116, 24);
+		panelCalendarStat.add(comboBoxDateFile);
+		
+		final JTextPane textPaneDateSource = new JTextPane();
+		textPaneDateSource.setBounds(246, 113, 64, 21);
+		panelCalendarStat.add(textPaneDateSource);
+		
+		datePicker.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				String date = datePicker.getDate().toGMTString();
+				String[] dateArray = date.split(" ");
+				String day = "" + (Integer.parseInt(dateArray[0]) + 1);
+				String month = returnNumber(dateArray[1]);
+				String year = dateArray[2];
+				String total = day + "/" + month + "/" + year;
+				File file = new File("tmp");
+				
+				FileOutputStream fop = null;
+		 
+				try {
+		 
+					fop = new FileOutputStream(file);
+		 
+					// if file doesnt exists, then create it
+					if (!file.exists()) {
+						file.createNewFile();
+					}
+		 
+					// get the content in bytes
+					byte[] contentInBytes = total.getBytes();
+		 
+					fop.write(contentInBytes);
+					fop.flush();
+					fop.close();
+		 
+					System.out.println("Done");
+		 
+				} catch (IOException ee) {
+					ee.printStackTrace();
+				} finally {
+					try {
+						if (fop != null) {
+							fop.close();
+						}
+					} catch (IOException ee) {
+						ee.printStackTrace();
+					}
+				}
+				System.out.println(total);
+				textPaneDateTotal.setText("" + dbUtil.totalNumberEachDate(total));
+			}
+		});
+		
+		comboBoxDateFile.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				JComboBox cb = (JComboBox) e.getSource();
+				String source = (String) cb.getSelectedItem();
+				String line = "";
+				
+				File file = new File("tmp");
+				BufferedReader reader;
+				try {
+					reader = new BufferedReader(new FileReader("tmp"));
+					line = reader.readLine();					
+				} catch (FileNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			    
+				if (source.equals("BBC")) {
+					textPaneDateSource.setText("" + dbUtil.totalNumberEachDate(line, "http://www.bbc.co.uk"));
+				} else if (source.equals("DailyRecord")) {
+					textPaneDateSource.setText("" + dbUtil.totalNumberEachDate(line, "http://www.dailyrecord.co.uk"));
+				} else if (source.equals("The Scotsman")) {
+					textPaneDateSource.setText("" + dbUtil.totalNumberEachDate(line, "http://www.scotsman.com"));
+				} else if (source.equals("Evening Times")) {
+					textPaneDateSource.setText("" + dbUtil.totalNumberEachDate(line, "Evening Times"));
+				}
+			}
+				
+		});
+		
+		/*final DatePicker  datepicker = new DatePicker(new Date());
+		panelCalendarStat.add(datepicker);
+		
+		panel.add(panelCalendarStat);
+		datepicker.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println(datepicker.getDate());//print the current date
+                
+            }
+        });*/
+		
 		
 	}
 	
@@ -559,6 +748,60 @@ public class StatWindow {
 		
 	}*/
 	
+	public static String returnNumber(String month){
+		String number = "";
+		switch(month){
+			case "Jan":
+			case "January":
+				number = "01";
+				break;
+			case "Feb":
+			case "February":
+				number = "02";
+				break;
+			case "Mar":
+			case "March":
+				number = "03";
+				break;
+			case "Apr":
+			case "April":
+				number = "04";
+				break;
+			case "May":
+				number = "05";
+				break;
+			case "Jun":
+			case "June":
+				number = "06";
+				break;
+			case "Jul":
+			case "July":
+				number = "07";
+				break;
+			case "Aug":
+			case "August":
+				number = "08";
+				break;
+			case "Sep":
+			case "September":
+				number = "09";
+				break;
+			case "Oct":
+			case "October":
+				number = "10";
+				break;
+			case "Nov":
+			case "November":
+				number = "11";
+				break;
+			case "Dec":
+			case "December":
+				number = "12";
+				break;			
+		}
+		return number;
+	}
+	
 	public static long folderSize(File directory) {
 	    long length = 0;
 	    for (File file : directory.listFiles()) {
@@ -566,6 +809,15 @@ public class StatWindow {
 	            length += file.length();
 	        else
 	            length += folderSize(file);
+	    }
+	    return length;
+	}
+	
+	public static long imageSize(ArrayList<String> imageList) {
+	    long length = 0;
+	    for(String image : imageList){
+	    	File file = new File("/home/ripul/resources/images/" + image);
+	    	length += file.length();
 	    }
 	    return length;
 	}

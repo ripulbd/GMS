@@ -320,14 +320,18 @@ public class DBUtils {
 		return newsDocList;
 	}
 	
-	public String returnURL(String title){
-		String URL = "";
+	public HashMap<String, String> returnURL(String title){
+		HashMap<String, String> tmpMap = new HashMap<String, String>();
 		BasicDBObject searchQuery = new BasicDBObject();
 		searchQuery.put("title", title);
 	 
 		DBCursor cursor = table.find(searchQuery);
 		DBObject dbObject = cursor.one();
+		String URL = dbObject.get("url").toString();
+		String timeStamp =dbObject.get("timeStamp").toString();
+		tmpMap.put("url", URL);
+		tmpMap.put("timeStamp", timeStamp);
 		
-		return URL;
+		return tmpMap;
 	}
 }

@@ -1,6 +1,7 @@
 package mir.gla.ac.uk.gms;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.Toolkit;
 
@@ -13,6 +14,7 @@ import javax.swing.border.TitledBorder;
 
 import java.awt.BorderLayout;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JSeparator;
 import javax.swing.JLabel;
@@ -21,6 +23,8 @@ import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.swing.JTextPane;
 
@@ -69,7 +73,7 @@ public class StatWindow1 {
 		frmGmsStatistics = new JFrame();
 		frmGmsStatistics.setResizable(false);
 		frmGmsStatistics.setTitle("GMS - Statistics");
-		frmGmsStatistics.setBounds(100, 100, 1215, 452);
+		frmGmsStatistics.setBounds(100, 100, 1260, 580);
 		frmGmsStatistics.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		JPanel panel = new JPanel();
@@ -332,7 +336,7 @@ public class StatWindow1 {
 		//totalInnerPannel ends here.......................
 		
 		JSeparator separator = new JSeparator();
-		separator.setBounds(8, 216, width - 20, 2);
+		separator.setBounds(8, 216, width - 32, 2);
 		panel.add(separator);
 		
 		/**
@@ -408,12 +412,168 @@ public class StatWindow1 {
 		
 		JPanel panelIndividualNews = new JPanel();
 		panelIndividualNews.setLayout(null);
-		panelIndividualNews.setBounds(228, 226, 406, 165);
+		panelIndividualNews.setBounds(425, 226, 830, 165);
 		TitledBorder titledBorderIndividualNews = new TitledBorder("Stat for individual news:");
 		panelIndividualNews.setBorder(titledBorderIndividualNews);
 		panel.add(panelIndividualNews);
 		
+		JLabel lblSource = new JLabel("Source:");
+		lblSource.setBounds(12, 23, 70, 15);
+		panelIndividualNews.add(lblSource);
+		final ArrayList<GMSNewsDocument> bbcDocList = dbUtil.returnNewsForSource("http://www.bbc.co.uk");
+		final ArrayList<GMSNewsDocument> drDocList = dbUtil.returnNewsForSource("http://www.dailyrecord.co.uk");
+		final ArrayList<GMSNewsDocument> etDocList = dbUtil.returnNewsForSource("http://www.scotsman.com");
+		final ArrayList<GMSNewsDocument> scotDocList = dbUtil.returnNewsForSource("Evening Times");
+		
+		
+		JComboBox comboBoxSource = new JComboBox(sourceStrings);
+		final JComboBox comboBoxEachNews = new JComboBox();
+		comboBoxSource.setBounds(73, 18, 147, 24);
+		panelIndividualNews.add(comboBoxSource);
+		comboBoxSource.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				JComboBox cb = (JComboBox) e.getSource();
+				String source = (String) cb.getSelectedItem();
+				String output = "";
+								
+				if (source.equals("BBC")) {
+					String[] array = new String[bbcDocList.size()];
+					int count = 0;
+					for(GMSNewsDocument tmpDoc : bbcDocList){
+						//comboBoxEachNews.addItem(tmpDoc.getTitle());
+						array[count++] = tmpDoc.getTitle();
+					}
+					DefaultComboBoxModel model = new DefaultComboBoxModel( array);
+					comboBoxEachNews.setModel( model );
+				} else if (source.equals("DailyRecord")) {
+					String[] array = new String[drDocList.size()];
+					int count = 0;
+					for(GMSNewsDocument tmpDoc : drDocList){
+						//comboBoxEachNews.addItem(tmpDoc.getTitle());
+						array[count++] = tmpDoc.getTitle();
+					}
+					DefaultComboBoxModel model = new DefaultComboBoxModel( array);
+					comboBoxEachNews.setModel( model );
+				} else if (source.equals("The Scotsman")) {
+					String[] array = new String[scotDocList.size()];
+					int count = 0;
+					for(GMSNewsDocument tmpDoc : scotDocList){
+						//comboBoxEachNews.addItem(tmpDoc.getTitle());
+						array[count++] = tmpDoc.getTitle();
+					}
+					DefaultComboBoxModel model = new DefaultComboBoxModel( array);
+					comboBoxEachNews.setModel( model );
+				} else if (source.equals("Evening Times")) {
+					String[] array = new String[etDocList.size()];
+					int count = 0;
+					for(GMSNewsDocument tmpDoc : etDocList){
+						//comboBoxEachNews.addItem(tmpDoc.getTitle());
+						array[count++] = tmpDoc.getTitle();
+					}
+					DefaultComboBoxModel model = new DefaultComboBoxModel( array);
+					comboBoxEachNews.setModel( model );
+				}
+			}
+		});
+		
+		JLabel lblNews = new JLabel("News:");
+		lblNews.setBounds(238, 23, 70, 15);
+		panelIndividualNews.add(lblNews);
+		
+		
+		comboBoxEachNews.setBounds(287, 18, 531, 24);
+		panelIndividualNews.add(comboBoxEachNews);
+		
+		JSeparator separator_3 = new JSeparator();
+		separator_3.setBounds(12, 61, 806, 2);
+		panelIndividualNews.add(separator_3);
+		
+		JLabel lblTitle = new JLabel("Title:");
+		lblTitle.setBounds(12, 75, 70, 26);
+		panelIndividualNews.add(lblTitle);
+		
+		final JTextPane textPaneTitle = new JTextPane();
+		textPaneTitle.setText("");
+		textPaneTitle.setBounds(58, 75, 493, 26);
+		panelIndividualNews.add(textPaneTitle);
+		
+		JLabel lblDate = new JLabel("Date:");
+		lblDate.setBounds(565, 75, 70, 26);
+		panelIndividualNews.add(lblDate);
+		
+		final JTextPane textPaneDate = new JTextPane();
+		textPaneDate.setText("");
+		textPaneDate.setBounds(615, 75, 203, 26);
+		panelIndividualNews.add(textPaneDate);
+		
+		JLabel lblNewsSizewithout = new JLabel("News Size:");
+		lblNewsSizewithout.setBounds(12, 120, 91, 26);
+		panelIndividualNews.add(lblNewsSizewithout);
+		
+		final JTextPane textPaneNewsSize = new JTextPane();
+		textPaneNewsSize.setText("");
+		textPaneNewsSize.setBounds(92, 113, 190, 40);
+		panelIndividualNews.add(textPaneNewsSize);
+		
+		JLabel lblImageSizes = new JLabel("Image Size:");
+		lblImageSizes.setBounds(284, 120, 82, 26);
+		panelIndividualNews.add(lblImageSizes);
+		
+		final JTextPane textPaneImageSize = new JTextPane();
+		textPaneImageSize.setText("");
+		textPaneImageSize.setBounds(365, 113, 188, 40);
+		panelIndividualNews.add(textPaneImageSize);
+		
+		JLabel lblTotalSize = new JLabel("Total Size:");
+		lblTotalSize.setBounds(553, 120, 82, 26);
+		panelIndividualNews.add(lblTotalSize);
+		
+		final JTextPane textPaneTotalSize = new JTextPane();
+		textPaneTotalSize.setText("");
+		textPaneTotalSize.setBounds(630, 113, 190, 40);
+		panelIndividualNews.add(textPaneTotalSize);
+		
+		comboBoxEachNews.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				JComboBox cb = (JComboBox) e.getSource();
+				String source = (String) cb.getSelectedItem();
+				HashMap<String, String> tmpMap = dbUtil.returnURL(source);
+				String timeStamp = tmpMap.get("timeStamp");
+				String URL = tmpMap.get("url");
+				ArrayList<String> imageNameList = dbUtil.imageName(URL);
+				
+				long elementSize = dbUtil.totalSizeEachElement(URL);
+				
+				long imageSize = imageSize(imageNameList);
+				
+				textPaneDate.setText(timeStamp);
+				textPaneTitle.setText(source);
+				textPaneNewsSize.setText(String.format("%dBytes, %.2fKB, %.2fMB\n", elementSize , (double) elementSize  / 1024,(double) elementSize / (1024 * 1024)));
+				textPaneImageSize.setText(String.format("%dBytes, %.2fKB, %.2fMB\n", imageSize, (double) imageSize / 1024,(double) imageSize / (1024 * 1024)));
+				textPaneTotalSize.setText(String.format("%dBytes, %.2fKB, %.2fMB\n", (imageSize + elementSize), (double) (imageSize + elementSize) / 1024,(double) (imageSize + elementSize) / (1024 * 1024)));
+				
+			}
+			
+			
+		});
+		
 	}
+	
+	/*private class OperatorAction implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	}*/
 	
 	public static long folderSize(File directory) {
 	    long length = 0;
@@ -422,6 +582,15 @@ public class StatWindow1 {
 	            length += file.length();
 	        else
 	            length += folderSize(file);
+	    }
+	    return length;
+	}
+	
+	public static long imageSize(ArrayList<String> imageList) {
+	    long length = 0;
+	    for(String image : imageList){
+	    	File file = new File("/home/ripul/resources/images/" + image);
+	    	length += file.length();
 	    }
 	    return length;
 	}
