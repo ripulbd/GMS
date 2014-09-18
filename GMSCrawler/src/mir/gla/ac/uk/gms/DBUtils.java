@@ -298,4 +298,36 @@ public class DBUtils {
 		}
 		return tempList;
 	}
+	
+	public ArrayList<GMSNewsDocument> returnNewsForSource(String source){
+		ArrayList<GMSNewsDocument> newsDocList = new ArrayList<GMSNewsDocument>();
+		BasicDBObject searchQuery = new BasicDBObject();
+		searchQuery.put("source", source);
+	 
+		DBCursor cursor = table.find(searchQuery);
+		while(cursor.hasNext()){
+			DBObject dbObject = cursor.next();
+			
+			String title = dbObject.get("title").toString();
+			String URL = dbObject.get("url").toString();
+			String timeStamp = dbObject.get("timeStamp").toString();
+			
+			GMSNewsDocument newsDoc = new GMSNewsDocument(URL);
+			newsDoc.setTitle(title);
+			newsDoc.setTimeStamp(timeStamp);
+			newsDocList.add(newsDoc);
+		}
+		return newsDocList;
+	}
+	
+	public String returnURL(String title){
+		String URL = "";
+		BasicDBObject searchQuery = new BasicDBObject();
+		searchQuery.put("title", title);
+	 
+		DBCursor cursor = table.find(searchQuery);
+		DBObject dbObject = cursor.one();
+		
+		return URL;
+	}
 }

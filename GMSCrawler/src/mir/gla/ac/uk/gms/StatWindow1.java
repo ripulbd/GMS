@@ -24,7 +24,7 @@ import java.io.File;
 
 import javax.swing.JTextPane;
 
-public class StadWindow {
+public class StatWindow1 {
 
 	private JFrame frmGmsStatistics;	
 
@@ -35,7 +35,7 @@ public class StadWindow {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					StadWindow window = new StadWindow();
+					StatWindow1 window = new StatWindow1();
 					window.frmGmsStatistics.setVisible(true);
 					Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 					 
@@ -55,7 +55,7 @@ public class StadWindow {
 	/**
 	 * Create the application.
 	 */
-	public StadWindow() {
+	public StatWindow1() {
 		initialize();
 	}
 
@@ -69,7 +69,7 @@ public class StadWindow {
 		frmGmsStatistics = new JFrame();
 		frmGmsStatistics.setResizable(false);
 		frmGmsStatistics.setTitle("GMS - Statistics");
-		frmGmsStatistics.setBounds(100, 100, 1215, 405);
+		frmGmsStatistics.setBounds(100, 100, 1215, 452);
 		frmGmsStatistics.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		JPanel panel = new JPanel();
@@ -83,6 +83,13 @@ public class StadWindow {
 		panel.setSize(1280, 736);		
 		frmGmsStatistics.getContentPane().add(panel);
 		panel.setLayout(null);
+		
+		String[] sourceStrings = { "BBC", "DailyRecord", "The Scotsman", "Evening Times"};
+		
+		final JComboBox jComboDbTotalSizeWithoutImage = new JComboBox(sourceStrings);
+		final JComboBox jComboDbTotalSizeImageOnly = new JComboBox(sourceStrings);
+		final JComboBox jComboDbTotalSizeTotal = new JComboBox(sourceStrings);
+		
 		
 		/**
 		 * Each title border represents an inner panel and consists of several components.  
@@ -122,9 +129,11 @@ public class StadWindow {
 		textPane.setBounds(12, 142, 382, 26);
 		dbInnerPannel.add(textPane);
 		
-		String[] sourceStrings = { "BBC", "DailyRecord", "The Scotsman", "Evening Times"};
-
-		JComboBox jComboDbTotalSizeWithoutImage = new JComboBox(sourceStrings);
+		long size = dbUtil.totalSize("http://www.bbc.co.uk");
+        String outputToTextPane = String.format("%d Bytes, %.2fKB, %.2fMB\n", size, (double) size / 1024, (double) size / (1024 * 1024));
+        textPane.setText(outputToTextPane);
+		
+		
 		jComboDbTotalSizeWithoutImage.setBounds(150, 96, 244, 20);
 		jComboDbTotalSizeWithoutImage.addActionListener(new ActionListener() {
 			
@@ -134,10 +143,26 @@ public class StadWindow {
 				JComboBox cb = (JComboBox)e.getSource();
 		        String source = (String)cb.getSelectedItem();
 		        String sourceQueryString = "";
-		        if(source.equals("BBC"))sourceQueryString = "http://www.bbc.co.uk";
-		        else if(source.equals("DailyRecord"))sourceQueryString = "http://www.dailyrecord.co.uk";
-		        else if(source.equals("The Scotsman"))sourceQueryString = "http://www.scotsman.com";
-		        else if(source.equals("Evening Times"))sourceQueryString = "Evening Times";
+		        if(source.equals("BBC")){
+		        	jComboDbTotalSizeImageOnly.setSelectedIndex(0);
+		        	jComboDbTotalSizeTotal.setSelectedIndex(0);
+		        	sourceQueryString = "http://www.bbc.co.uk";
+		        }
+		        else if(source.equals("DailyRecord")){
+		        	jComboDbTotalSizeImageOnly.setSelectedIndex(1);
+		        	jComboDbTotalSizeTotal.setSelectedIndex(1);
+		        	sourceQueryString = "http://www.dailyrecord.co.uk";
+		        }
+		        else if(source.equals("The Scotsman")){
+		        	jComboDbTotalSizeImageOnly.setSelectedIndex(2);
+		        	jComboDbTotalSizeTotal.setSelectedIndex(2);
+		        	sourceQueryString = "http://www.scotsman.com";
+		        }
+		        else if(source.equals("Evening Times")){
+		        	jComboDbTotalSizeImageOnly.setSelectedIndex(3);
+		        	jComboDbTotalSizeTotal.setSelectedIndex(3);
+		        	sourceQueryString = "Evening Times";
+		        }
 		        long size = dbUtil.totalSize(sourceQueryString);
 		        String output = String.format("%d Bytes, %.2fKB, %.2fMB\n", size, (double) size / 1024, (double) size / (1024 * 1024));
 		        textPane.setText(output);
@@ -187,9 +212,9 @@ public class StadWindow {
 		final JTextPane textPaneImageOnly = new JTextPane();
 		textPaneImageOnly.setBounds(12, 142, 382, 26);
 		imageInnerPannel.add(textPaneImageOnly);
+		textPaneImageOnly.setText(String.format("%d Bytes, %.2fKB, %.2fMB\n", bbcImageSize, (double) bbcImageSize / 1024, (double) bbcImageSize / (1024 * 1024)));
 		
 
-		JComboBox jComboDbTotalSizeImageOnly = new JComboBox(sourceStrings);
 		jComboDbTotalSizeImageOnly.setBounds(185, 98, 199, 20);
 		jComboDbTotalSizeImageOnly.addActionListener(new ActionListener() {
 			
@@ -200,15 +225,23 @@ public class StadWindow {
 		        String source = (String)cb.getSelectedItem();
 		        String output = "";
 		        if(source.equals("BBC")){
+		        	jComboDbTotalSizeWithoutImage.setSelectedIndex(0);
+		        	jComboDbTotalSizeTotal.setSelectedIndex(0);
 		        	output =  String.format("%d Bytes, %.2fKB, %.2fMB\n", bbcImageSize, (double) bbcImageSize / 1024, (double) bbcImageSize / (1024 * 1024));
 		        }
 		        else if(source.equals("DailyRecord")){
+		        	jComboDbTotalSizeWithoutImage.setSelectedIndex(1);
+		        	jComboDbTotalSizeTotal.setSelectedIndex(1);
 		        	output =  String.format("%d Bytes, %.2fKB, %.2fMB\n", drImageSize, (double) drImageSize / 1024, (double) drImageSize / (1024 * 1024));
 		        }
 		        else if(source.equals("The Scotsman")){
+		        	jComboDbTotalSizeWithoutImage.setSelectedIndex(2);
+		        	jComboDbTotalSizeTotal.setSelectedIndex(2);
 		        	output =  String.format("%d Bytes, %.2fKB, %.2fMB\n", scotImageSize, (double) scotImageSize / 1024, (double) scotImageSize / (1024 * 1024));
 		        }
 		        else if(source.equals("Evening Times")){
+		        	jComboDbTotalSizeWithoutImage.setSelectedIndex(3);
+		        	jComboDbTotalSizeTotal.setSelectedIndex(3);
 		        	output =  String.format("%d Bytes, %.2fKB, %.2fMB\n", etImageSize, (double) etImageSize / 1024, (double) etImageSize / (1024 * 1024));
 		        }
 		        
@@ -231,8 +264,8 @@ public class StadWindow {
 		
 		//Components..........
 		JLabel lblDbTotalSizeTotal = new JLabel("Total size of all data: ");
-		lblDbTotalSizeImageOnly.setBounds(12, 18, 182, 21);
-		totalInnerPannel.add(lblDbTotalSizeImageOnly);
+		lblDbTotalSizeTotal.setBounds(12, 18, 182, 21);
+		totalInnerPannel.add(lblDbTotalSizeTotal);
 
 		JTextPane textDbTotalSizeTotal = new JTextPane();
 		textDbTotalSizeTotal.setSize(new Dimension(40, 0));
@@ -254,8 +287,11 @@ public class StadWindow {
 		final JTextPane textPaneTotal = new JTextPane();
 		textPaneTotal.setBounds(12, 142, 382, 26);
 		totalInnerPannel.add(textPaneTotal);
+		
+		long bbcTotalSize = dbUtil.totalSize("http://www.bbc.co.uk");
+		String outputTotal = String.format("%d Bytes, %.2fKB, %.2fMB\n", (bbcTotalSize + bbcImageSize), (double) (bbcTotalSize + bbcImageSize) / 1024,(double) (bbcTotalSize + bbcImageSize) / (1024 * 1024));
+		textPaneTotal.setText(outputTotal);
 
-		JComboBox jComboDbTotalSizeTotal = new JComboBox(sourceStrings);
 		jComboDbTotalSizeTotal.setBounds(185, 98, 199, 20);
 		jComboDbTotalSizeTotal.addActionListener(new ActionListener() {
 
@@ -266,19 +302,27 @@ public class StadWindow {
 				String source = (String) cb.getSelectedItem();
 				String output = "";
 				if (source.equals("BBC")) {
+					jComboDbTotalSizeImageOnly.setSelectedIndex(0);
+					jComboDbTotalSizeImageOnly.setSelectedIndex(0);
 			        long size = dbUtil.totalSize("http://www.bbc.co.uk");
 					output = String.format("%d Bytes, %.2fKB, %.2fMB\n", (size + bbcImageSize), (double) (size + bbcImageSize) / 1024,(double) (size + bbcImageSize) / (1024 * 1024));
 				} else if (source.equals("DailyRecord")) {
+					jComboDbTotalSizeImageOnly.setSelectedIndex(1);
+					jComboDbTotalSizeImageOnly.setSelectedIndex(1);
 					long size = dbUtil.totalSize("http://www.dailyrecord.co.uk");
 					output = String.format("%d Bytes, %.2fKB, %.2fMB\n", (size + drImageSize), (double) (size + drImageSize) / 1024, (double) (size + drImageSize) / (1024 * 1024));
 				} else if (source.equals("The Scotsman")) {
+					jComboDbTotalSizeImageOnly.setSelectedIndex(2);
+					jComboDbTotalSizeImageOnly.setSelectedIndex(2);
 					long size = dbUtil.totalSize("http://www.scotsman.com");
 					output = String.format("%d Bytes, %.2fKB, %.2fMB\n", (size + scotImageSize), (double) (size + scotImageSize) / 1024, (double) (size + scotImageSize) / (1024 * 1024));
 				} else if (source.equals("Evening Times")) {
 					long size = dbUtil.totalSize("Evening Times");
+					jComboDbTotalSizeImageOnly.setSelectedIndex(3);
+					jComboDbTotalSizeImageOnly.setSelectedIndex(3);
 					output = String.format("%d Bytes, %.2fKB, %.2fMB\n", (size + etImageSize), (double) (size + etImageSize) / 1024,(double) (size + etImageSize) / (1024 * 1024));
 				}
-
+				
 				textPaneTotal.setText(output);
 			}
 		});
@@ -290,6 +334,84 @@ public class StadWindow {
 		JSeparator separator = new JSeparator();
 		separator.setBounds(8, 216, width - 20, 2);
 		panel.add(separator);
+		
+		/**
+		 * Total Number Panel Starts here....
+		 */
+		JPanel panelTotalNumber = new JPanel();
+		panelTotalNumber.setLayout(null);
+		panelTotalNumber.setBounds(8, 226, 406, 165);
+		TitledBorder titledBorderTotalNumber = new TitledBorder("Total Number Stat:");
+		panelTotalNumber.setBorder(titledBorderTotalNumber);
+		panel.add(panelTotalNumber);
+		
+		JLabel labelTotalNumber = new JLabel("Total number of news: ");
+		labelTotalNumber.setBounds(12, 24, 163, 15);
+		panelTotalNumber.add(labelTotalNumber);
+		
+		JTextPane textPaneTotalNumber = new JTextPane();
+		textPaneTotalNumber.setText("");
+		textPaneTotalNumber.setSize(new Dimension(40, 0));
+		textPaneTotalNumber.setEditable(false);
+		textPaneTotalNumber.setBounds(180, 18, 214, 21);
+		panelTotalNumber.add(textPaneTotalNumber);
+		
+		long totalNumber = dbUtil.totalNumber();
+		output = String.format("%d", totalNumber);
+		textPaneTotalNumber.setText(output);
+		
+		JSeparator separator_2 = new JSeparator();
+		separator_2.setBounds(12, 61, 380, 2);
+		panelTotalNumber.add(separator_2);
+		
+		JLabel labelTotalNumberSource = new JLabel("Total number of news for each source:");
+		labelTotalNumberSource.setBounds(12, 75, 282, 21);
+		panelTotalNumber.add(labelTotalNumberSource);
+		
+		final JTextPane textPaneTotalNumberSource = new JTextPane();
+		textPaneTotalNumberSource.setText("");
+		textPaneTotalNumberSource.setBounds(208, 108, 185, 26);
+		panelTotalNumber.add(textPaneTotalNumberSource);
+		
+		long number= dbUtil.totalNumber("http://www.bbc.co.uk");
+		//textPaneTotalNumberSource.setText(String.format("%d", number));
+			
+		JComboBox comboBoxTotalNumberSource = new JComboBox(sourceStrings);
+		comboBoxTotalNumberSource.setBounds(12, 108, 184, 26);
+		
+		comboBoxTotalNumberSource.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				JComboBox cb = (JComboBox) e.getSource();
+				String source = (String) cb.getSelectedItem();
+				String output = "";
+				if (source.equals("BBC")) {
+			        long number= dbUtil.totalNumber("http://www.bbc.co.uk");
+					output = String.format("%d", number);
+				} else if (source.equals("DailyRecord")) {
+					long number = dbUtil.totalNumber("http://www.dailyrecord.co.uk");
+					output = String.format("%d", number);
+				} else if (source.equals("The Scotsman")) {
+					long number = dbUtil.totalNumber("http://www.scotsman.com");
+					output = String.format("%d", number);
+				} else if (source.equals("Evening Times")) {
+					long number = dbUtil.totalNumber("Evening Times");
+					output = String.format("%d", number);
+				}
+				
+				textPaneTotalNumberSource.setText(output);
+			}
+		});
+		panelTotalNumber.add(comboBoxTotalNumberSource);
+		
+		JPanel panelIndividualNews = new JPanel();
+		panelIndividualNews.setLayout(null);
+		panelIndividualNews.setBounds(228, 226, 406, 165);
+		TitledBorder titledBorderIndividualNews = new TitledBorder("Stat for individual news:");
+		panelIndividualNews.setBorder(titledBorderIndividualNews);
+		panel.add(panelIndividualNews);
 		
 	}
 	

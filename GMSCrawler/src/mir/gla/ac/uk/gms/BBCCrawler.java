@@ -44,7 +44,7 @@ public class BBCCrawler extends AbstractCrawler {
 	 */
 	private ArrayList<HashMap<String, String>> urlInfos, relatedStories;
 	private GMSNewsDocument bbcNews; 							//a news document...
-	//private String outputFolder = "C:/Users/soumc/Downloads"; 	//where the images will be stored...
+	//private String outputFolder = "C:/Users/soumc/bbc_latest/"; 	//where the images will be stored...
 	private String outputFolder = "/home/ripul/images/bbc/";
 	private DBUtils dbUtils;										//the database utility class
 	private Queue<String> urlQueue;									//queue of the URLs to be crawled...
@@ -76,25 +76,23 @@ public class BBCCrawler extends AbstractCrawler {
 		System.out.println("URLs being fetched....");
 		int count = 0;
 				
-		while(!urlQueue.isEmpty()){
+	//while(!urlQueue.isEmpty()){
 				Document doc = null;
 			//System.out.println("Fetching RSS Link......");
 	        String currentURL = urlQueue.remove();
-	        //System.out.println("Current URL:" + currentURL);
+	       // System.out.println("Current URL:" + currentURL);
 	        doc = Jsoup.connect(currentURL).get();
-			System.out.println("Fetching links from the home page......");
+			//System.out.println("Fetching links from the home page......");
 			
-	        if(currentURL.equals("http://www.bbc.co.uk/news/scotland/glasgow_and_west/"))
-	        {
-	   
-	        /*
+	        if(currentURL.equals("http://www.bbc.co.uk/news/scotland/glasgow_and_west/")){
+	   	      
 	        	String URL=doc.select("div [id=top-story]").select("a.story").first().attr("abs:href");
 	        	String title = doc.select("div [id=top-story]").select("a.story").first().text();
 	        	//System.out.println (URL);
+	        	      	
+	        if(!alreadyInList(URL)){
 	        	if(!dbUtils.find("url", URL)){
-	        		urlQueue.add(URL);
-	        	
-	        	//if(!alreadyInList(URL)){
+		        urlQueue.add(URL);
 				HashMap<String, String> info = new HashMap<String, String>();
 				info.put("url", URL);
 				info.put("title", title);
@@ -102,11 +100,14 @@ public class BBCCrawler extends AbstractCrawler {
 				retrieveRelatedStory(URL);
 				  	
 	        	}
-				        	        
+	        	}
+				
+	       
 			
 	        	URL= doc.select("div [id=second-story]").select("a.story").first().attr("abs:href");
 				title=  doc.select("div [id=second-story]").select("a.story").first().text();
 				//System.out.println (URL);
+				if(!alreadyInList(URL)){
 				if(!dbUtils.find("url", URL)){ urlQueue.add(URL);
 				//if(!alreadyInList(URL)){
 					HashMap<String, String> info = new HashMap<String, String>();
@@ -115,19 +116,25 @@ public class BBCCrawler extends AbstractCrawler {
 					urlInfos.add(info);
 					retrieveRelatedStory(URL);
 				}
+				}
 		        
 				
 				URL=doc.select("div [id=third-story]").select("a.story").first().attr("abs:href");
 				title=  doc.select("div [id=third-story]").select("a.story").first().text();
 				//System.out.println (URL);
+				
 				if(!dbUtils.find("url", URL)){ urlQueue.add(URL);
-				//if(!alreadyInList(URL)){
+				if(!alreadyInList(URL)){
 				HashMap<String, String> info = new HashMap<String, String>();
 				info.put("url", URL);
 				info.put("title", title);
 				urlInfos.add(info);
 				retrieveRelatedStory(URL);
-			}
+		
+				}
+				}
+				
+			
 				
 	        	Elements eltop = doc.select ("div[id=other-top-stories]").select("a.story");
 				for (Element a:eltop){
@@ -135,52 +142,58 @@ public class BBCCrawler extends AbstractCrawler {
 					//System.out.println (other);
 				 title= a.text();
 					if(!dbUtils.find("url", URL)){ urlQueue.add(URL);
-					//if(!alreadyInList(URL)){
+					if(!alreadyInList(URL)){
 						HashMap<String, String> info = new HashMap<String, String>();
 						info.put("url", URL);
 						info.put("title", title);
 						urlInfos.add(info);
 						retrieveRelatedStory(URL);
 					}
+					}
 			       
 				}  
 				
-				*/    
-			
+				
+		
 				Elements elsport = doc.select ("div.featured-site-top-stories").select("ul").select ("li").select("a.story");
 				for (Element a:elsport){
-					 String URL= a.attr("abs:href");
-					  String title= a.text();
-					 System.out.println(URL);
+					 URL= a.attr("abs:href");
+					   title= a.text();
+					// System.out.println(URL);
 					
 					 if(!dbUtils.find("url", URL) ){
-					 // if(!alreadyInList(URL)){
+					if(!alreadyInList(URL)){
 						 urlQueue.add(URL);
 						HashMap<String, String> info = new HashMap<String, String>();
 						info.put("url", URL);
 						info.put("title", title);
 						urlInfos.add(info);
 						retrieveRelatedStory(URL);
-					//}
+					}
 			        
+				
 				}
-				}
-	       
+					 }
+	      
 	        }
+	      
 	        
-	        /*
+	       
 	        else {
 	        	
 	        	if(!alreadyInList(currentURL)){
+	        		if(!dbUtils.find("url", currentURL)){
 					HashMap<String, String> tempRelated = new HashMap<String, String>();
 					tempRelated.put("url", currentURL);
 					urlInfos.add(tempRelated);
 					retrieveRelatedStory(currentURL);
 				}
-				retrieveRelatedStory(currentURL);
+	        	}
+	        	retrieveRelatedStory(currentURL);
 	        }
-	        */
-	        }
+	//}
+	      
+	        //}
 	       
 		
 		//System.out.println(urlInfos);	
@@ -363,6 +376,7 @@ private void retrieveRelatedStory(String URL){
 				info1.put("title", relatedtitle);
 				//info1.put(", value)
 				urlInfos.add(info1);
+				moreretrieveRelatedStory(relatedlink);
 				//System.out.println(relatedlink);
 			}
 						
@@ -389,6 +403,7 @@ private void retrieveRelatedStory(String URL){
 				HashMap<String, String> info1 = new HashMap<String, String>();
 				info1.put("url", relatedlink);
 				urlInfos.add(info1);
+				moreretrieveRelatedStory(relatedlink);
 				//System.out.println ("related link added to queue");
 			}
 				
@@ -399,6 +414,89 @@ private void retrieveRelatedStory(String URL){
 	}
 	
 }
+
+
+private void moreretrieveRelatedStory(String relatedlink){
+	
+	Document doc = null;
+	String returnString = "";
+	try {
+		doc = Jsoup.connect(relatedlink).get();
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	
+	Elements relatedsport = doc.select("div [id=also-related-links]").select("ul").select("a.link");
+	String relsporttext=doc.select("div [id=also-related-links]").select("h3").text();
+	//System.out.println(related);
+	Elements relatednews = doc.select("div.story-related").select("a.story");
+	//System.out.println(related);
+	int x1=0;
+	String reltext=doc.select("div.see-also").select("h3").text();
+	
+	if (relatedsport!=null && relsporttext.equals("Also related to this story"))
+	{
+		for (Element e:relatedsport)
+		{
+			//HashMap<String, String> tempRelated = new HashMap<String, String>();
+			String relatedlink2=e.attr("abs:href");
+			String relatedtitle2=e.text();
+			//relatedlink= "www.bbc.co.uk" +relatedlink;
+			
+			if(relatedlink.equals("http://www.bbc.co.uk/sport/live/rugby-union/27447986"))continue;
+			 if(relatedlink.equals("http://www.bbc.co.uk/sport/live/rugby-union/27604419"))continue;
+			 if(relatedlink.equals("http://www.bbc.co.uk/sport/0/get-inspired/23179331"))continue;
+			 if(relatedlink.equals("http://www.bbc.co.uk/sport/0/get-inspired/23152583"))continue;
+			if(!alreadyInList(relatedlink2)){
+			if(!dbUtils.find("url", relatedlink2)){
+				urlQueue.add(relatedlink2);
+				HashMap<String, String> info1 = new HashMap<String, String>();
+				info1.put("url", relatedlink2);
+				info1.put("title", relatedtitle2);
+				//info1.put(", value)
+				urlInfos.add(info1);
+				//System.out.println(relatedlink);
+			}
+						
+			//}
+		x1++;
+		}
+	}
+		
+	}
+
+	if (x1==0 && relatednews!=null){
+		
+		if (reltext.equals("Related Stories"))
+				{
+			for (Element e:relatednews)
+			{
+				HashMap<String, String> tempRelated = new HashMap<String, String>();
+				String relatedlink3=e.attr("abs:href");
+				String relatedtitle3 = e.text();
+				//relatedlink= "www.bbc.co.uk" +relatedlink;
+				//System.out.println(relatedlink);
+				if(!alreadyInList(relatedlink3)){
+					urlQueue.add(relatedlink3);
+					// add the links to urlinfo because this is being used in main function to crawl urls
+					HashMap<String, String> info1 = new HashMap<String, String>();
+					info1.put("url", relatedlink3);
+					urlInfos.add(info1);
+					//moreretrieveRelatedStory(relatedlink);
+					//System.out.println ("related link added to queue");
+				}
+					
+			}
+			
+		}
+		
+		}
+	
+	
+	
+}
+
 
 
 /**
@@ -422,6 +520,7 @@ private String retrieveMainStory(Document doc){
 	//System.out.println(related);
 	Elements relatednews = doc.select("div.story-related").select("a.story");
 	//System.out.println(related);
+	/*
 	int x2=0;
 	if (relatedsport!=null && relsporttext.equals("Also related to this story") )
 	{
@@ -461,7 +560,7 @@ private String retrieveMainStory(Document doc){
 		
 	}
 	}
-	
+	*/
 	return returnString;
 }
 
@@ -565,10 +664,13 @@ if (el1!=null){
 		String imageLocation =  imageName1;	
 		//System.out.println("name is" +image_name);
 		int indexname = imageName1.lastIndexOf("/");
-        String imageName = "bbc_"+ imageName1.substring(indexname+1,imageName1.length());
+        String imageName = "bbc_"+imageName1.substring(indexname+1,imageName1.length());
 		 //System.out.println(imageName);
           String caption= im.select("span").text();
           if (caption.isEmpty())caption= im.select("img").attr("alt");
+          
+          
+          if (!caption.equals("line")){
           //System.out.println("caption is:" +caption);
                    
          boolean imageFlag = false;
@@ -589,6 +691,7 @@ if (el1!=null){
 	}
 
  	 }
+}
 
 
 if (exec==0 && el3!=null){
@@ -608,7 +711,9 @@ if (exec==0 && el3!=null){
            //int pos = caption.lastIndexOf("STV");
 		 // caption= caption.substring(0, pos-1);
          // System.out.println("caption is:" +caption);
-		
+ 
+        
+        if (!caption.equals("line")){
           boolean imageFlag = false;
           Response resultImageResponse = null;
       //Open a URL Stream
@@ -628,6 +733,7 @@ if (exec==0 && el3!=null){
   
 	
 	}
+}
   
 return imageLocAndCaption;
           
