@@ -133,7 +133,7 @@ public class ETCrawler extends AbstractCrawler {
 	        HtmlDivision div = (HtmlDivision) divs.get(0);
 	        commentNumText = div.asText();
 	        commentNumText = commentNumText.substring(0, commentNumText.indexOf(" "));
-	        System.out.println("CommentNumText:" + commentNumText);
+	        //System.out.println("CommentNumText:" + commentNumText);
 	        if(commentNumText.equals("Loading")){
 	        	if(loopCounter == 5)break;
 	        	System.out.println("Found Loading, trying out again!");
@@ -150,7 +150,7 @@ public class ETCrawler extends AbstractCrawler {
 		}
 		
 		int commentNumber = Integer.parseInt(commentNumText);
-        System.out.println("Comment Number:" + commentNumText);
+        //System.out.println("Comment Number:" + commentNumText);
         if(commentNumber > 0){
         	processComment(URL, etNews);
         }

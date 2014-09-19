@@ -98,7 +98,7 @@ public class BBCCrawlerTest {
 			e.printStackTrace();
 		}
 		cal = Calendar.getInstance();
-		System.out.println("##############-[BBC crawling starts at:" + dateFormat.format(cal.getTime()) + "]-##############");
+		System.out.println("##############-[BBC crawling ends at:" + dateFormat.format(cal.getTime()) + "]-##############");
 	}
 	
 	public static void copyFolder(File src, File dest)
