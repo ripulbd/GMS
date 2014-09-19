@@ -86,6 +86,10 @@ public class BBCCrawler extends AbstractCrawler {
 			
 	        if(currentURL.equals("http://www.bbc.co.uk/news/scotland/glasgow_and_west/")){
 	   	      
+	        	 Elements exist2=doc.select("div [id=top-story]");
+	         	
+	        	 if (!exist2.isEmpty())
+	         	{
 	        	String URL=doc.select("div [id=top-story]").select("a.story").first().attr("abs:href");
 	        	String title = doc.select("div [id=top-story]").select("a.story").first().text();
 	        	//System.out.println (URL);
@@ -101,11 +105,14 @@ public class BBCCrawler extends AbstractCrawler {
 				  	
 	        	}
 	        	}
+	         	}
 				
 	       
-			
-	        	URL= doc.select("div [id=second-story]").select("a.story").first().attr("abs:href");
-				title=  doc.select("div [id=second-story]").select("a.story").first().text();
+	        Elements exist=doc.select("div [id=second-story]");
+        	if (!exist.isEmpty())
+        	{
+	        	String URL= doc.select("div [id=second-story]").select("a.story").first().attr("abs:href");
+	        	String title=  doc.select("div [id=second-story]").select("a.story").first().text();
 				//System.out.println (URL);
 				if(!alreadyInList(URL)){
 				if(!dbUtils.find("url", URL)){ urlQueue.add(URL);
@@ -117,10 +124,13 @@ public class BBCCrawler extends AbstractCrawler {
 					retrieveRelatedStory(URL);
 				}
 				}
-		        
-				
-				URL=doc.select("div [id=third-story]").select("a.story").first().attr("abs:href");
-				title=  doc.select("div [id=third-story]").select("a.story").first().text();
+        	}
+        	Elements exist1=doc.select("div [id=third-story]");
+        	if (!exist1.isEmpty())
+        	{
+		
+        		String URL=doc.select("div [id=third-story]").select("a.story").first().attr("abs:href");
+        		String title=  doc.select("div [id=third-story]").select("a.story").first().text();
 				//System.out.println (URL);
 				
 				if(!dbUtils.find("url", URL)){ urlQueue.add(URL);
@@ -133,14 +143,14 @@ public class BBCCrawler extends AbstractCrawler {
 		
 				}
 				}
-				
+        	}
 			
 				
 	        	Elements eltop = doc.select ("div[id=other-top-stories]").select("a.story");
 				for (Element a:eltop){
-					 URL= a.attr("abs:href");
+					String URL= a.attr("abs:href");
 					//System.out.println (other);
-				 title= a.text();
+					String title= a.text();
 					if(!dbUtils.find("url", URL)){ urlQueue.add(URL);
 					if(!alreadyInList(URL)){
 						HashMap<String, String> info = new HashMap<String, String>();
@@ -157,8 +167,8 @@ public class BBCCrawler extends AbstractCrawler {
 		
 				Elements elsport = doc.select ("div.featured-site-top-stories").select("ul").select ("li").select("a.story");
 				for (Element a:elsport){
-					 URL= a.attr("abs:href");
-					   title= a.text();
+					String URL= a.attr("abs:href");
+					String title= a.text();
 					// System.out.println(URL);
 					
 					 if(!dbUtils.find("url", URL) ){
@@ -376,7 +386,7 @@ private void retrieveRelatedStory(String URL){
 				info1.put("title", relatedtitle);
 				//info1.put(", value)
 				urlInfos.add(info1);
-				moreretrieveRelatedStory(relatedlink);
+				//moreretrieveRelatedStory(relatedlink);
 				//System.out.println(relatedlink);
 			}
 						
@@ -403,7 +413,7 @@ private void retrieveRelatedStory(String URL){
 				HashMap<String, String> info1 = new HashMap<String, String>();
 				info1.put("url", relatedlink);
 				urlInfos.add(info1);
-				moreretrieveRelatedStory(relatedlink);
+				//moreretrieveRelatedStory(relatedlink);
 				//System.out.println ("related link added to queue");
 			}
 				
@@ -415,87 +425,6 @@ private void retrieveRelatedStory(String URL){
 	
 }
 
-
-private void moreretrieveRelatedStory(String relatedlink){
-	
-	Document doc = null;
-	String returnString = "";
-	try {
-		doc = Jsoup.connect(relatedlink).get();
-	} catch (IOException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
-	
-	Elements relatedsport = doc.select("div [id=also-related-links]").select("ul").select("a.link");
-	String relsporttext=doc.select("div [id=also-related-links]").select("h3").text();
-	//System.out.println(related);
-	Elements relatednews = doc.select("div.story-related").select("a.story");
-	//System.out.println(related);
-	int x1=0;
-	String reltext=doc.select("div.see-also").select("h3").text();
-	
-	if (relatedsport!=null && relsporttext.equals("Also related to this story"))
-	{
-		for (Element e:relatedsport)
-		{
-			//HashMap<String, String> tempRelated = new HashMap<String, String>();
-			String relatedlink2=e.attr("abs:href");
-			String relatedtitle2=e.text();
-			//relatedlink= "www.bbc.co.uk" +relatedlink;
-			
-			if(relatedlink.equals("http://www.bbc.co.uk/sport/live/rugby-union/27447986"))continue;
-			 if(relatedlink.equals("http://www.bbc.co.uk/sport/live/rugby-union/27604419"))continue;
-			 if(relatedlink.equals("http://www.bbc.co.uk/sport/0/get-inspired/23179331"))continue;
-			 if(relatedlink.equals("http://www.bbc.co.uk/sport/0/get-inspired/23152583"))continue;
-			if(!alreadyInList(relatedlink2)){
-			if(!dbUtils.find("url", relatedlink2)){
-				urlQueue.add(relatedlink2);
-				HashMap<String, String> info1 = new HashMap<String, String>();
-				info1.put("url", relatedlink2);
-				info1.put("title", relatedtitle2);
-				//info1.put(", value)
-				urlInfos.add(info1);
-				//System.out.println(relatedlink);
-			}
-						
-			//}
-		x1++;
-		}
-	}
-		
-	}
-
-	if (x1==0 && relatednews!=null){
-		
-		if (reltext.equals("Related Stories"))
-				{
-			for (Element e:relatednews)
-			{
-				HashMap<String, String> tempRelated = new HashMap<String, String>();
-				String relatedlink3=e.attr("abs:href");
-				String relatedtitle3 = e.text();
-				//relatedlink= "www.bbc.co.uk" +relatedlink;
-				//System.out.println(relatedlink);
-				if(!alreadyInList(relatedlink3)){
-					urlQueue.add(relatedlink3);
-					// add the links to urlinfo because this is being used in main function to crawl urls
-					HashMap<String, String> info1 = new HashMap<String, String>();
-					info1.put("url", relatedlink3);
-					urlInfos.add(info1);
-					//moreretrieveRelatedStory(relatedlink);
-					//System.out.println ("related link added to queue");
-				}
-					
-			}
-			
-		}
-		
-		}
-	
-	
-	
-}
 
 
 
