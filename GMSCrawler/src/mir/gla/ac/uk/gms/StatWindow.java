@@ -670,8 +670,7 @@ public class StatWindow {
 					fop.flush();
 					fop.close();
 		 
-					System.out.println("Done");
-		 
+					System.out.println("Done");		 
 				} catch (IOException ee) {
 					ee.printStackTrace();
 				} finally {
