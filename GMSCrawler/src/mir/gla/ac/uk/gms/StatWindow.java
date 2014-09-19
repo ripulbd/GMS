@@ -634,6 +634,7 @@ public class StatWindow {
 		final JComboBox comboBoxDateFile = new JComboBox(sourceStrings);
 		comboBoxDateFile.setBounds(118, 111, 116, 24);
 		panelCalendarStat.add(comboBoxDateFile);
+		comboBoxDateFile.setEnabled(false);
 		
 		final JTextPane textPaneDateSource = new JTextPane();
 		textPaneDateSource.setBounds(246, 113, 64, 21);
@@ -684,6 +685,7 @@ public class StatWindow {
 				}
 				System.out.println(total);
 				textPaneDateTotal.setText("" + dbUtil.totalNumberEachDate(total));
+				comboBoxDateFile.setEnabled(true);
 			}
 		});
 		
