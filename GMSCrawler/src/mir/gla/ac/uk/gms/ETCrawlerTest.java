@@ -34,26 +34,13 @@ public class ETCrawlerTest {
 		System.out.println("##############-[ET crawling starts at:" + dateFormat.format(cal.getTime()) + "]-##############");
 		
 		try {
-			/*String tmpURL = "http://www.eveningtimes.co.uk/news/u/michelle-mone-banned-for-six-months-after-speeding-on-m77.1408708353";
-			
-			HashMap<String, String> tmpHashMap = new HashMap<String, String>();
-			tmpHashMap.put("url", tmpURL);
-			tmpHashMap.put("title", "Michelle Mone banned for six months after speeding on M77");
-			
-			System.out.println("Added URL:" + tmpHashMap.get("url"));
-			GMSNewsDocument etDoc = (GMSNewsDocument) etCrawler.crawlNews(tmpHashMap);
-			System.out.println(etDoc);
-			etCrawler.store(etDoc);*/
-			
 			ArrayList<HashMap<String, String>> urlInfos = etCrawler.crawlURLs();
 			System.out.println("Total News Fetched:" + urlInfos.size());
-			int pauseCount = 0;
 			for(HashMap<String, String> tmpHashMap : urlInfos){
 				System.out.println("Added URL:" + tmpHashMap.get("url"));
 				GMSNewsDocument etDoc = (GMSNewsDocument) etCrawler.crawlNews(tmpHashMap);
 				//System.out.println(etDoc);
 				etCrawler.store(etDoc);
-				pauseCount++;
 				/**
 				 * The following code implements the politeness policy. It pauses for 10 seconds
 				 * after crawling each URL as per the policy of the robots.txt

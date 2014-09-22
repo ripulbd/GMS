@@ -671,7 +671,7 @@ public class StatWindow {
 					fop.flush();
 					fop.close();
 		 
-					System.out.println("Done");		 
+					//System.out.println("Done");		 
 				} catch (IOException ee) {
 					ee.printStackTrace();
 				} finally {
@@ -683,7 +683,7 @@ public class StatWindow {
 						ee.printStackTrace();
 					}
 				}
-				System.out.println(total);
+				//System.out.println(total);
 				textPaneDateTotal.setText("" + dbUtil.totalNumberEachDate(total));
 				comboBoxDateFile.setEnabled(true);
 			}

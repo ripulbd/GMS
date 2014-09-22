@@ -35,31 +35,14 @@ public class CrawlerTest {
 		System.out.println("##############-[Scotsman crawling starts at:" + dateFormat.format(cal.getTime()) + "]-##############");
 		
 		//video news: http://www.scotsman.com/what-s-on/music/piping-festival-aims-to-use-glasgow-2014-momentum-1-3502847
-		//Tow image news:http://www.scotsman.com/lifestyle/heritage/glasgow-to-recognise-slave-trade-links-1-3497713
-		//No comments news: http://www.scotsman.com/what-s-on/music/piping-festival-aims-to-use-glasgow-2014-momentum-1-3502847
-		
-		//http://www.scotsman.com/sport/commonwealth-games-day-11-and-closing-ceremony-1-3487434 commotwealth URL
 		
 		try {
 			ArrayList<HashMap<String, String>> urlInfos = scotsCrawler.crawlURLs();
-			//ArrayList<HashMap<String, String>> urlInfos = new ArrayList<HashMap<String, String>>();
-			/*HashMap<String, String> tmpHashMap = new HashMap<String, String>();
-			tmpHashMap.put("url", "http://www.scotsman.com/news/politics/top-stories/glasgow-2014-alex-salmond-hails-gallus-games-1-3497971");
-			tmpHashMap.put("timeStamp", "9 Aug 2014 17:32:55");
-			tmpHashMap.put("description", "Dummy Description....");
-			urlInfos.add(tmpHashMap);*/
 			System.out.println("Total News Fetched:" + urlInfos.size());
-			int count = 0, pauseCount = 0;
 			for(HashMap<String, String> tmpHashMap : urlInfos){
 				System.out.println("Added URL:" + tmpHashMap.get("url"));
 				GMSNewsDocument scotDoc = scotsCrawler.crawlNews(tmpHashMap);
-				//System.out.println(scotDoc);
-				//if(count == 5)break;
-				//count++;
-				//listOfDoc.add(scotDoc);
 				scotsCrawler.store();
-				pauseCount++;
-				count++;
 				/**
 				 * The following code implements the politeness policy. It pauses for 20 seconds
 				 * after crawling 10 URLs 
@@ -71,25 +54,6 @@ public class CrawlerTest {
 				}
 			}
 			
-			/*System.out.println("Finished fethcing and storing all news from the homepage, now fetching news from all related stories:"); 
-			for(GMSNewsDocument tmpScotDoc : listOfDoc){
-				ArrayList<HashMap<String, String>> tmpRelatedStories = tmpScotDoc.getRelatedStories();
-				if(tmpRelatedStories != null && tmpRelatedStories.size() > 0){
-					for(HashMap<String, String> tmpHashMap : tmpScotDoc.getRelatedStories()){
-						String tmpTitle = tmpHashMap.get("title");
-						String tmpURL = tmpHashMap.get("url");
-						if(tmpURL.contains("youtube.com"))continue;
-						ArrayList<HashMap<String, String>> tmpList = scotsCrawler.crawlRelatedStory(tmpTitle, tmpURL);
-						if(tmpList != null){
-							GMSNewsDocument scotDoc = scotsCrawler.crawlNews(tmpHashMap);
-							System.out.println(scotDoc);
-							listOfDoc.add(scotDoc);
-							scotsCrawler.store();
-						}
-					}
-				}
-			}*/
-			//GMSNewsDocument scotDoc = scotsCrawler.crawlNews(urlInfos.get(0));
 			/**
 			 * Now, copy the newly saved images from the java image folder to the Go-Lang image folder 
 			 */
@@ -102,7 +66,6 @@ public class CrawlerTest {
 		    	if(!srcFolder.exists()){
 		 
 		           System.out.println("Directory does not exist.");
-		           //just exit
 		           System.exit(0);
 		 
 		        }else{
@@ -168,7 +131,6 @@ public class CrawlerTest {
 	 
 	    	        in.close();
 	    	        out.close();
-	    	        //System.out.println("File copied from " + src + " to " + dest);
 	    	}
 	    }
 

@@ -482,7 +482,7 @@ public class DrCrawler extends AbstractCrawler {
 	                				}
 	                		         
 	                		         if(imageFlag && saveImage(resultImageResponse, imageLocAndCaption, imageName, caption)){
-	                						System.out.println("main image Saved and caption added!");
+	                						//System.out.println("main image Saved and caption added!");
 	                					}
 	                					
 	                			}

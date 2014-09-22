@@ -34,10 +34,13 @@ public class ETCrawler extends AbstractCrawler {
 	private DBUtils dbUtils;
 	private String masterURL;
 	private WebClient webClient;
+	private DNSResolver dnsResolver;
 	public ETCrawler(String masterURL) {
 		// TODO Auto-generated constructor stub
 		super(masterURL);
 		this.masterURL = masterURL;
+		
+		dnsResolver = new DNSResolver("dns.txt");
 		dbUtils = new DBUtils();
 		webClient = new WebClient();
 		webClient.getOptions().setThrowExceptionOnScriptError(false);
