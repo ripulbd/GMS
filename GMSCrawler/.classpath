@@ -33,5 +33,6 @@
 	<classpathentry kind="lib" path="libs/microba-0.4.4.3-javadoc.jar"/>
 	<classpathentry kind="lib" path="libs/microba-0.4.4.3-sources.jar"/>
 	<classpathentry kind="lib" path="libs/microba-0.4.4.3.jar" sourcepath="libs/microba-0.4.4.3-sources.jar"/>
+	<classpathentry kind="lib" path="libs/dnsjava-2.1.6.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
