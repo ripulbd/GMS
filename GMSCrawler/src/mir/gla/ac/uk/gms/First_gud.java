@@ -1,6 +1,9 @@
 package mir.gla.ac.uk.gms;
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -44,11 +47,12 @@ public class First_gud {
 		
 	 WebClient webClient;
 	 HtmlAnchor anchor1;
-	String masterURL = "http://discussion.theguardian.com/discussion/p/4xnz9?orderby=oldest&commentpage=2&per_page=50";
+	//String masterURL = "http://discussion.theguardian.com/discussion/p/4xnz9?orderby=oldest&commentpage=1&per_page=50";
 	
 	 	Queue<String> urlQueue;
 		urlQueue = new LinkedList<String>();
-urlQueue.add(masterURL);
+		//urlQueue.add(masterURL);
+		
 		webClient = new WebClient();
 		webClient.getOptions().setThrowExceptionOnScriptError(false);
 	    webClient.getOptions().setThrowExceptionOnFailingStatusCode(false);
@@ -65,9 +69,31 @@ urlQueue.add(masterURL);
         java.util.logging.Logger.getLogger("org.apache.commons.httpclient").setLevel(Level.OFF);
 	
 
-           	HtmlPage page = (HtmlPage) webClient.getPage(new java.net.URL(masterURL));
+        	for(int i = 1; i <= 4; i++){
+        		String masterURL = "http://discussion.theguardian.com/discussion/p/4xnz9?orderby=oldest&commentpage=" + i + "&per_page=50&noposting=true&json=true&tab=all&forcetab=true";
+        		//http://discussion.theguardian.com/discussion/p/4xnz9?orderby=oldest&per_page=50&commentpage=1&noposting=true&json=true&tab=all&forcetab=true
+        		Page page =  webClient.getPage(new java.net.URL(masterURL));
+        		File file = new File("filename" + i + ".txt");
+        		System.out.println("page=" + page.getWebResponse().getContentAsString()); 
+    			// if file doesnt exists, then create it
+    			if (!file.exists()) {
+    				file.createNewFile();
+    			}
+     
+    			FileWriter fw = new FileWriter(file.getAbsoluteFile());
+    			BufferedWriter bw = new BufferedWriter(fw);
+    			bw.write(page.getWebResponse().getContentAsString());
+    			bw.close();
+    			try {
+				    Thread.sleep(5000);                 
+				} catch(InterruptedException ex) {
+				    Thread.currentThread().interrupt();
+				}
+        	}
+           	
 	        //System.out.println("page=" + page);
-	    	List<HtmlAnchor> anchors = page.getAnchors();
+	    	
+           	/*List<HtmlAnchor> anchors = page.getAnchors();
 	    	//System.out.println("anchor text is" +anchors.size());
 	    	       	    
 	    		   int counter=0;
@@ -91,7 +117,7 @@ urlQueue.add(masterURL);
 		    	     HtmlPage page1 = anchor1.click();
 		    	     String commentResponse = page1.getWebResponse().getContentAsString();
 		    	     System.out.println(commentResponse);
-
+		*/
     }
 	}	    	        
 		       
