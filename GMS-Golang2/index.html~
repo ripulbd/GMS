@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Glasgow Memory Server (GMS)</title>
+    <!--meta(name='description', content='website description')-->
+    <!--meta(name='keywords', content='website keywords, website keywords')-->
+    <meta content="text/html; charset=utf-8" http-equiv="content-type">
+    <link href="resources/stylesheets/style.css" rel="stylesheet" type="text/css">
+    <!--modernizr enables HTML5 elements and feature detects -->
+    <script src="resources/javascripts/modernizr-1.5.min.js" type="text/javascript"></script>
+</head>
+
+<body>
+    <div id="bg"><img alt="home" src="../../resources/images/glasgow.jpg"></div>
+
+    <div id="main">
+        <header>
+            <div id="logo">
+                <div id="logo_text">
+                    <!--class="logo_colour", allows you to change the colour of the text -->
+
+                    <h1><a href="index.html">Glasgow Memory Server
+                    (GMS)</a></h1>
+                </div>
+            </div>
+            
+            <div id="invisible">
+                <div id="invisible_text">
+                    <form class="form-wrapper cf">
+                		<button type="submit">Search</button><input placeholder="Search here..." required="required" type= "text" aligh="right">
+            		  </form>
+                </div>
+            </div>            
+            
+                <div id="menu_container">
+                    <ul id="menu-bar">
+                        <li class="active">
+                            <a href="/">Home</a>
+                        </li>
+
+                        <li>
+                            <a href="/news">News</a>
+
+                            <ul>
+                                <li>
+                                    <a href="/bbc">BBC</a>
+                                </li>
+								<li>
+                                    <a href="/dr">DailyRecord</a>
+                                </li>
+                                <li>
+                                    <a href="/scotsman">The Scotsman</a>
+                                </li>
+
+                                <li>
+                                    <a href="/et">Evening Times</a>
+                                </li>
+                                
+                            </ul>
+                        </li>
+
+                        <li>
+                            <a href="/blog">Blog</a>
+
+                            <ul>
+                                <li>
+                                    <a href="/blogger">Blogger</a>
+                                </li>
+
+                                <li>
+                                    <a href="/wordpress">Wordpress</a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li>
+                            <a href="/image">Image</a>
+
+                            <ul>
+                                <li>
+                                    <a href="/imgur">imgur</a>
+                                </li>
+
+                                <li>
+                                    <a href="/flickr">flickr</a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li>
+                            <a href="/video">Video</a>
+
+                            <ul>
+                                <li>
+                                    <a href="/bbcvid">BBC</a>
+                                </li>
+
+                                <li>
+                                    <a href="/youtube">Youtube</a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li>
+                            <a href="/twitter">Twitter</a>
+                        </li>
+
+                        <li>
+                            <a href="#">Contact Us</a>
+                        </li>
+                    </ul>
+                </div>            
+        </header>
+        <div id="site_content">
+            <!--<div class="sidebar" id="sidebar_container">
+                <h3>Latest News</h3>
+
+                <h4>News 1.</h4>
+
+                <h5>News 1.</h5>
+
+                <p>All other latest news.</p>
+            </div>-->
+
+            <div class="content">
+                <h1>Glasgow Memory Server (GMS): Home Page!</h1>             
+            </div>                                             		            		
+										            	            	
+            	<form action="/detailNews" id="readMore{{$index}}" method="post" name="readMore{{$index}}">
+            	<p></p>
+        			<div class="contents" id="content_container">
+            			<div class="inner_top">
+            				<div class="inner_top_font">Top BBC News:</a></div>
+            				<div class="inner_sort">
+            					Sort News: <a href="#">Latest</a> | <a href="#">Most Discussed</a>
+            				</div>
+            				            				
+            				<hr class="inner_separator">            				
+            			</div>
+            			<div id="inner_left_news">
+            			   <div id="inner_left_headline"><a href="#">Inner News Inner News Inner NewsInner NewsInner News</a> </div>            				          				
+            				<img alt= "alt" id="inner_left_image" src="../../resources/images/tryImage.jpg">
+            				<div id="inner_left_descr">Inner News Inner News Inner News</div>
+            			</div>            			            			
+            			<div id="inner_middle_right_news">
+            					<div id="inner_middle_right_news_first">
+            						<a href="#">First News First News First News</a>
+            					</div>
+            					<div id="inner_middle_right_news_first">
+            						<a href="#">Second News Second News Second News</a>
+            					</div>
+									<div id="inner_middle_right_news_first">
+            						<a href="#">Third News Third News Third News</a>
+            					</div>
+            					<div id="inner_middle_right_news_first">
+            						<a href="#">Third News Third News Third News</a>
+            					</div>									
+            			</div>
+            			<!--	<img alt= "alt" id="content_image" src="resources/images/">
+            			
+            			            			
+            			<div id="headline">
+                			Headline
+            			</div>
+
+            			<div id="source">
+                			Date:
+            			</div>
+
+            			<div id="source">
+                			Source:
+            			</div>
+
+            			<div id="more">
+                			<input name="query" type="hidden" value="alt">                			
+                			<a onclick="document.readMore{{$index}}.submit();" href="#">Read More</a>
+            			</div>-->
+        			</div>
+        			<div class="contents" id="content_container">
+            			<div class="inner_top">
+            				<div class="inner_top_font">Top Daily Record News:</a></div>
+            				<div class="inner_sort">
+            					Sort News: <a href="#">Latest</a> | <a href="#">Most Discussed</a>
+            				</div>
+            				            				
+            				<hr class="inner_separator">            				
+            			</div>
+            			<div id="inner_left_news">
+            			   <div id="inner_left_headline"><a href="#">Inner News Inner News Inner NewsInner NewsInner News</a> </div>            				          				
+            				<img alt= "alt" id="inner_left_image" src="../../resources/images/tryImage.jpg">
+            				<div id="inner_left_descr">Inner News Inner News Inner News</div>
+            			</div>            			            			
+            			<div id="inner_middle_right_news">
+            					<div id="inner_middle_right_news_first">
+            						<a href="#">First News First News First News</a>
+            					</div>
+            					<div id="inner_middle_right_news_first">
+            						<a href="#">Second News Second News Second News</a>
+            					</div>
+									<div id="inner_middle_right_news_first">
+            						<a href="#">Third News Third News Third News</a>
+            					</div>
+            					<div id="inner_middle_right_news_first">
+            						<a href="#">Third News Third News Third News</a>
+            					</div>									
+            			</div>            			
+        			</div>
+        			<div class="contents" id="content_container">
+            			<div class="inner_top">
+            				<div class="inner_top_font">Top Scotsman News:</a></div>
+            				<div class="inner_sort">
+            					Sort News: <a href="#">Latest</a> | <a href="#">Most Discussed</a>
+            				</div>
+            				            				
+            				<hr class="inner_separator">            				
+            			</div>
+            			<div id="inner_left_news">
+            			   <div id="inner_left_headline"><a href="#">Inner News Inner News Inner NewsInner NewsInner News</a> </div>            				          				
+            				<img alt= "alt" id="inner_left_image" src="../../resources/images/tryImage.jpg">
+            				<div id="inner_left_descr">Inner News Inner News Inner News</div>
+            			</div>            			            			
+            			<div id="inner_middle_right_news">
+            					<div id="inner_middle_right_news_first">
+            						<a href="#">First News First News First News</a>
+            					</div>
+            					<div id="inner_middle_right_news_first">
+            						<a href="#">Second News Second News Second News</a>
+            					</div>
+									<div id="inner_middle_right_news_first">
+            						<a href="#">Third News Third News Third News</a>
+            					</div>
+            					<div id="inner_middle_right_news_first">
+            						<a href="#">Third News Third News Third News</a>
+            					</div>									
+            			</div>            			
+        			</div>
+        			<div class="contents" id="content_container">
+            			<div class="inner_top">
+            				<div class="inner_top_font">Top Evening Times News:</a></div>
+            				<div class="inner_sort">
+            					Sort News: <a href="#">Latest</a> | <a href="#">Most Discussed</a>
+            				</div>
+            				            				
+            				<hr class="inner_separator">            				
+            			</div>
+            			<div id="inner_left_news">
+            			   <div id="inner_left_headline"><a href="#">Inner News Inner News Inner NewsInner NewsInner News</a> </div>            				          				
+            				<img alt= "alt" id="inner_left_image" src="../../resources/images/tryImage.jpg">
+            				<div id="inner_left_descr">Inner News Inner News Inner News</div>
+            			</div>            			            			
+            			<div id="inner_middle_right_news">
+            					<div id="inner_middle_right_news_first">
+            						<a href="#">First News First News First News</a>
+            					</div>
+            					<div id="inner_middle_right_news_first">
+            						<a href="#">Second News Second News Second News</a>
+            					</div>
+									<div id="inner_middle_right_news_first">
+            						<a href="#">Third News Third News Third News</a>
+            					</div>
+            					<div id="inner_middle_right_news_first">
+            						<a href="#">Third News Third News Third News</a>
+            					</div>									
+            			</div>            			
+        			</div>        			
+        			       			
+        			<!--<div class="contents" id="content_container">
+            			<div class="inner_top">
+            				<div class="inner_top_font">Top Daily Scotsman News:</a></div>
+            				<div class="inner_sort">
+            					Sort News: <a href="#">Latest</a> | <a href="#">Most Discussed</a>
+            				</div>
+            				            				
+            				<hr class="inner_separator">            				
+            			</div>
+            			<div id="inner_left_news">
+            			   <div id="inner_left_headline"><a href="#">Inner News Inner News Inner NewsInner NewsInner News</a> </div>            				          				
+            				<img alt= "alt" id="inner_left_image" src="resources/images/tryImage.jpg">
+            				<div id="inner_left_descr">Inner News Inner News Inner News</div>
+            			</div>            			
+            			<div id="inner_middle_right_news">
+            					<div id="inner_middle_right_news_first">
+            						<a href="#">First News First News First News</a>
+            					</div>
+            					<div id="inner_middle_right_news_first">
+            						<a href="#">Second News Second News Second News</a>
+            					</div>
+									<div id="inner_middle_right_news_first">
+            						<a href="#">Third News Third News Third News</a>
+            					</div>
+            					<div id="inner_middle_right_news_first">
+            						<a href="#">Third News Third News Third News</a>
+            					</div>									
+            			</div>
+            			<div id="inner_middle_right_news">
+            					<div id="inner_middle_right_news_first">
+            						<a href="#">First News First News First News</a>
+            					</div>
+            					<div id="inner_middle_right_news_first">
+            						<a href="#">Second News Second News Second News</a>
+            					</div>
+									<div id="inner_middle_right_news_first">
+            						<a href="#">Third News Third News Third News</a>
+            					</div>
+            					<div id="inner_middle_right_news_first">
+            						<a href="#">Third News Third News Third News</a>
+            					</div>									
+            			</div>            			
+        			</div>-->
+        			        			
+        			
+    			</form>                
+            
+
+            <script>
+function submitform(formName)
+            {
+            alert(formName);
+            document.formName.submit();
+            //document.getElementById(formName).submit();
+            }        
+            </script>
+        </div>
+
+        <div id="scroll">
+            <a class="top" href="#" title="Scroll to the top"><img alt="top"
+            src="resources/images/top.png"></a>
+        </div>
+
+        <footer>
+            <p><img alt="twitter" src="resources/images/twitter.png"> <img alt="facebook"
+            src="resources/images/facebook.png"> <img alt="rss" src="resources/images/rss.png"></p>
+
+            <p><a href="/">Home</a>|<a href="/news">News</a>|<a href=
+            "/blog">Blog</a>|<a href="/image">Image</a>|<a href=
+            "/video">Video</a>|<a href="/twitter">Twitter</a>|<a href=
+            "#">Contact Us</a></p>
+        </footer>
+    </div><!--javascript at the bottom for fast page loading -->
+    <script src="resources/javascripts/jquery.js" type="text/javascript"></script>
+</body>
+</html>

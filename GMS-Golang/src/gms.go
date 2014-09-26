@@ -55,7 +55,16 @@ type TopPage struct {
 	Pages []Page	
 }
 
-var templates = template.Must(template.ParseFiles("index.html", "news.html", "detailNews.html"))
+var funcMap = template.FuncMap{
+        // The name "inc" is what the function will be called in the template text.
+        "inc": func(i int) int {
+            return i + 1
+        },
+}
+
+var templates = template.Must(template.New("test").Funcs(funcMap).ParseFiles("index.html", "news.html", "detailNews.html"))
+
+//template.New("test").Funcs(funcMap).Parse(``)
 
 func renderTemplate(w http.ResponseWriter, tmpl string, p *TopPage) {
 	// Execute the template for each recipient.

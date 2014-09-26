@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Glasgow Memory Server (GMS)</title>
+    <!--meta(name='description', content='website description')-->
+    <!--meta(name='keywords', content='website keywords, website keywords')-->
+    <meta content="text/html; charset=utf-8" http-equiv="content-type">
+    <link href="resources/stylesheets/style2.css" rel="stylesheet" type="text/css">
+    <!--modernizr enables HTML5 elements and feature detects -->
+    <script src="resources/javascripts/modernizr-1.5.min.js" type="text/javascript"></script>
+</head>
+
+<body>
+    <div id="bg"><img alt="home" src="resources/images/glasgow.jpg"></div>
+
+    <div id="main">
+        <header>
+            <div id="logo">
+                <div id="logo_text">
+                    <!--class="logo_colour", allows you to change the colour of the text -->
+
+                    <h1><a href="index.html">Glasgow Memory Server
+                    (GMS)</a></h1>
+                </div>
+            </div>
+
+            <form class="form-wrapper cf">
+                <input placeholder="Search here..." required="required" type=
+                "text"><button type="submit">Search</button>
+            </form>
+
+            <nav>
+                <div id="menu_container">
+                    <ul id="menu-bar">
+                        <li>
+                            <a href="/">Home</a>
+                        </li>
+
+                        <li class="active">
+                            <a href="/news">News</a>
+
+                            <ul>
+                                <li>
+                                    <a href="/bbc">BBC</a>
+                                </li>
+								<li>
+                                    <a href="/dr">DailyRecord</a>
+                                </li>
+                                <li>
+                                    <a href="/scotsman">The Scotsman</a>
+                                </li>
+
+                                <li>
+                                    <a href="/et">Evening Times</a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li>
+                            <a href="/blog">Blog</a>
+
+                            <ul>
+                                <li>
+                                    <a href="/blogger">Blogger</a>
+                                </li>
+
+                                <li>
+                                    <a href="/wordpress">Wordpress</a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li>
+                            <a href="/image">Image</a>
+
+                            <ul>
+                                <li>
+                                    <a href="/imgur">imgur</a>
+                                </li>
+
+                                <li>
+                                    <a href="/flickr">flickr</a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li>
+                            <a href="/video">Video</a>
+
+                            <ul>
+                                <li>
+                                    <a href="/bbcvid">BBC</a>
+                                </li>
+
+                                <li>
+                                    <a href="/youtube">Youtube</a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li>
+                            <a href="/twitter">Twitter</a>
+                        </li>
+
+                        <li>
+                            <a href="#">Contact Us</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <div id="site_content">
+            <div class="sidebar" id="sidebar_container">
+                <h3>Latest News</h3>
+
+                <h4>News 1.</h4>
+
+                <h5>News 1.</h5>
+
+                <p>All other latest news.</p>
+            </div>
+
+            <div class="content">
+                <h1>Glasgow Memory Server (GMS): Home Page!</h1>
+
+                <p>{{.Headline}} </p>                
+            </div>                        
+            {{range $index, $element := .Pages}}
+            	{{if $index}}
+            		<hr class="separator">
+				{{end}}            	            	 
+            	<form action="/detailNews" id="readMore{{$index}}" method="post" name="readMore{{$index}}">
+        			<div class="contents" id="content_container">
+            			<h4 id="h4_content"><strong>{{printf "%s" $element.Title}}</strong></h4>
+            			{{if $element.Images}}
+            				{{$images := index $element.Images 0 }}
+            				<img alt= "{{printf "%s" $images.Caption}}" id="content_image" src="resources/images/{{printf "%s" $images.Name}}">
+            			
+            			{{end}}            			
+            			<div id="headline">
+                			{{printf "%s" $element.Description}}
+            			</div>
+
+            			<div id="source">
+                			Date: {{printf "%s" $element.TimeStamp}}
+            			</div>
+
+            			<div id="source">
+                			Source: {{printf "%s" $element.Source}} Website
+            			</div>
+
+            			<div id="more">
+                			<input name="query" type="hidden" value="{{printf "%s" .Title}}">
+                			<a href="#" onclick="document.readMore{{$index}}.submit()">Read More</a>
+            			</div>
+        			</div>
+        			
+    			</form>
+            {{end}}            
+            
+
+            <script>
+function submitform(formName)
+            {
+            alert(formName);
+            document.formName.submit();
+            //document.getElementById(formName).submit();
+            }        
+            </script>
+        </div>
+
+        <div id="scroll">
+            <a class="top" href="#" title="Scroll to the top"><img alt="top"
+            src="resources/images/top.png"></a>
+        </div>
+
+        <footer>
+            <p><img alt="twitter" src="resources/images/twitter.png"> <img alt="facebook"
+            src="resources/images/facebook.png"> <img alt="rss" src="resources/images/rss.png"></p>
+
+            <p><a href="/">Home</a>|<a href="/news">News</a>|<a href=
+            "/blog">Blog</a>|<a href="/image">Image</a>|<a href=
+            "/video">Video</a>|<a href="/twitter">Twitter</a>|<a href=
+            "#">Contact Us</a></p>
+        </footer>
+    </div><!--javascript at the bottom for fast page loading -->
+    <script src="resources/javascripts/jquery.js" type="text/javascript"></script>
+</body>
+</html>

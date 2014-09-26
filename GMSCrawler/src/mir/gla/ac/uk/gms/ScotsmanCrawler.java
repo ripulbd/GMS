@@ -429,7 +429,8 @@ public class ScotsmanCrawler extends AbstractCrawler {
 		Element image = article.getElementsByTag("img").first();
 		Element captionElement = article.select("p.flt-l").first();
 		if(image != null){
-			String caption = captionElement.text();
+			String caption = "";
+			if(captionElement != null) caption = captionElement.text();
 			if(caption.contains(" Picture"))caption = caption.substring(0, caption.indexOf(" Picture"));
 	        String imageName = image.attr("src");
 	        String imageLocation = "http://www.scotsman.com" + imageName;

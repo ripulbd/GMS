@@ -157,7 +157,7 @@
                     <hr class="inner_comment">
                     {{if .Comments}}                    	
                     	{{range $index, $element := .Comments}}
-                    		<h4>Comment - {{$index}} </h4>
+                    		<h4>Comment - {{inc $index}} </h4>
                     		<p>Name: {{$element.UserName}}</p>
                     		<p>Date: {{$element.TimeStamp}}</p>
                     		<p>UpVote: {{$element.UpVote}}</p>
@@ -171,7 +171,7 @@
                     				{{if $replyIndex }}
                     					<hr class="inner_comment_replies">
                     				{{end}}                    				
-                    				<h4>Comment Reply - {{$replyIndex}}</h4>
+                    				<h4>Comment Reply - {{inc $replyIndex}}</h4>
                     				<p>Name: {{$reply.UserName}}</p>
                     				<p>Date: {{$reply.TimeStamp}}</p>
                     				<p>UpVote: {{$reply.UpVote}}</p>
