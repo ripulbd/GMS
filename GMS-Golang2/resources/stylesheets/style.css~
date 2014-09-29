@@ -51,8 +51,8 @@ body {
 }
 
 p { 
-  padding: 0 0 16px 0;
-  line-height: 1.7em;
+  padding: 0 0 2px 0;
+  /*line-height: 1.7em;*/
 }
 
 img { 
@@ -175,7 +175,7 @@ header {
   border-radius: 7px;
   -moz-border-radius: 7px;
   -webkit-border: 7px;
-  background: url(../../../resources/images/menubar.png);
+  background: url(../images/menubar.png);
   opacity: 0.8;
   left: 0;
   padding: 10px 20px 20px 20px;
@@ -403,8 +403,8 @@ nav {
 
 #inner_left_image{
 	padding-top: 10px;	
-	height: 45%;
-	width: 45%;
+	height: 120px;
+	width: 120px;
 	float: left;
 	padding-left: 5px;
 	padding-bottom: 10px;	
@@ -412,7 +412,7 @@ nav {
 #inner_left_headline{	
 	padding-left: 5px;
 	padding-top: 5px;	
-	width: 80%;
+	width: 90%;
    white-space: nowrap;
    overflow: hidden;
    text-overflow: ellipsis;	
@@ -428,14 +428,35 @@ nav {
    text-overflow: ellipsis;	
 }
 
+#inner_all_news_div{	
+	/*padding-top: 12px;
+	padding-bottom: 12px;*/		
+	width: 99%;
+	/*padding-right:15px;
+	padding-left: 5px;*/
+   white-space: nowrap;
+   overflow: hidden;
+   text-overflow: ellipsis;	
+}
+
+
+#inner_all_news{
+	font-size: 1.5em;		
+	/*padding-top: 12px;*/
+	padding-bottom: 12px;		
+	float: right;
+	padding-right: 12px;	
+}
+
+
 #inner_left_descr{	
 	padding-left: 5px;
 	padding-top: 10px;
-	padding-right: 5px;
+	padding-right: 35px;
 	width: 45%;
 	height: 20%;   
-   word-break: break-all;	
-   float: right;
+   word-break: normal;	
+   float: right;   
 }
 
 #detail_image{
@@ -559,6 +580,10 @@ nav {
   float: left;
   font-size: 120%;
   padding: 14px 0 0 5px;
+}
+
+.content p { 
+  padding-left: 5px;
 }
   
 .content ul { 
@@ -692,6 +717,17 @@ footer a:hover {
   border-bottom: 1px solid #FFF;  
   float: left;  
   padding-left: 5px;
+  /*margin: 0 0 0 20px;*/
+  color: #FFFFFF;
+}
+
+.inner_all_news_separator{
+  width: 45%;   
+  height: 0;
+  /*border-top: 1px solid #D9D5CF;*/
+  border-bottom: 1px solid #FFF;  
+  float: right;  
+  /*padding-right: 15px;*/    
   /*margin: 0 0 0 20px;*/
   color: #FFFFFF;
 }
@@ -1035,4 +1071,9 @@ table tr td {
 .form-wrapper button::-moz-focus-inner { /* remove extra button spacing for Mozilla Firefox */
     border: 0;
     padding: 0;
+}
+
+a.currentlyActive
+{
+  text-decoration: underline;
 }

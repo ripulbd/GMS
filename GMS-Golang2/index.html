@@ -133,7 +133,7 @@
             			<div class="inner_top">
             				<div class="inner_top_font">Top BBC News:</a></div>
             				<div class="inner_sort">
-            					Sort News: <a href="#">Latest</a> | <a href="#">Most Discussed</a>
+            					Sort News: <a href="#" id="bbcLatest" style="text-decoration:underline">Latest</a> | <a href="#" id="bbcDiscussed">Most Discussed</a>
             				</div>
             				            				
             				<hr class="inner_separator">            				
@@ -220,7 +220,7 @@
             			<div class="inner_top">
             				<div class="inner_top_font">Top Daily Record News:</a></div>
             				<div class="inner_sort">
-            					Sort News: <a href="#">Latest</a> | <a href="#">Most Discussed</a>
+            					Sort News: <a href="#" id="drLatest" style="text-decoration:underline">Latest</a> | <a href="#" id="drDiscussed">Most Discussed</a>
             				</div>
             				            				
             				<hr class="inner_separator">            				
@@ -282,12 +282,12 @@
             			<div id="inner_all_news">
             					<a href="#">All Daily Record News</a>
 							</div>            			
-        			</div>
+        			</div>        			        			
         			<div class="contents" id="content_container">
             			<div class="inner_top">
             				<div class="inner_top_font">Top Scotsman News:</a></div>
             				<div class="inner_sort">
-            					Sort News: <a href="#">Latest</a> | <a href="#">Most Discussed</a>
+            					Sort News: <a id="scotLatest" style="text-decoration:underline">Latest</a> | <a id="scotDiscussed">Most Discussed</a>
             				</div>
             				            				
             				<hr class="inner_separator">            				
@@ -299,45 +299,45 @@
             				{{$fourth := index .Scot 3}}
             				{{$fifth := index .Scot 4}}
             			   {{if $first.Title}}
-            			   		<div id="inner_left_headline"><a href="#">{{$first.Title}}</a> </div>            					            					
+            			   		<div id="inner_left_headline"><a href="#" id="scotFirstTitle">{{$first.Title}}</a> </div>            					            					
             				{{else}}
-            					<div id="inner_left_headline"><a href="#">{{$first.Description}}</a> </div>
+            					<div id="inner_left_headline"><a href="#" id="scotFirstTitle">{{$first.Description}}</a> </div>
             				{{end}}
             			   {{if $first.Images}}
             					{{$images := index $first.Images 0 }}
-            					<img alt= "{{printf "%s" $images.Caption}}" id="inner_left_image" src="resources/images/{{printf "%s" $images.Name}}">
+            					<img alt= "{{printf "%s" $images.Caption}}" id="inner_left_image" class="scotInnerImage" src="resources/images/{{printf "%s" $images.Name}}">
             			   {{else}}
             					<img alt= "alt" id="inner_left_image" src="resources/images/tryImage.jpg">
             			   {{end}}            				          				            				
-            				<div id="inner_left_descr">{{$first.Description}}</div>
+            				<div id="inner_left_descr" class="scotFirstDescrition">{{$first.Description}}</div>
             			</div>            			            			
             			<div id="inner_middle_right_news">
             					<div id="inner_middle_right_news_first">
             						{{if $sec.Title}}
-            			   				<a href="#">{{$sec.Title}}</a>            					            					
+            			   				<a href="#" class="scotSecTitle">{{$sec.Title}}</a>            					            					
             						{{else}}
-            							<a href="#">{{$sec.Description}}</a>
+            							<a href="#" class="scotSecTitle">{{$sec.Description}}</a>
             						{{end}}            				            						
             					</div>
             					<div id="inner_middle_right_news_first">
             						{{if $third.Title}}
-            			   				<a href="#">{{$third.Title}}</a>            					            					
+            			   				<a href="#" class="scotThirdTitle">{{$third.Title}}</a>            					            					
             						{{else}}
-            							<a href="#">{{$third.Description}}</a>
+            							<a href="#" class="scotThirdTitle">{{$third.Description}}</a>
             						{{end}}            				            						
             					</div>
             					<div id="inner_middle_right_news_first">
             						{{if $fourth.Title}}
-            			   				<a href="#">{{$fourth.Title}}</a>            					            					
+            			   				<a href="#" class="scotFourthTitle">{{$fourth.Title}}</a>            					            					
             						{{else}}
-            							<a href="#">{{$fourth.Description}}</a>
+            							<a href="#" class="scotFourthTitle">{{$fourth.Description}}</a>
             						{{end}}            				            						
             					</div>
             					<div id="inner_middle_right_news_first">
             						{{if $fifth.Title}}
-            			   				<a href="#">{{$fifth.Title}}</a>            					            					
+            			   				<a href="#" class="scotFifthTitle">{{$fifth.Title}}</a>            					            					
             						{{else}}
-            							<a href="#">{{$fifth.Description}}</a>
+            							<a href="#" class="scotFifthTitle">{{$fifth.Description}}</a>
             						{{end}}            				            						
             					</div>									
             			</div>
@@ -350,11 +350,12 @@
             					<a href="#">All Scotsman News</a>
 							</div>            			
         			</div>
+        			
         			<div class="contents" id="content_container">
             			<div class="inner_top">
-            				<div class="inner_top_font">Top Evening Times News:</a></div>
+            				<div class="inner_top_font">Top Evening News:</a></div>
             				<div class="inner_sort">
-            					Sort News: <a href="#">Latest</a> | <a href="#">Most Discussed</a>
+            					Sort News: <a id="etLatest" style="text-decoration:underline">Latest</a> | <a id="etDiscussed">Most Discussed</a>
             				</div>
             				            				
             				<hr class="inner_separator">            				
@@ -366,46 +367,45 @@
             				{{$fourth := index .ET 3}}
             				{{$fifth := index .ET 4}}
             			   {{if $first.Title}}
-            			   		<div id="inner_left_headline"><a href="#">{{$first.Title}}</a> </div>            					            					
+            			   		<div id="inner_left_headline"><a href="#" id="etFirstTitle">{{$first.Title}}</a> </div>            					            					
             				{{else}}
-            					<div id="inner_left_headline"><a href="#">{{$first.Description}}</a> </div>
+            					<div id="inner_left_headline"><a href="#" id="etFirstTitle">{{$first.Description}}</a> </div>
             				{{end}}
-            			   	{{if $first.Images}}
+            			   {{if $first.Images}}
             					{{$images := index $first.Images 0 }}
-            					<img alt= "{{printf "%s" $images.Caption}}" id="inner_left_image" src="resources/images/{{printf "%s" $images.Name}}">
-            				{{else}}
-            					<img alt= "alt" id="inner_left_image" src="resources/images/tryImage.jpg"> 
-            				{{end}}            				          				
-            				
-            				<div id="inner_left_descr">{{$first.Description}}</div>
+            					<img alt= "{{printf "%s" $images.Caption}}" id="inner_left_image" class="etInnerImage" src="resources/images/{{printf "%s" $images.Name}}">
+            			   {{else}}
+            					<img alt= "alt" id="inner_left_image" src="resources/images/tryImage.jpg">
+            			   {{end}}            				          				            				
+            				<div id="inner_left_descr" class="etFirstDescrition">{{$first.Description}}</div>
             			</div>            			            			
             			<div id="inner_middle_right_news">
             					<div id="inner_middle_right_news_first">
             						{{if $sec.Title}}
-            			   				<a href="#">{{$sec.Title}}</a>            					            					
+            			   				<a href="#" class="etSecTitle">{{$sec.Title}}</a>            					            					
             						{{else}}
-            							<a href="#">{{$sec.Description}}</a>
+            							<a href="#" class="etSecTitle">{{$sec.Description}}</a>
             						{{end}}            				            						
             					</div>
             					<div id="inner_middle_right_news_first">
             						{{if $third.Title}}
-            			   				<a href="#">{{$third.Title}}</a>            					            					
+            			   				<a href="#" class="etThirdTitle">{{$third.Title}}</a>            					            					
             						{{else}}
-            							<a href="#">{{$third.Description}}</a>
+            							<a href="#" class="etThirdTitle">{{$third.Description}}</a>
             						{{end}}            				            						
             					</div>
             					<div id="inner_middle_right_news_first">
             						{{if $fourth.Title}}
-            			   				<a href="#">{{$fourth.Title}}</a>            					            					
+            			   				<a href="#" class="etFourthTitle">{{$fourth.Title}}</a>            					            					
             						{{else}}
-            							<a href="#">{{$fourth.Description}}</a>
+            							<a href="#" class="etFourthTitle">{{$fourth.Description}}</a>
             						{{end}}            				            						
             					</div>
             					<div id="inner_middle_right_news_first">
             						{{if $fifth.Title}}
-            			   				<a href="#">{{$fifth.Title}}</a>            					            					
+            			   				<a href="#" class="etFifthTitle">{{$fifth.Title}}</a>            					            					
             						{{else}}
-            							<a href="#">{{$fifth.Description}}</a>
+            							<a href="#" class="etFifthTitle">{{$fifth.Description}}</a>
             						{{end}}            				            						
             					</div>									
             			</div>
@@ -415,9 +415,9 @@
            				
             			
             			<div id="inner_all_news">
-            					<a href="#">All Evening Times News</a>
+            					<a href="#">All Scotsman News</a>
 							</div>            			
-        			</div>        			
+        			</div>        			        			       			
         			       			
         			<!--<div class="contents" id="content_container">
             			<div class="inner_top">
@@ -466,9 +466,102 @@
         			
     			</form>                
             
+            <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js">
+				</script>
 
             <script>
-function submitform(formName)
+            
+            
+            //$('#bbcLatest').off('click', function(e) {alert('You pressed BBC Latest'); $('#bbcDiscussed').on('click', false);  return false;})
+				//$('#bbcDiscussed').off('click', function(e) {alert('You pressed BBC Discussed'); $('#bbcLatest').on('click', false);  return false;})				
+            //$('#bbcLatest').bind('click', false);
+            
+            $(document).on("click", "#scotLatest", function(){
+            	//alert('You pressed Scot Latest');
+            	//$('#scotLatest').fadeTo("fast", .5).removeAttr("href");
+            	//$('#scotDiscussed').attr('href', '#');					 
+            	//return false;
+            	$("#scotLatest").css('textDecoration','underline');
+					$("#scotDiscussed").css('textDecoration','none');            	
+            	$.get("/scotLatest", "", function(data, status) {
+            			//alert()
+            			$("#scotFirstTitle").text(data[0].Title);
+            			$(".scotInnerImage").attr('src', 'resources/images/' + data[0].Images[0].Name);
+							$(".scotInnerImage").attr('alt', 'resources/images/' + data[0].Images[0].Caption);
+							$(".scotFirstDescrition").text(data[0].Description);
+							$(".scotSecTitle").text(data[1].Title);
+							$(".scotThirdTitle").text(data[2].Title);
+							$(".scotFourthTitle").text(data[3].Title);
+							$(".scotFifthTitle").text(data[4].Title);
+							            			            		
+                 });
+            });
+            
+            $(document).on("click", "#scotDiscussed", function(){
+            	//alert('You pressed Scot Discussed');
+            	//$('#scotDiscussed').fadeTo("fast", .5).removeAttr("href");
+            	//$('#scotLatest').attr('href', '#');					 
+            	//return false;
+            	$("#scotLatest").css('textDecoration','none');
+					$("#scotDiscussed").css('textDecoration','underline');  
+            	$.get("/scotDiscussed", "", function(data, status) {
+            			$("#scotFirstTitle").text(data[0].Title);
+            			$(".scotInnerImage").attr('src', 'resources/images/' + data[0].Images[0].Name);
+            			$(".scotInnerImage").attr('alt', 'resources/images/' + data[0].Images[0].Caption);
+            			$(".scotFirstDescrition").text(data[0].Description);
+            			$(".scotSecTitle").text(data[1].Title);
+							$(".scotThirdTitle").text(data[2].Title);
+							$(".scotFourthTitle").text(data[3].Title);
+							$(".scotFifthTitle").text(data[4].Title);                 		
+                 });
+            });
+            
+            $(document).on("click", "#etLatest", function(){
+            	//alert('You pressed Scot Latest');
+            	//$('#scotLatest').fadeTo("fast", .5).removeAttr("href");
+            	//$('#scotDiscussed').attr('href', '#');					 
+            	//return false;
+            	$("#etLatest").css('textDecoration','underline');
+					$("#etDiscussed").css('textDecoration','none');
+            	$.get("/etLatest", "", function(data, status) {
+            			//alert()
+            			$("#etFirstTitle").text(data[0].Title);
+            			$(".etInnerImage").attr('src', 'resources/images/' + data[0].Images[0].Name);
+							$(".etInnerImage").attr('alt', 'resources/images/' + data[0].Images[0].Caption);
+							$(".etFirstDescrition").text(data[0].Description);
+							$(".etSecTitle").text(data[1].Title);
+							$(".etThirdTitle").text(data[2].Title);
+							$(".etFourthTitle").text(data[3].Title);
+							$(".etFifthTitle").text(data[4].Title);
+							            			            		
+                 });
+            });
+            
+            $(document).on("click", "#etDiscussed", function(){
+            	//alert('You pressed Scot Discussed');
+            	//$('#etDiscussed').fadeTo("fast", .5).removeAttr("href");
+            	//$('#etLatest').attr('href', '#');					 
+            	//return false;
+            	$("#etLatest").css('textDecoration','none');
+					$("#etDiscussed").css('textDecoration','underline');
+            	$.get("/etDiscussed", "", function(data, status) {
+            			$("#etFirstTitle").text(data[0].Title);
+            			$(".etInnerImage").attr('src', 'resources/images/' + data[0].Images[0].Name);
+            			$(".etInnerImage").attr('alt', 'resources/images/' + data[0].Images[0].Caption);
+            			$(".etFirstDescrition").text(data[0].Description);
+            			$(".etSecTitle").text(data[1].Title);
+							$(".etThirdTitle").text(data[2].Title);
+							$(".etFourthTitle").text(data[3].Title);
+							$(".etFifthTitle").text(data[4].Title);                 		
+                 });
+            });
+            
+            /*function myFunction() {
+    				$(".inner_top_font").html("Hello jQuery")
+				}
+				$(document).ready(myFunction);*/         
+				
+				function submitform(formName)
             {
             alert(formName);
             document.formName.submit();
