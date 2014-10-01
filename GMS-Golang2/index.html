@@ -129,6 +129,62 @@
 										            	            	
             	<form action="/detailNews" id="readMore1" method="post" name="readMore1">
             	<p></p>
+            	<div class="today_contents" id="today_content_container">
+            			<div class="inner_top">
+            				<div class="inner_top_font">Glasgow Today: Top five news</a></div>
+            				<div class="inner_sort">
+            					Sort News: <a href="#" style="text-decoration:underline" id="todayLatest">Latest</a> | <a href="#" id="todayDiscussed">Most Discussed</a>
+            				</div>
+            				            				
+            				<hr class="inner_separator">            				
+            			</div>            			            			            			
+            			<div id="bbc_today">
+            					<h3>News from BBC:</h3>
+            					<hr class="today_separator">            					
+            					{{range $index, $element := .BBCToday}}
+            						<div id="inner_middle_right_news_first">
+            							<a href="#" class="bbcToday{{$index}}">{{$element.Title}}</a>
+            						</div>            						
+            					{{end}}            														
+            			</div>
+            			<div id="dr_today">
+            					<h3>News from Daily Record:</h3>
+            					<hr class="today_separator">
+            					{{range $index, $element := .DRToday}}
+            						<div id="inner_middle_right_news_first">
+            							<a href="#" class="drToday{{$index}}">{{$element.Title}}</a>
+            						</div>
+            					{{end}}									
+            			</div>
+            			<div id="scot_today">
+									<h3>News from Scotsman:</h3>
+            					<hr class="today_separator">            					
+            					{{range $index, $element := .ScotToday}}
+            						<div id="inner_middle_right_news_first">
+            							<a href="#" class="scotToday{{$index}}">{{$element.Title}}</a>
+            						</div>
+            					{{end}}									
+            			</div>
+            			<div id="et_today">
+									<h3>News from Evening Times:</h3>
+            					<hr class="today_separator">            					
+            					{{range $index, $element := .ETToday}}
+            						<div id="inner_middle_right_news_first">
+            							<a href="#" class="etToday{{$index}}" >{{$element.Title}}</a>
+            						</div>
+            					{{end}}									
+            			</div>            			
+            			<div id="inner_all_news_div">
+            				<hr class="inner_all_news_separator">
+            			</div>
+           				
+            			
+            			<div id="inner_all_news">
+            					<a href="#">Glasgow Today: All News</a>
+							</div>            			
+        			</div>
+        			<div class="old_news">Top Old News:</div>
+        			<hr class="old_news_separator">
         			<div class="contents" id="content_container">
             			<div class="inner_top">
             				<div class="inner_top_font">Top BBC News:</a></div>
@@ -494,6 +550,104 @@
 							$(".scotFourthTitle").text(data[3].Title);
 							$(".scotFifthTitle").text(data[4].Title);
 							            			            		
+                 });
+            });
+            
+            $(document).on("click", "#todayLatest", function(){            	
+            	$("#todayLatest").css('textDecoration','underline');
+					$("#todayDiscussed").css('textDecoration','none');            	
+            	$.get("/todayLatest", "", function(data, status) {
+            			$.each( data, function( index, value ){
+            				if(value.BBCToday.length === 0) {}
+            				else {
+            					$.each( value.BBCToday, function( innerIndex, innerValue ){            						
+            						$(".bbcToday"+ innerIndex).text(innerValue.Title);
+            					});
+            				}
+								if(value.ETToday.length === 0) {}
+								else {
+									var divLength = $("#et_today > div").length
+									for (var i = divLength -1 ; i >= 0; i--) {
+										$(".etToday"+ i).parent().remove()
+									}														
+									/*for ( var i = 0; i < $("#et_today > div").length; i++ ) {
+										$(".etToday"+ i).text(value.ETToday[i].Title)
+									}*/										
+            					for ( var i = 0; i < value.ETToday.length; i++ ) {
+    									$("#et_today").append('<div id="inner_middle_right_news_first"><a href="#" class="etToday"' + i + '">'+ value.ETToday[i].Title + '</a></div>')
+									}            						
+								}
+								if(value.DRToday.length === 0) {}
+								else {									
+									$.each( value.DRToday, function( innerIndex, innerValue ){										
+            						$(".drToday"+ innerIndex).text(innerValue.Title)
+            					});
+								}
+								if(value.ScotToday.length === 0) {}
+								else {
+									var divLength = $("#scot_today > div").length
+									for (var i = divLength - 1; i >= 0; i--) {
+										$(".scotToday"+ i).parent().remove()
+									}
+																																			            														
+									/*for ( var i = 0; i < divLength; i++ ) {
+										$(".scotToday"+ i).text(value.ScotToday[i].Title)
+									}*/	
+									            					
+									for ( var i = 0; i < value.ScotToday.length; i++ ) {
+    									$("#scot_today").append('<div id="inner_middle_right_news_first"><a href="#" class="scotToday"' + i + '">'+ value.ScotToday[i].Title + '</a></div>')
+									}
+								}            				            			       							
+							});            										            			            		
+                 });
+            });
+            
+            $(document).on("click", "#todayDiscussed", function(){            	
+            	$("#todayDiscussed").css('textDecoration','underline');
+					$("#todayLatest").css('textDecoration','none');            	
+            	$.get("/todayDiscussed", "", function(data, status) {
+            			            					      			
+            			$.each( data, function( index, value ){
+            				if(value.BBCToday.length === 0) {}
+            				else {
+            					$.each( value.BBCToday, function( innerIndex, innerValue ){            						
+            						$(".bbcToday"+ innerIndex).text(innerValue.Title);
+            					});
+            				}
+								if(value.ETToday.length === 0) {}
+								else {
+									var divLength = $("#et_today > div").length
+									for (var i = divLength - 1; i >= 0; i--) {
+										$(".etToday"+ i).parent().remove()
+									}														
+									/*for ( var i = 0; i < $("#et_today > div").length; i++ ) {
+										$(".etToday"+ i).text(value.ETToday[i].Title)
+									}*/										
+            					for ( var i = 0; i < value.ETToday.length; i++ ) {
+    									$("#et_today").append('<div id="inner_middle_right_news_first"><a href="#" class="etToday"' + i + '">'+ value.ETToday[i].Title + '</a></div>')
+									}            						
+								}
+								if(value.DRToday.length === 0) {}
+								else {									
+									$.each( value.DRToday, function( innerIndex, innerValue ){										
+            						$(".drToday"+ innerIndex).text(innerValue.Title)
+            					});
+								}
+								if(value.ScotToday.length === 0) {}
+								else {																										            														
+									/*for ( var i = 0; i < $("#scot_today > div").length; i++ ) {
+										$(".scotToday"+ i).text(value.ScotToday[i].Title)
+									}*/	
+									var divLength = $("#scot_today > div").length
+									for (var i = divLength - 1; i >= 0; i--) {
+										$(".scotToday"+ i).parent().remove()
+										
+									}            					
+									for ( var i = 0; i < value.ScotToday.length; i++ ) {
+    									$("#scot_today").append('<div id="inner_middle_right_news_first"><a href="#" class="scotToday"' + i + '">'+ value.ScotToday[i].Title + '</a></div>')
+									}
+								}            				            			       							
+							});            										            			            		
                  });
             });
             

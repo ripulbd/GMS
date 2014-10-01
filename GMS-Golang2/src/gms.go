@@ -17,6 +17,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"unicode/utf8"
+	"time"
 )
 
 var (
@@ -59,10 +60,22 @@ type TopPage struct {
 
 type IndexPage struct {
 	Headline string
+	BBCToday      []Page
+	DRToday       []Page
+	ScotToday     []Page
+	ETToday       []Page
+	
 	BBC      []Page
 	DR       []Page
 	Scot     []Page
 	ET       []Page
+}
+
+type TodayPage struct {	
+	BBCToday      []Page
+	DRToday       []Page
+	ScotToday     []Page
+	ETToday       []Page
 }
 
 var templates = template.Must(template.ParseFiles("index.html", "news.html", "detailNews.html"))
@@ -146,9 +159,32 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 		"$limit": 5,
 	}
 
+	currenttime := time.Now().Local()
+
+	fmt.Println("Current time : ", currenttime.Format("02/01/2006"))
+	fmt.Println("Previous Day : ", currenttime.AddDate(0,0,-1).Format("02/01/2006"))
+	
+	
+	bbcTodayResult := []Page{}
+	err = c.Find(bson.M{"$and": []bson.M{{"source": "http://www.bbc.co.uk"}, {"timeStamp":bson.M{"$regex":currenttime.Format("02/01/2006"), "$options":"i"}}}}).Limit(5).All(&bbcTodayResult)
+	
+	drTodayResult := []Page{}
+	err = c.Find(bson.M{"$and": []bson.M{{"source": "http://www.dailyrecord.co.uk"}, {"timeStamp":bson.M{"$regex":currenttime.Format("02/01/2006"), "$options":"i"}}}}).Limit(5).All(&drTodayResult)
+	
+	etTodayResult := []Page{}
+	err = c.Find(bson.M{"$and": []bson.M{{"source": "Evening Times"}, {"timeStamp":bson.M{"$regex":currenttime.Format("02/01/2006"), "$options":"i"}}}}).Limit(5).All(&etTodayResult)
+	
+	scotTodayResult := []Page{}
+	err = c.Find(bson.M{"$and": []bson.M{{"source": "http://www.scotsman.com"}, {"timeStamp":bson.M{"$regex":currenttime.Format("02/01/2006"), "$options":"i"}}}}).Limit(5).All(&scotTodayResult)
+	
 	bbcResult := []Page{}
 	//err = c.Find(bson.M{}).All(&result)
-	err = c.Find(bson.M{"source": "http://www.bbc.co.uk"}).Sort("-$natural").Limit(5).All(&bbcResult)
+	//err = c.Find(bson.M{"source": "http://www.bbc.co.uk"}).Sort("-$natural").Limit(5).All(&bbcResult)
+	err = c.Find(bson.M{"$and": []bson.M{{"source": "http://www.bbc.co.uk"}, {"timeStamp":bson.M{"$regex":"29/09/2014", "$options":"i"}}}}).Limit(5).All(&bbcResult)
+	
+	fmt.Printf("BBC Length : %d\n", len(bbcResult))
+	//db.gmsNews.find({$and:[{source:'http://www.bbc.co.uk'},{timeStamp:{$regex:'29/09/2014', $options:'i'}}]}).limit(5).pretty()
+	//c.Find(bson.M{"$and": bson.M{"source": "http://www.bbc.co.uk", "timeStamp":bson.M{"$regex":"29/09/2014", "$options":"i"}}}).Limit(5).All(&bbcResult)
 
 	scotSortResult := []Page{}
 
@@ -183,35 +219,40 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	drResult := []Page{}	
-	err = c.Find(bson.M{"source": "http://www.dailyrecord.co.uk"}).Sort("-$natural").Limit(5).All(&drResult)
+	//err = c.Find(bson.M{"source": "http://www.dailyrecord.co.uk"}).Sort("-$natural").Limit(5).All(&drResult)
+	err = c.Find(bson.M{"$and": []bson.M{{"source": "http://www.dailyrecord.co.uk"}, {"timeStamp":bson.M{"$regex":"29/09/2014", "$options":"i"}}}}).Limit(5).All(&drResult)
 
 	etResult := []Page{}
 	//err = c.Find(bson.M{}).All(&result)
-	err = c.Find(bson.M{"source": "Evening Times"}).Sort("-$natural").Limit(5).All(&etResult)
-
+	//err = c.Find(bson.M{"source": "Evening Times"}).Sort("-$natural").Limit(5).All(&etResult)
+	err = c.Find(bson.M{"$and": []bson.M{{"source": "Evening Times"}, {"timeStamp":bson.M{"$regex":"29/09/2014", "$options":"i"}}}}).Limit(5).All(&etResult)
+	fmt.Printf("ET Length : %d\n", len(etResult))
+	
 	scotResult := []Page{}
 	//err = c.Find(bson.M{}).All(&result)
-	err = c.Find(bson.M{"source": "http://www.scotsman.com"}).Sort("-$natural").Limit(5).All(&scotResult)
+	//err = c.Find(bson.M{"source": "http://www.scotsman.com"}).Sort("-$natural").Limit(5).All(&scotResult)
+	err = c.Find(bson.M{"$and": []bson.M{{"source": "http://www.scotsman.com"}, {"timeStamp":bson.M{"$regex":"25/09/2014", "$options":"i"}}}}).Limit(5).All(&scotResult)
 
-	if utf8.RuneCountInString(bbcResult[0].Description) > 150 {
-		bbcResult[0].Description = bbcResult[0].Description[:140] + "..."
+	fmt.Printf("Scot Length : %d\n", len(scotResult))
+	if utf8.RuneCountInString(bbcResult[0].Description) > 130 {
+		bbcResult[0].Description = bbcResult[0].Description[:130] + "..."
 	}
 	
-	if utf8.RuneCountInString(etResult[0].Description) > 150 {
-		etResult[0].Description = etResult[0].Description[:140] + "..."
+	if utf8.RuneCountInString(etResult[0].Description) > 120 {
+		etResult[0].Description = etResult[0].Description[:120] + "..."
 	}
-	if utf8.RuneCountInString(drResult[0].Description) > 150 {
-		drResult[0].Description = drResult[0].Description[:140] + "..."
+	if utf8.RuneCountInString(drResult[0].Description) > 130 {
+		drResult[0].Description = drResult[0].Description[:130] + "..."
 	}
-	if utf8.RuneCountInString(scotResult[0].Description) > 150 {
-		scotResult[0].Description = scotResult[0].Description[:140] + "..."
+	if len(scotResult) > 0 &&  utf8.RuneCountInString(scotResult[0].Description) > 130 {
+		scotResult[0].Description = scotResult[0].Description[:130] + "..."
 	}
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	indexPage := IndexPage{"Top 5 contents from each source are shown below:", bbcResult, drResult, scotResult, etResult}
+	indexPage := IndexPage{"Top 5 contents from each source are shown below:", bbcTodayResult, drTodayResult, scotTodayResult, etTodayResult, bbcResult, drResult, scotResult, etResult}
 
 	renderIndexTemplate(w, "index", &indexPage)
 }
@@ -370,14 +411,15 @@ func scotLatestHandler(w http.ResponseWriter, r *http.Request) {
 	c := session.DB("gmsTry").C("gmsNews")
 	
 	scotResult := []Page{}	
-	err = c.Find(bson.M{"source": "http://www.scotsman.com"}).Sort("-$natural").Limit(5).All(&scotResult)	
+	//err = c.Find(bson.M{"source": "http://www.scotsman.com"}).Sort("-$natural").Limit(5).All(&scotResult)
+	err = c.Find(bson.M{"$and": []bson.M{{"source": "http://www.scotsman.com"}, {"timeStamp":bson.M{"$regex":"25/09/2014", "$options":"i"}}}}).Limit(5).All(&scotResult)	
 
 	if err != nil {
 		log.Fatal(err)
 	}
 	
-	if utf8.RuneCountInString(scotResult[0].Description) > 150 {
-			scotResult[0].Description = scotResult[0].Description[:140] + "..."
+	if utf8.RuneCountInString(scotResult[0].Description) > 130 {
+			scotResult[0].Description = scotResult[0].Description[:130] + "..."
 		}
 
 	js, err := json.Marshal(scotResult)
@@ -450,8 +492,8 @@ func scotDiscussedHandler(w http.ResponseWriter, r *http.Request) {
 		url := results[i]["_id"]
 		err = c.Find(bson.M{"url": url}).All(&tmpPage)
 		
-		if utf8.RuneCountInString(tmpPage[0].Description) > 150 {
-			tmpPage[0].Description = tmpPage[0].Description[:140] + "..."
+		if utf8.RuneCountInString(tmpPage[0].Description) > 130 {
+			tmpPage[0].Description = tmpPage[0].Description[:130] + "..."
 		}
 		scotSortResult = append(scotSortResult, tmpPage[0])
 	}
@@ -465,6 +507,241 @@ func scotDiscussedHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
   	w.Write(js)
 }
+
+
+func todayLatestHandler(w http.ResponseWriter, r *http.Request) {
+	session, err := mgo.Dial("localhost")
+	if err != nil {
+		panic(err)
+	}
+	defer session.Close()
+	fmt.Printf("We are here.....")
+
+	// Optional. Switch the session to a monotonic behavior.
+	session.SetMode(mgo.Monotonic, true)
+
+	currenttime := time.Now().Local()
+
+	//fmt.Println("Current time : ", currenttime.Format("02/01/2006"))
+	//fmt.Println("Previous Day : ", currenttime.AddDate(0,0,-1).Format("02/01/2006"))
+	
+	c := session.DB("gmsTry").C("gmsNews")
+	
+	scotResult := []Page{}	
+	//err = c.Find(bson.M{"source": "http://www.scotsman.com"}).Sort("-$natural").Limit(5).All(&scotResult)
+	err = c.Find(bson.M{"$and": []bson.M{{"source": "http://www.scotsman.com"}, {"timeStamp":bson.M{"$regex":currenttime.Format("02/01/2006"), "$options":"i"}}}}).Limit(5).All(&scotResult)	
+	
+	if err != nil {
+		log.Fatal(err)
+	}
+		
+	
+	bbcResult := []Page{}		
+	err = c.Find(bson.M{"$and": []bson.M{{"source": "http://www.bbc.co.uk"}, {"timeStamp":bson.M{"$regex":currenttime.Format("02/01/2006"), "$options":"i"}}}}).Limit(5).All(&bbcResult)
+	
+	if err != nil {
+		log.Fatal(err)
+	}	
+	
+	drResult := []Page{}		
+	err = c.Find(bson.M{"$and": []bson.M{{"source": "http://www.dailyrecord.co.uk"}, {"timeStamp":bson.M{"$regex":currenttime.Format("02/01/2006"), "$options":"i"}}}}).Limit(5).All(&drResult)
+	
+	if err != nil {
+		log.Fatal(err)
+	}
+	
+	etResult := []Page{}		
+	err = c.Find(bson.M{"$and": []bson.M{{"source": "Evening Times"}, {"timeStamp":bson.M{"$regex":currenttime.Format("02/01/2006"), "$options":"i"}}}}).Limit(5).All(&etResult)
+	
+	if err != nil {
+		log.Fatal(err)
+	}
+	
+	todayPage := TodayPage{bbcResult, drResult, scotResult, etResult}	
+	todayPageArray := []TodayPage{todayPage}
+		
+	js, err := json.Marshal(todayPageArray)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+		
+	w.Header().Set("Content-Type", "application/json")
+  	w.Write(js)
+}
+
+
+func todayDiscussedHandler(w http.ResponseWriter, r *http.Request) {
+	session, err := mgo.Dial("localhost")
+	if err != nil {
+		panic(err)
+	}
+	defer session.Close()
+
+	// Optional. Switch the session to a monotonic behavior.
+	session.SetMode(mgo.Monotonic, true)
+	///////////Scot////////////////////	
+	c := session.DB("gmsTry").C("gmsNews")
+
+	o1 := bson.M{
+		"$match": bson.M{"source": "http://www.scotsman.com"},
+	}
+
+	o2 := bson.M{
+		"$unwind": "$comments",
+	}
+
+	o3 := bson.M{
+		"$group": bson.M{
+			"_id": "$url",
+			"size": bson.M{
+				"$sum": 1,
+			},
+		},
+	}
+
+	o4 := bson.M{
+		"$sort": bson.M{
+			"size": -1,
+		},
+	}
+
+	o5 := bson.M{
+		"$limit": 5,
+	}
+	
+	scotSortResult := []Page{}
+	
+
+	operations := []bson.M{o1, o2, o3, o4, o5}
+
+	pipe := c.Pipe(operations)
+
+	// Run the queries and capture the results
+	results := []bson.M{}
+	err1 := pipe.All(&results)
+
+	if err1 != nil {
+		fmt.Printf("ERROR : %s\n", err1.Error())
+		//return
+	}
+	if len(results) > 0 {
+		for i := 0; i < 5; i++ {
+			tmpPage := []Page{}
+			url := results[i]["_id"]
+			err = c.Find(bson.M{"url": url}).All(&tmpPage)		
+			scotSortResult = append(scotSortResult, tmpPage[0])
+		}
+	}
+	fmt.Printf("Scotsman Today Discussed : %d\n", len(results))
+	///////////Scot////////////////////
+	
+	///////////BBC////////////////////
+	o1 = bson.M{
+		"$match": bson.M{"source": "http://www.bbc.co.uk"},
+	}	
+	
+	bbcSortResult := []Page{}
+
+	operations = []bson.M{o1, o2, o3, o4, o5}
+
+	pipe = c.Pipe(operations)
+
+	// Run the queries and capture the results
+	results = []bson.M{}
+	err1 = pipe.All(&results)
+
+	if err1 != nil {
+		fmt.Printf("ERROR : %s\n", err1.Error())
+		//return
+	}
+	if len(results) > 0 {
+		for i := 0; i < 5; i++ {
+			tmpPage := []Page{}
+			url := results[i]["_id"]
+			err = c.Find(bson.M{"url": url}).All(&tmpPage)
+			bbcSortResult = append(bbcSortResult, tmpPage[0])
+		}
+	}
+	fmt.Printf("BBC Today Discussed : %d\n", len(results))
+	///////////BBC////////////////////
+	
+	///////////DR////////////////////
+	o1 = bson.M{
+		"$match": bson.M{"source": "http://www.dailyrecord.co.uk"},
+	}	
+	
+	drSortResult := []Page{}
+
+	operations = []bson.M{o1, o2, o3, o4, o5}
+
+	pipe = c.Pipe(operations)
+
+	// Run the queries and capture the results
+	results = []bson.M{}
+	err1 = pipe.All(&results)
+
+	if err1 != nil {
+		fmt.Printf("ERROR : %s\n", err1.Error())
+		//return
+	}
+
+	if len(results) > 0 {
+		for i := 0; i < 5; i++ {
+			tmpPage := []Page{}
+			url := results[i]["_id"]
+			err = c.Find(bson.M{"url": url}).All(&tmpPage)		
+			drSortResult = append(drSortResult, tmpPage[0])
+		}
+	}
+	fmt.Printf("DR Today Discussed : %d\n", len(results))
+	///////////DR////////////////////
+	
+	///////////ET////////////////////
+	o1 = bson.M{
+		"$match": bson.M{"source": "Evening Times"},
+	}	
+	
+	etSortResult := []Page{}
+
+	operations = []bson.M{o1, o2, o3, o4, o5}
+
+	pipe = c.Pipe(operations)
+
+	// Run the queries and capture the results
+	results = []bson.M{}
+	err1 = pipe.All(&results)
+
+	if err1 != nil {
+		fmt.Printf("ERROR : %s\n", err1.Error())
+		//return
+	}
+
+	if len(results) > 0 {
+		for i := 0; i < 5; i++ {
+			tmpPage := []Page{}
+			url := results[i]["_id"]
+			err = c.Find(bson.M{"url": url}).All(&tmpPage)
+		
+			etSortResult = append(etSortResult, tmpPage[0])
+		}
+	}
+	fmt.Printf("ET Today Discussed : %d\n", len(results))
+	///////////ET////////////////////
+	
+	todayPage := TodayPage{bbcSortResult, drSortResult, scotSortResult, etSortResult}
+	todayPageArray := []TodayPage{todayPage}
+	
+	js, err := json.Marshal(todayPageArray)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	
+	w.Header().Set("Content-Type", "application/json")
+  	w.Write(js)
+}
+
 
 func etLatestHandler(w http.ResponseWriter, r *http.Request) {
 	session, err := mgo.Dial("localhost")
@@ -480,14 +757,15 @@ func etLatestHandler(w http.ResponseWriter, r *http.Request) {
 	c := session.DB("gmsTry").C("gmsNews")
 	
 	etResult := []Page{}	
-	err = c.Find(bson.M{"source": "Evening Times"}).Sort("-$natural").Limit(5).All(&etResult)	
+	//err = c.Find(bson.M{"source": "Evening Times"}).Sort("-$natural").Limit(5).All(&etResult)
+	err = c.Find(bson.M{"$and": []bson.M{{"source": "Evening Times"}, {"timeStamp":bson.M{"$regex":"29/09/2014", "$options":"i"}}}}).Limit(5).All(&etResult)	
 
 	if err != nil {
 		log.Fatal(err)
 	}
 	
-	if utf8.RuneCountInString(etResult[0].Description) > 150 {
-			etResult[0].Description = etResult[0].Description[:140] + "..."
+	if utf8.RuneCountInString(etResult[0].Description) > 120 {
+			etResult[0].Description = etResult[0].Description[:120] + "..."
 		}
 
 	js, err := json.Marshal(etResult)
@@ -560,8 +838,8 @@ func etDiscussedHandler(w http.ResponseWriter, r *http.Request) {
 		url := results[i]["_id"]
 		err = c.Find(bson.M{"url": url}).All(&tmpPage)
 		
-		if utf8.RuneCountInString(tmpPage[0].Description) > 150 {
-			tmpPage[0].Description = tmpPage[0].Description[:140] + "..."
+		if utf8.RuneCountInString(tmpPage[0].Description) > 130 {
+			tmpPage[0].Description = tmpPage[0].Description[:130] + "..."
 		}
 		etSortResult = append(etSortResult, tmpPage[0])
 	}
@@ -605,6 +883,8 @@ func main() {
 	http.HandleFunc("/scotDiscussed", makeHandler(scotDiscussedHandler))
 	http.HandleFunc("/etLatest", makeHandler(etLatestHandler))
 	http.HandleFunc("/etDiscussed", makeHandler(etDiscussedHandler))
+	http.HandleFunc("/todayLatest", makeHandler(todayLatestHandler))
+	http.HandleFunc("/todayDiscussed", makeHandler(todayDiscussedHandler))
 	http.HandleFunc("/dr", makeHandler(drHandler))
 	http.HandleFunc("/detailNews", makeHandler(detailNewsHandler))
 	http.Handle("/resources/", http.StripPrefix("/resources/", http.FileServer(http.Dir("resources"))))
