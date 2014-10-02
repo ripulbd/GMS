@@ -123,8 +123,7 @@
             </div>-->
 
             <div class="content">
-                <h1>Glasgow Memory Server (GMS): Home Page!</h1>
-                <p>{{.Headline}}</p>             
+                <h1>Glasgow Memory Server (GMS): Home Page!</h1>                           
             </div>                                             		            		
 										            	            	
             	<form action="/detailNews" id="readMore1" method="post" name="readMore1">
@@ -143,7 +142,7 @@
             					<hr class="today_separator">            					
             					{{range $index, $element := .BBCToday}}
             						<div id="inner_middle_right_news_first">
-            							<a href="#" class="bbcToday{{$index}}">{{$element.Title}}</a>
+            							<a href="/indiNews?url={{$element.Url}}" class="bbcToday{{$index}}">{{$element.Title}}</a>
             						</div>            						
             					{{end}}            														
             			</div>
@@ -152,7 +151,7 @@
             					<hr class="today_separator">
             					{{range $index, $element := .DRToday}}
             						<div id="inner_middle_right_news_first">
-            							<a href="#" class="drToday{{$index}}">{{$element.Title}}</a>
+            							<a href="/indiNews?url={{$element.Url}}" class="drToday{{$index}}">{{$element.Title}}</a>
             						</div>
             					{{end}}									
             			</div>
@@ -161,7 +160,7 @@
             					<hr class="today_separator">            					
             					{{range $index, $element := .ScotToday}}
             						<div id="inner_middle_right_news_first">
-            							<a href="#" class="scotToday{{$index}}">{{$element.Title}}</a>
+            							<a href="/indiNews?url={{$element.Url}}" class="scotToday{{$index}}">{{$element.Title}}</a>
             						</div>
             					{{end}}									
             			</div>
@@ -170,7 +169,7 @@
             					<hr class="today_separator">            					
             					{{range $index, $element := .ETToday}}
             						<div id="inner_middle_right_news_first">
-            							<a href="#" class="etToday{{$index}}" >{{$element.Title}}</a>
+            							<a href="/indiNews?url={{$element.Url}}" class="etToday{{$index}}" >{{$element.Title}}</a>
             						</div>
             					{{end}}									
             			</div>            			
@@ -201,9 +200,9 @@
             				{{$fourth := index .BBC 3}}
             				{{$fifth := index .BBC 4}}            			   	
             			   	{{if $first.Title}}
-            			   		<div id="inner_left_headline"><a href="#">{{$first.Title}}</a> </div>            					            					
+            			   		<div id="inner_left_headline"><a href="/indiNews?url={{$first.Url}}">{{$first.Title}}</a> </div>            					            					
             				{{else}}
-            					<div id="inner_left_headline"><a href="#">{{$first.Description}}</a> </div>
+            					<div id="inner_left_headline"><a href="/indiNews?url={{$first.Url}}">{{$first.Description}}</a> </div>
             				{{end}}
             				
             			   	{{if $first.Images}}
@@ -217,30 +216,30 @@
             			<div id="inner_middle_right_news">
             					<div id="inner_middle_right_news_first">
             						{{if $sec.Title}}
-            			   				<a href="#">{{$sec.Title}}</a>            					            					
+            			   				<a href="/indiNews?url={{$sec.Url}}">{{$sec.Title}}</a>            					            					
             						{{else}}
-            							<a href="#">{{$sec.Description}}</a>
+            							<a href="/indiNews?url={{$sec.Url}}">{{$sec.Description}}</a>
             						{{end}}            				            						
             					</div>
             					<div id="inner_middle_right_news_first">
             						{{if $third.Title}}
-            			   				<a href="#">{{$third.Title}}</a>            					            					
+            			   				<a href="/indiNews?url={{$third.Url}}">{{$third.Title}}</a>            					            					
             						{{else}}
-            							<a href="#">{{$third.Description}}</a>
+            							<a href="/indiNews?url={{$third.Url}}">{{$third.Description}}</a>
             						{{end}}            				            						
             					</div>
             					<div id="inner_middle_right_news_first">
             						{{if $fourth.Title}}
-            			   				<a href="#">{{$fourth.Title}}</a>            					            					
+            			   				<a href="/indiNews?url={{$fourth.Url}}">{{$fourth.Title}}</a>            					            					
             						{{else}}
-            							<a href="#">{{$fourth.Description}}</a>
+            							<a href="/indiNews?url={{$fourth.Url}}">{{$fourth.Description}}</a>
             						{{end}}            				            						
             					</div>
             					<div id="inner_middle_right_news_first">
             						{{if $fifth.Title}}
-            			   				<a href="#">{{$fifth.Title}}</a>            					            					
+            			   				<a href="/indiNews?url={{$fifth.Url}}">{{$fifth.Title}}</a>            					            					
             						{{else}}
-            							<a href="#">{{$fifth.Description}}</a>
+            							<a href="/indiNews?url={{$fifth.Url}}">{{$fifth.Description}}</a>
             						{{end}}            				            						
             					</div>									
             			</div>
@@ -288,9 +287,9 @@
             				{{$fourth := index .DR 3}}
             				{{$fifth := index .DR 4}}
             			   {{if $first.Title}}
-            			   		<div id="inner_left_headline"><a href="#">{{$first.Title}}</a> </div>            					            					
+            			   		<div id="inner_left_headline"><a href="/indiNews?url={{$first.Url}}">{{$first.Title}}</a> </div>            					            					
             				{{else}}
-            					<div id="inner_left_headline"><a href="#">{{$first.Description}}</a> </div>
+            					<div id="inner_left_headline"><a href="/indiNews?url={{$first.Url}}">{{$first.Description}}</a> </div>
             				{{end}}
             			   {{if $first.Images}}
             					{{$images := index $first.Images 0 }}
@@ -303,30 +302,30 @@
             			<div id="inner_middle_right_news">
             					<div id="inner_middle_right_news_first">
             						{{if $sec.Title}}
-            			   				<a href="#">{{$sec.Title}}</a>            					            					
+            			   				<a href="/indiNews?url={{$sec.Url}}">{{$sec.Title}}</a>            					            					
             						{{else}}
-            							<a href="#">{{$sec.Description}}</a>
+            							<a href="/indiNews?url={{$sec.Url}}">{{$sec.Description}}</a>
             						{{end}}            				            						
             					</div>
             					<div id="inner_middle_right_news_first">
             						{{if $third.Title}}
-            			   				<a href="#">{{$third.Title}}</a>            					            					
+            			   				<a href="/indiNews?url={{$third.Url}}">{{$third.Title}}</a>            					            					
             						{{else}}
-            							<a href="#">{{$third.Description}}</a>
+            							<a href="/indiNews?url={{$third.Url}}">{{$third.Description}}</a>
             						{{end}}            				            						
             					</div>
             					<div id="inner_middle_right_news_first">
             						{{if $fourth.Title}}
-            			   				<a href="#">{{$fourth.Title}}</a>            					            					
+            			   				<a href="/indiNews?url={{$fourth.Url}}">{{$fourth.Title}}</a>            					            					
             						{{else}}
-            							<a href="#">{{$fourth.Description}}</a>
+            							<a href="/indiNews?url={{$fourth.Url}}">{{$fourth.Description}}</a>
             						{{end}}            				            						
             					</div>
             					<div id="inner_middle_right_news_first">
             						{{if $fifth.Title}}
-            			   				<a href="#">{{$fifth.Title}}</a>            					            					
+            			   				<a href="/indiNews?url={{$fifth.Url}}">{{$fifth.Title}}</a>            					            					
             						{{else}}
-            							<a href="#">{{$fifth.Description}}</a>
+            							<a href="/indiNews?url={{$fifth.Url}}">{{$fifth.Description}}</a>
             						{{end}}            				            						
             					</div>            													
             			</div>
@@ -355,9 +354,9 @@
             				{{$fourth := index .Scot 3}}
             				{{$fifth := index .Scot 4}}
             			   {{if $first.Title}}
-            			   		<div id="inner_left_headline"><a href="#" id="scotFirstTitle">{{$first.Title}}</a> </div>            					            					
+            			   		<div id="inner_left_headline"><a href="/indiNews?url={{$first.Url}}" id="scotFirstTitle">{{$first.Title}}</a> </div>            					            					
             				{{else}}
-            					<div id="inner_left_headline"><a href="#" id="scotFirstTitle">{{$first.Description}}</a> </div>
+            					<div id="inner_left_headline"><a href="/indiNews?url={{$first.Url}}" id="scotFirstTitle">{{$first.Description}}</a> </div>
             				{{end}}
             			   {{if $first.Images}}
             					{{$images := index $first.Images 0 }}
@@ -370,30 +369,30 @@
             			<div id="inner_middle_right_news">
             					<div id="inner_middle_right_news_first">
             						{{if $sec.Title}}
-            			   				<a href="#" class="scotSecTitle">{{$sec.Title}}</a>            					            					
+            			   				<a href="/indiNews?url={{$sec.Url}}" class="scotSecTitle">{{$sec.Title}}</a>            					            					
             						{{else}}
-            							<a href="#" class="scotSecTitle">{{$sec.Description}}</a>
+            							<a href="/indiNews?url={{$sec.Url}}" class="scotSecTitle">{{$sec.Description}}</a>
             						{{end}}            				            						
             					</div>
             					<div id="inner_middle_right_news_first">
             						{{if $third.Title}}
-            			   				<a href="#" class="scotThirdTitle">{{$third.Title}}</a>            					            					
+            			   				<a href="/indiNews?url={{$third.Url}}" class="scotThirdTitle">{{$third.Title}}</a>            					            					
             						{{else}}
-            							<a href="#" class="scotThirdTitle">{{$third.Description}}</a>
+            							<a href="/indiNews?url={{$third.Url}}" class="scotThirdTitle">{{$third.Description}}</a>
             						{{end}}            				            						
             					</div>
             					<div id="inner_middle_right_news_first">
             						{{if $fourth.Title}}
-            			   				<a href="#" class="scotFourthTitle">{{$fourth.Title}}</a>            					            					
+            			   				<a href="/indiNews?url={{$fourth.Url}}" class="scotFourthTitle">{{$fourth.Title}}</a>            					            					
             						{{else}}
-            							<a href="#" class="scotFourthTitle">{{$fourth.Description}}</a>
+            							<a href="/indiNews?url={{$fourth.Url}}" class="scotFourthTitle">{{$fourth.Description}}</a>
             						{{end}}            				            						
             					</div>
             					<div id="inner_middle_right_news_first">
             						{{if $fifth.Title}}
-            			   				<a href="#" class="scotFifthTitle">{{$fifth.Title}}</a>            					            					
+            			   				<a href="/indiNews?url={{$fifth.Url}}" class="scotFifthTitle">{{$fifth.Title}}</a>            					            					
             						{{else}}
-            							<a href="#" class="scotFifthTitle">{{$fifth.Description}}</a>
+            							<a href="/indiNews?url={{$fifth.Url}}" class="scotFifthTitle">{{$fifth.Description}}</a>
             						{{end}}            				            						
             					</div>									
             			</div>
@@ -423,9 +422,9 @@
             				{{$fourth := index .ET 3}}
             				{{$fifth := index .ET 4}}
             			   {{if $first.Title}}
-            			   		<div id="inner_left_headline"><a href="#" id="etFirstTitle">{{$first.Title}}</a> </div>            					            					
+            			   		<div id="inner_left_headline"><a href="/indiNews?url={{$first.Url}}" id="etFirstTitle">{{$first.Title}}</a> </div>            					            					
             				{{else}}
-            					<div id="inner_left_headline"><a href="#" id="etFirstTitle">{{$first.Description}}</a> </div>
+            					<div id="inner_left_headline"><a href="/indiNews?url={{$first.Url}}" id="etFirstTitle">{{$first.Description}}</a> </div>
             				{{end}}
             			   {{if $first.Images}}
             					{{$images := index $first.Images 0 }}
@@ -438,30 +437,30 @@
             			<div id="inner_middle_right_news">
             					<div id="inner_middle_right_news_first">
             						{{if $sec.Title}}
-            			   				<a href="#" class="etSecTitle">{{$sec.Title}}</a>            					            					
+            			   				<a href="/indiNews?url={{$sec.Url}}" class="etSecTitle">{{$sec.Title}}</a>            					            					
             						{{else}}
-            							<a href="#" class="etSecTitle">{{$sec.Description}}</a>
+            							<a href="/indiNews?url={{$sec.Url}}" class="etSecTitle">{{$sec.Description}}</a>
             						{{end}}            				            						
             					</div>
             					<div id="inner_middle_right_news_first">
             						{{if $third.Title}}
-            			   				<a href="#" class="etThirdTitle">{{$third.Title}}</a>            					            					
+            			   				<a href="/indiNews?url={{$third.Url}}" class="etThirdTitle">{{$third.Title}}</a>            					            					
             						{{else}}
-            							<a href="#" class="etThirdTitle">{{$third.Description}}</a>
+            							<a href="/indiNews?url={{$third.Url}}" class="etThirdTitle">{{$third.Description}}</a>
             						{{end}}            				            						
             					</div>
             					<div id="inner_middle_right_news_first">
             						{{if $fourth.Title}}
-            			   				<a href="#" class="etFourthTitle">{{$fourth.Title}}</a>            					            					
+            			   				<a href="/indiNews?url={{$fourth.Url}}" class="etFourthTitle">{{$fourth.Title}}</a>            					            					
             						{{else}}
-            							<a href="#" class="etFourthTitle">{{$fourth.Description}}</a>
+            							<a href="/indiNews?url={{$fourth.Url}}" class="etFourthTitle">{{$fourth.Description}}</a>
             						{{end}}            				            						
             					</div>
             					<div id="inner_middle_right_news_first">
             						{{if $fifth.Title}}
-            			   				<a href="#" class="etFifthTitle">{{$fifth.Title}}</a>            					            					
+            			   				<a href="/indiNews?url={{$fifth.Url}}" class="etFifthTitle">{{$fifth.Title}}</a>            					            					
             						{{else}}
-            							<a href="#" class="etFifthTitle">{{$fifth.Description}}</a>
+            							<a href="/indiNews?url={{$fifth.Url}}" class="etFifthTitle">{{$fifth.Description}}</a>
             						{{end}}            				            						
             					</div>									
             			</div>
@@ -471,7 +470,7 @@
            				
             			
             			<div id="inner_all_news">
-            					<a href="#">All Scotsman News</a>
+            					<a href="#">All Evening Times News</a>
 							</div>            			
         			</div>        			        			       			
         			       			
@@ -558,44 +557,124 @@
 					$("#todayDiscussed").css('textDecoration','none');            	
             	$.get("/todayLatest", "", function(data, status) {
             			$.each( data, function( index, value ){
-            				if(value.BBCToday.length === 0) {}
-            				else {
-            					$.each( value.BBCToday, function( innerIndex, innerValue ){            						
-            						$(".bbcToday"+ innerIndex).text(innerValue.Title);
-            					});
+            				if(value.BBCToday.length === 0) {
+            					var divLength = $("#bbc_today > div").length
+									for (var i = 0; i < divLength; i++) {
+										$(".bbcToday"+ i).parent().remove()
+									}
             				}
-								if(value.ETToday.length === 0) {}
+            				else {
+            					var divLength = $("#bbc_today > div").length
+									if(divLength <= value.BBCToday.length){
+										for (var i = 0; i < divLength; i++) {
+											$(".bbcToday"+ i).text(value.BBCToday[i].Title)
+											$(".bbcToday"+ i).attr("src",value.BBCToday[i].Url)
+											
+										}
+										for (var i = divLength; i < value.BBCToday.length; i++) {
+											$("#bbc_today").append('<div id="inner_middle_right_news_first"><a href="'+ value.BBCToday[i].Url +'" class="bbcToday' + i + '">'+ value.BBCToday[i].Title + '</a></div>')
+										}
+									} else {
+										for (var i = 0; i < value.BBCToday.length; i++) {
+											$(".bbcToday"+ i).text(value.BBCToday[i].Title)
+											$(".bbcToday"+ i).attr("src",value.BBCToday[i].Url)
+										}														
+										/*for ( var i = 0; i < $("#et_today > div").length; i++ ) {
+											$(".etToday"+ i).text(value.ETToday[i].Title)
+										}*/										
+            						for ( var i = value.BBCToday.length; i < divLength; i++ ) {
+    										//$("#et_today").append('<div id="inner_middle_right_news_first"><a href="#" class="etToday' + i + '">'+ value.ETToday[i].Title + '</a></div>')
+    										$(".bbcToday"+ i).parent().remove()
+										} 
+									}
+            				}
+								if(value.ETToday.length === 0) {
+									var divLength = $("#et_today > div").length
+									for (var i = 0; i < divLength; i++) {
+										$(".etToday"+ i).parent().remove()										
+									}
+								}
 								else {
 									var divLength = $("#et_today > div").length
-									for (var i = divLength -1 ; i >= 0; i--) {
-										$(".etToday"+ i).parent().remove()
-									}														
-									/*for ( var i = 0; i < $("#et_today > div").length; i++ ) {
-										$(".etToday"+ i).text(value.ETToday[i].Title)
-									}*/										
-            					for ( var i = 0; i < value.ETToday.length; i++ ) {
-    									$("#et_today").append('<div id="inner_middle_right_news_first"><a href="#" class="etToday"' + i + '">'+ value.ETToday[i].Title + '</a></div>')
-									}            						
+									if(divLength <= value.ETToday.length){
+										for (var i = 0; i < divLength; i++) {
+											$(".etToday"+ i).text(value.ETToday[i].Title)
+											$(".etToday"+ i).attr("src",value.ETToday[i].Url)
+										}
+										for (var i = divLength; i < value.ETToday.length; i++) {
+											$("#et_today").append('<div id="inner_middle_right_news_first"><a href="'+ value.ETToday[i].Url +'" class="etToday' + i + '">'+ value.ETToday[i].Title + '</a></div>')
+										}
+									} else {
+										for (var i = 0; i < value.ETToday.length; i++) {
+											$(".etToday"+ i).text(value.ETToday[i].Title)
+											$(".etToday"+ i).attr("src",value.ETToday[i].Url)
+										}														
+										/*for ( var i = 0; i < $("#et_today > div").length; i++ ) {
+											$(".etToday"+ i).text(value.ETToday[i].Title)
+										}*/										
+            						for ( var i = value.ETToday.length; i < divLength; i++ ) {
+    										//$("#et_today").append('<div id="inner_middle_right_news_first"><a href="#" class="etToday' + i + '">'+ value.ETToday[i].Title + '</a></div>')
+    										$(".etToday"+ i).parent().remove()
+										} 
+									}									           						
 								}
-								if(value.DRToday.length === 0) {}
+								if(value.DRToday.length === 0) {
+									var divLength = $("#dr_today > div").length
+									for (var i = 0; i < divLength; i++) {
+										$(".drToday"+ i).parent().remove()
+									}
+								}
 								else {									
-									$.each( value.DRToday, function( innerIndex, innerValue ){										
-            						$(".drToday"+ innerIndex).text(innerValue.Title)
-            					});
+									var divLength = $("#dr_today > div").length
+									if(divLength <= value.DRToday.length){
+										for (var i = 0; i < divLength; i++) {
+											$(".drToday"+ i).text(value.DRToday[i].Title)
+											$(".drToday"+ i).attr("src",value.DRToday[i].Url)
+										}
+										for (var i = divLength; i < value.DRToday.length; i++) {
+											$("#dr_today").append('<div id="inner_middle_right_news_first"><a href="'+ value.DRToday[i].Url +'" class="drToday' + i + '">'+ value.DRToday[i].Title + '</a></div>')
+										}
+									} else {
+										for (var i = 0; i < value.DRToday.length; i++) {
+											$(".drToday"+ i).text(value.DRToday[i].Title)
+											$(".drToday"+ i).attr("src",value.DRToday[i].Url)
+										}														
+										/*for ( var i = 0; i < $("#et_today > div").length; i++ ) {
+											$(".etToday"+ i).text(value.ETToday[i].Title)
+										}*/										
+            						for ( var i = value.DRToday.length; i < divLength; i++ ) {
+    										//$("#et_today").append('<div id="inner_middle_right_news_first"><a href="#" class="etToday' + i + '">'+ value.ETToday[i].Title + '</a></div>')
+    										$(".drToday"+ i).parent().remove()
+										} 
+									}
 								}
-								if(value.ScotToday.length === 0) {}
-								else {
+								if(value.ScotToday.length === 0) {
 									var divLength = $("#scot_today > div").length
-									for (var i = divLength - 1; i >= 0; i--) {
+									for (var i = 0; i < divLength; i++) {
 										$(".scotToday"+ i).parent().remove()
 									}
-																																			            														
-									/*for ( var i = 0; i < divLength; i++ ) {
-										$(".scotToday"+ i).text(value.ScotToday[i].Title)
-									}*/	
-									            					
-									for ( var i = 0; i < value.ScotToday.length; i++ ) {
-    									$("#scot_today").append('<div id="inner_middle_right_news_first"><a href="#" class="scotToday"' + i + '">'+ value.ScotToday[i].Title + '</a></div>')
+								}
+								else {																										            														
+									var divLength = $("#scot_today > div").length									
+									if(divLength <= value.ScotToday.length){
+										for (var i = 0; i < divLength; i++) {
+											$(".scotToday"+ i).text(value.ScotToday[i].Title)
+											$(".scotToday"+ i).attr("src",value.ScotToday[i].Url)
+										}
+										for (var i = divLength; i < value.ScotToday.length; i++) {
+											$("#scot_today").append('<div id="inner_middle_right_news_first"><a href="'+ value.ScotToday[i].Url +'" class="scotToday' + i + '">'+ value.ScotToday[i].Title + '</a></div>')
+										}
+									} else {
+										for (var i = 0; i < value.ScotToday.length; i++) {
+											$(".scotToday"+ i).text(value.ScotToday[i].Title)
+										}														
+										/*for ( var i = 0; i < $("#et_today > div").length; i++ ) {
+											$(".etToday"+ i).text(value.ETToday[i].Title)
+										}*/										
+            						for ( var i = value.ScotToday.length; i < divLength; i++ ) {
+    										//$("#et_today").append('<div id="inner_middle_right_news_first"><a href="#" class="etToday' + i + '">'+ value.ETToday[i].Title + '</a></div>')
+    										$(".scotToday"+ i).parent().remove()
+										} 
 									}
 								}            				            			       							
 							});            										            			            		
@@ -608,42 +687,121 @@
             	$.get("/todayDiscussed", "", function(data, status) {
             			            					      			
             			$.each( data, function( index, value ){
-            				if(value.BBCToday.length === 0) {}
-            				else {
-            					$.each( value.BBCToday, function( innerIndex, innerValue ){            						
-            						$(".bbcToday"+ innerIndex).text(innerValue.Title);
-            					});
+            				if(value.BBCToday.length === 0) {
+            					var divLength = $("#bbc_today > div").length
+									for (var i = 0; i < divLength; i++) {
+										$(".bbcToday"+ i).parent().remove()
+									}
             				}
-								if(value.ETToday.length === 0) {}
+            				else {
+            					var divLength = $("#bbc_today > div").length
+									if(divLength <= value.BBCToday.length){
+										for (var i = 0; i < divLength; i++) {
+											$(".bbcToday"+ i).text(value.BBCToday[i].Title)
+											$(".bbcToday"+ i).attr("src",value.bbcToday[i].Url)
+										}
+										for (var i = divLength; i < value.BBCToday.length; i++) {
+											$("#bbc_today").append('<div id="inner_middle_right_news_first"><a href="'+ value.BBCToday[i].Url +'" class="bbcToday' + i + '">'+ value.BBCToday[i].Title + '</a></div>')
+										}
+									} else {
+										for (var i = 0; i < value.BBCToday.length; i++) {
+											$(".bbcToday"+ i).text(value.BBCToday[i].Title)
+											$(".bbcToday"+ i).attr("src",value.bbcToday[i].Url)
+										}														
+										/*for ( var i = 0; i < $("#et_today > div").length; i++ ) {
+											$(".etToday"+ i).text(value.ETToday[i].Title)
+										}*/										
+            						for ( var i = value.BBCToday.length; i < divLength; i++ ) {
+    										//$("#et_today").append('<div id="inner_middle_right_news_first"><a href="#" class="etToday' + i + '">'+ value.ETToday[i].Title + '</a></div>')
+    										$(".bbcToday"+ i).parent().remove()
+										} 
+									}
+            				}
+								if(value.ETToday.length === 0) {
+									var divLength = $("#et_today > div").length
+									for (var i = 0; i < divLength; i++) {
+										$(".etToday"+ i).parent().remove()
+									}
+								}
 								else {
 									var divLength = $("#et_today > div").length
-									for (var i = divLength - 1; i >= 0; i--) {
-										$(".etToday"+ i).parent().remove()
-									}														
-									/*for ( var i = 0; i < $("#et_today > div").length; i++ ) {
-										$(".etToday"+ i).text(value.ETToday[i].Title)
-									}*/										
-            					for ( var i = 0; i < value.ETToday.length; i++ ) {
-    									$("#et_today").append('<div id="inner_middle_right_news_first"><a href="#" class="etToday"' + i + '">'+ value.ETToday[i].Title + '</a></div>')
-									}            						
+									if(divLength <= value.ETToday.length){
+										for (var i = 0; i < divLength; i++) {
+											$(".etToday"+ i).text(value.ETToday[i].Title)
+											$(".etToday"+ i).attr("src",value.ETToday[i].Url)
+										}
+										for (var i = divLength; i < value.ETToday.length; i++) {
+											$("#et_today").append('<div id="inner_middle_right_news_first"><a href="' + value.ETToday[i].Url +'" class="etToday' + i + '">'+ value.ETToday[i].Title + '</a></div>')
+										}
+									} else {
+										for (var i = 0; i < value.ETToday.length; i++) {
+											$(".etToday"+ i).text(value.ETToday[i].Title)
+											$(".etToday"+ i).attr("src",value.ETToday[i].Url)
+										}														
+										/*for ( var i = 0; i < $("#et_today > div").length; i++ ) {
+											$(".etToday"+ i).text(value.ETToday[i].Title)
+										}*/										
+            						for ( var i = value.ETToday.length; i < divLength; i++ ) {
+    										//$("#et_today").append('<div id="inner_middle_right_news_first"><a href="#" class="etToday' + i + '">'+ value.ETToday[i].Title + '</a></div>')
+    										$(".etToday"+ i).parent().remove()
+										} 
+									}									           						
 								}
-								if(value.DRToday.length === 0) {}
+								if(value.DRToday.length === 0) {
+									var divLength = $("#dr_today > div").length
+									for (var i = 0; i < divLength; i++) {
+										$(".drToday"+ i).parent().remove()
+									}
+								}
 								else {									
-									$.each( value.DRToday, function( innerIndex, innerValue ){										
-            						$(".drToday"+ innerIndex).text(innerValue.Title)
-            					});
+									var divLength = $("#dr_today > div").length
+									if(divLength <= value.DRToday.length){
+										for (var i = 0; i < divLength; i++) {
+											$(".drToday"+ i).text(value.DRToday[i].Title)
+										}
+										for (var i = divLength; i < value.DRToday.length; i++) {
+											$("#dr_today").append('<div id="inner_middle_right_news_first"><a href="#" class="drToday' + i + '">'+ value.DRToday[i].Title + '</a></div>')
+										}
+									} else {
+										for (var i = 0; i < value.DRToday.length; i++) {
+											$(".drToday"+ i).text(value.DRToday[i].Title)
+										}														
+										/*for ( var i = 0; i < $("#et_today > div").length; i++ ) {
+											$(".etToday"+ i).text(value.ETToday[i].Title)
+										}*/										
+            						for ( var i = value.DRToday.length; i < divLength; i++ ) {
+    										//$("#et_today").append('<div id="inner_middle_right_news_first"><a href="#" class="etToday' + i + '">'+ value.ETToday[i].Title + '</a></div>')
+    										$(".drToday"+ i).parent().remove()
+										} 
+									}
 								}
-								if(value.ScotToday.length === 0) {}
-								else {																										            														
-									/*for ( var i = 0; i < $("#scot_today > div").length; i++ ) {
-										$(".scotToday"+ i).text(value.ScotToday[i].Title)
-									}*/	
+								if(value.ScotToday.length === 0) {
+									alert("Here")
 									var divLength = $("#scot_today > div").length
-									for (var i = divLength - 1; i >= 0; i--) {
-										$(".scotToday"+ i).parent()remove()
-									}            					
-									for ( var i = 0; i < value.ScotToday.length; i++ ) {
-    									$("#scot_today").append('<div id="inner_middle_right_news_first"><a href="#" class="scotToday"' + i + '">'+ value.ScotToday[i].Title + '</a></div>')
+									for (var i = 0; i < divLength; i++) {
+										$(".scotToday"+ i).parent().remove()
+									}
+								}
+								else {																																			            														
+									var divLength = $("#scot_today > div").length
+									if(divLength <= value.ScotToday.length){
+										for (var i = 0; i < divLength; i++) {
+											$(".scotToday"+ i).text(value.ScotToday[i].Title)
+										}
+										for (var i = divLength; i < value.ScotToday.length; i++) {
+											$("#scot_today").append('<div id="inner_middle_right_news_first"><a href="#" class="scotToday' + i + '">'+ value.ScotToday[i].Title + '</a></div>')
+										}
+									} else {
+										for (var i = 0; i < value.ScotToday.length; i++) {
+											$(".scotToday"+ i).text(value.ScotToday[i].Title)
+										}														
+										/*for ( var i = 0; i < $("#et_today > div").length; i++ ) {
+											$(".etToday"+ i).text(value.ETToday[i].Title)
+										}*/										
+            						for ( var i = value.ScotToday.length; i < divLength; i++ ) {
+    										//$("#et_today").append('<div id="inner_middle_right_news_first"><a href="#" class="etToday' + i + '">'+ value.ETToday[i].Title + '</a></div>')
+    										$(".scotToday"+ i).parent().remove()
+										} 
 									}
 								}            				            			       							
 							});            										            			            		

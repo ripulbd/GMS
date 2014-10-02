@@ -343,6 +343,23 @@ nav {
   z-index: 100
 }
 
+#detail_content_container { 
+  float: left;
+  width: 80%;
+  margin: 5px 5px 5px 5px;
+  padding-left:5px;      
+  
+  /*background: transparent url(../images/menubar.png);*/
+  -webkit-box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 2px;
+  -moz-box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 2px;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 2px;
+  border: 1px solid #323232;
+  border-radius: 7px 7px 7px 7px;
+  -moz-border-radius: 7px 7px 7px 7px;
+  -webkit-border: 7px 7px 7px 7px;  
+  z-index: 100
+}
+
 #inner_left_news { 
   float: left;
   width: 50%;
@@ -471,8 +488,8 @@ nav {
 
 #detail_image{
 	padding-top: 10px;
-	height: 300px;
-	width: 450px;	
+	height: 400px;
+	width: 600px;	
 }
 
 #headline{
@@ -525,7 +542,7 @@ nav {
   }
 .details { 
   text-align: left;
-  width: 660px;
+  width: 90%;
   margin: 0 20px 10px 10px;
   float: left;;
   font-size: 120%;
@@ -752,6 +769,16 @@ footer a:hover {
   color: #FFFFFF;
 }
 
+.detail_image { 
+  height: 0;
+  border-top: 1px solid #D9D5CF;
+  border-bottom: 1px solid #FFF;  
+  float: left;
+  width: 98%;
+  margin: 0 0 0 0;
+  color: #FFFFFF;
+}
+
 .inner_comment { 
   height: 0;
   border-top: 1px solid #E71C0A;
@@ -762,7 +789,27 @@ footer a:hover {
   color: #FFFFFF;
 }
 
+.inner_comment_detail { 
+  height: 0;
+  border-top: 1px solid #E71C0A;
+  border-bottom: 1px solid #FFF;  
+  float: left;
+  width: 98%;
+  margin: 0 0 0 0;
+  color: #FFFFFF;
+}
+
 .inner_comment_replies { 
+  height: 0;
+  border-top: 1px solid #4031AA;
+  border-bottom: 1px solid #FFF;  
+  float: left;
+  width: 650px;
+  margin: 0 0 0 0;
+  color: #FFFFFF;
+}
+
+.inner_comment_detail_replies { 
   height: 0;
   border-top: 1px solid #4031AA;
   border-bottom: 1px solid #FFF;  
@@ -1124,7 +1171,7 @@ table tr td {
   z-index: 100*/
 }
 
-#bbc_today_inner_middle_right_news { 
+#bbc_today { 
   float: left;
   width: 23%;
   margin: 5px 5px 10px 5px;
@@ -1138,7 +1185,7 @@ table tr td {
   -webkit-border: 7px 7px 7px 7px;  
   z-index: 100*/
 }
-#dr_inner_middle_right_news { 
+#dr_today { 
   float: left;
   width: 23%;
   margin: 5px 5px 10px 5px;
@@ -1152,7 +1199,7 @@ table tr td {
   -webkit-border: 7px 7px 7px 7px;  
   z-index: 100*/
 }
-#et_inner_middle_right_news { 
+#scot_today { 
   float: left;
   width: 23%;
   margin: 5px 5px 10px 5px;
@@ -1166,7 +1213,7 @@ table tr td {
   -webkit-border: 7px 7px 7px 7px;  
   z-index: 100*/
 }
-#scot_inner_middle_right_news { 
+#et_today { 
   float: left;
   width: 23%;
   margin: 5px 5px 10px 5px;

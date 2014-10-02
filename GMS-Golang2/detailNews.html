@@ -23,20 +23,22 @@
                     (GMS)</a></h1>
                 </div>
             </div>
-
-            <form class="form-wrapper cf">
-                <input placeholder="Search here..." required="required" type=
-                "text"><button type="submit">Search</button>
-            </form>
-
-            <nav>
+            
+            <div id="invisible">
+                <div id="invisible_text">
+                    <form class="form-wrapper cf">
+                		<button type="submit">Search</button><input placeholder="Search here..." required="required" type= "text" aligh="right">
+            		  </form>
+                </div>
+            </div>            
+            
                 <div id="menu_container">
                     <ul id="menu-bar">
-                        <li>
+                        <li class="active">
                             <a href="/">Home</a>
                         </li>
 
-                        <li class="active">
+                        <li>
                             <a href="/news">News</a>
 
                             <ul>
@@ -53,6 +55,7 @@
                                 <li>
                                     <a href="/et">Evening Times</a>
                                 </li>
+                                
                             </ul>
                         </li>
 
@@ -89,7 +92,7 @@
 
                             <ul>
                                 <li>
-                                    <a href="/bbvvid">BBC</a>
+                                    <a href="/bbcvid">BBC</a>
                                 </li>
 
                                 <li>
@@ -106,8 +109,7 @@
                             <a href="#">Contact Us</a>
                         </li>
                     </ul>
-                </div>
-            </nav>
+                </div>            
         </header>
 
         <div id="site_content">
@@ -132,7 +134,7 @@
                 <p>
             </div>
 
-            <div id="content_container">
+            <div id="detail_content_container">
                 <div class="details">
                     <h4 id="h4_detail_content"><strong>Title: {{.Title}}</strong></h4>
                     <p>Date: {{.TimeStamp}}</p>
@@ -142,7 +144,7 @@
 					{{.MainStory}}
 
                     <p>
-                    <hr class="inner">
+                    <hr class="detail_image">
 					{{if .Images}}
                     	<p>Related Images:</p>
                     	{{range $index, $element := .Images}}
@@ -154,7 +156,7 @@
 					{{end}}
                     <hr class="inner">
                     <h3>Comments:</h3>
-                    <hr class="inner_comment">
+                    <hr class="inner_comment_detail">
                     {{if .Comments}}                    	
                     	{{range $index, $element := .Comments}}
                     		<h4>Comment - {{$index}} </h4>
@@ -165,11 +167,11 @@
                     		<p>
                     			Comment Text: {{$element.CommentBody}}
                     		</P>
-                    		<hr class="inner_comment_replies">
+                    		<hr class="inner_comment_detail_replies">
                     		{{if $element.Replies}}
                     			{{range $replyIndex, $reply := $element.Replies}}
                     				{{if $replyIndex }}
-                    					<hr class="inner_comment_replies">
+                    					<hr class="inner_comment_detail_replies">
                     				{{end}}                    				
                     				<h4>Comment Reply - {{$replyIndex}}</h4>
                     				<p>Name: {{$reply.UserName}}</p>
@@ -184,7 +186,7 @@
                     			This comment has no replies
                     		{{end}}
                     		<p>
-                    		<hr class="inner_comment">	
+                    		<hr class="inner_comment_detail">	
                     	{{end}}
                     {{else}}
                     	<p>This news has no comments!</p>	
