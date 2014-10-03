@@ -23,19 +23,23 @@
                     (GMS)</a></h1>
                 </div>
             </div>
-
-            <form class="form-wrapper cf">
-                <input placeholder="Search here..." required="required" type=
-                "text"><button type="submit">Search</button>
-            </form>
-
-            <nav>
+            
+            <div id="invisible">
+                <div id="invisible_text">
+                    <form class="form-wrapper cf">
+                		<button type="submit">Search</button><input placeholder="Search here..." required="required" type= "text" aligh="right">
+            		  </form>
+                </div>
+            </div>            
+            
                 <div id="menu_container">
                     <ul id="menu-bar">
                         <li>
                             <a href="/">Home</a>
                         </li>
-
+								<li>
+                            <a href="/today">Today</a>
+                        </li>
                         <li class="active">
                             <a href="/news">News</a>
 
@@ -53,6 +57,7 @@
                                 <li>
                                     <a href="/et">Evening Times</a>
                                 </li>
+                                
                             </ul>
                         </li>
 
@@ -106,12 +111,11 @@
                             <a href="#">Contact Us</a>
                         </li>
                     </ul>
-                </div>
-            </nav>
+                </div>            
         </header>
 
         <div id="site_content">
-            <div class="sidebar" id="sidebar_container">
+            <!--<div class="sidebar" id="sidebar_container">
                 <h3>Latest News</h3>
 
                 <h4>News 1.</h4>
@@ -119,26 +123,28 @@
                 <h5>News 1.</h5>
 
                 <p>All other latest news.</p>
-            </div>
+            </div>-->
 
             <div class="content">
                 <h1>Glasgow Memory Server (GMS): Home Page!</h1>
 
                 <p>{{.Headline}} </p>                
             </div>                        
-            {{range $index, $element := .Pages}}
-            	{{if $index}}
-            		<hr class="separator">
-				{{end}}            	            	 
+            {{range $index, $element := .Pages}}            	            	            	 
             	<form action="/detailNews" id="readMore{{$index}}" method="post" name="readMore{{$index}}">
         			<div class="contents" id="content_container">
-            			<h4 id="h4_content"><strong>{{printf "%s" $element.Title}}</strong></h4>
+        					{{if $element.Title}}
+            				<h4 id="h4_content"><strong>{{printf "%s" $element.Title}}</strong></h4>
+            			{{else}}
+            				<h4 id="h4_content"><strong>No Headline for this news</strong></h4>	
+            			{{end}}	
             			{{if $element.Images}}
             				{{$images := index $element.Images 0 }}
             				<img alt= "{{printf "%s" $images.Caption}}" id="content_image" src="resources/images/{{printf "%s" $images.Name}}">
-            			
+            			{{else}}
+								<img alt= "No Image" id="content_image" src="resources/images/tryImage.jpg">            					            			            				
             			{{end}}            			
-            			<div id="headline">
+            			<div id="news_headline">
                 			{{printf "%s" $element.Description}}
             			</div>
 
@@ -152,7 +158,8 @@
 
             			<div id="more">
                 			<input name="query" type="hidden" value="{{printf "%s" .Title}}">
-                			<a href="#" onclick="document.readMore{{$index}}.submit()">Read More</a>
+                			<!--<a href="#" onclick="document.readMore{{$index}}.submit()">Read More</a>-->
+                			<a href="/indiNews?url={{.Url}}" >Read More</a>
             			</div>
         			</div>
         			

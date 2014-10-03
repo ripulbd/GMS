@@ -498,6 +498,12 @@ nav {
 	margin: 0 0 10px 140px;
 	padding-top: 10px;	
 }
+#news_headline{
+	position: relative;
+	width: 90%;	
+	margin: 0 0 10px 140px;
+	padding-top: 10px;	
+}
 #source{
 	position: relative;
 	width: 500px;	
@@ -1156,20 +1162,7 @@ table tr td {
   z-index: 100
 }
 
-#today_inner_middle_right_news { 
-  float: left;
-  width: 23%;
-  margin: 5px 5px 10px 5px;
-  padding-left:5px;          
-  /*-webkit-box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 2px;
-  -moz-box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 2px;
-  box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 2px;
-  border: 1px solid #323232;
-  border-radius: 7px 7px 7px 7px;
-  -moz-border-radius: 7px 7px 7px 7px;
-  -webkit-border: 7px 7px 7px 7px;  
-  z-index: 100*/
-}
+
 
 #bbc_today { 
   float: left;
@@ -1254,4 +1247,70 @@ table tr td {
 	margin-top: 30px;
 	margin-bottom:10px; 
 	width: 60%;
+}
+
+#map_canvas {
+	width: 98%;
+	margin-left: auto;
+	margin-right: auto;
+	height: 500px;
+	background-color: #CCC;
+	padding-left: 10px;
+}
+
+#today_first_news { 
+  float: left;
+  width: 23%;
+  margin: 5px 5px 10px 5px;
+  padding-left:5px;          
+  /*-webkit-box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 2px;
+  -moz-box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 2px;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 2px;
+  border: 1px solid #323232;
+  border-radius: 7px 7px 7px 7px;
+  -moz-border-radius: 7px 7px 7px 7px;
+  -webkit-border: 7px 7px 7px 7px;  
+  z-index: 100*/
+}
+
+#today_other_news { 
+  float: left;
+  width: 23%;
+  margin: 5px 5px 10px 5px;
+  padding-left:5px;          
+  /*-webkit-box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 2px;
+  -moz-box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 2px;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 2px;
+  border: 1px solid #323232;
+  border-radius: 7px 7px 7px 7px;
+  -moz-border-radius: 7px 7px 7px 7px;
+  -webkit-border: 7px 7px 7px 7px;  
+  z-index: 100*/
+}
+
+#today_inner_left_headline{		
+	padding-top: 5px;	
+	width: 80%;
+   white-space: nowrap;
+   overflow: hidden;
+   text-overflow: ellipsis;	
+}
+
+#today_inner_left_image{
+	padding-top: 10px;	
+	height: 45%;
+	width: 40%;
+	float: left;	
+	padding-bottom: 10px;	
+}
+#today_space{
+	padding-top: 10px;		
+}
+.today_separator { 
+  width: 95%;    
+  height: 0;  
+  border-top: 1px solid #D9D5CF;
+  border-bottom: 1px solid #FFF;      
+  margin: 0 0 0 0px;
+  color: #FFFFFF;    
 }
