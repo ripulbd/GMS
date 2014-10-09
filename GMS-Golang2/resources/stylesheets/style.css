@@ -824,6 +824,42 @@ footer a:hover {
   margin: 0 0 0 0;
   color: #FFFFFF;
 }
+.inner_comment_detail_replies_2 { 
+  height: 0;
+  border-top: 1px solid #000000;
+  border-bottom: 1px solid #FFF;  
+  float: left;
+  width: 98%;
+  margin: 0 0 0 0;
+  color: #FFFFFF;
+}
+.inner_comment_detail_replies_3 { 
+  height: 0;
+  border-top: 1px solid #21610B;
+  border-bottom: 1px solid #FFF;  
+  float: left;
+  width: 98%;
+  margin: 0 0 0 0;
+  color: #FFFFFF;
+}
+.inner_comment_detail_replies_4 { 
+  height: 0;
+  border-top: 1px solid #BDBDBD;
+  border-bottom: 1px solid #FFF;  
+  float: left;
+  width: 98%;
+  margin: 0 0 0 0;
+  color: #FFFFFF;
+}
+.inner_comment_detail_replies_5 { 
+  height: 0;
+  border-top: 1px solid #819FF7;
+  border-bottom: 1px solid #FFF;  
+  float: left;
+  width: 98%;
+  margin: 0 0 0 0;
+  color: #FFFFFF;
+}
 
 table { 
   margin: 10px 0 30px 0;
@@ -1275,7 +1311,7 @@ table tr td {
 
 #today_other_news { 
   float: left;
-  width: 23%;
+  width: 70%;
   margin: 5px 5px 10px 5px;
   padding-left:5px;          
   /*-webkit-box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 2px;
@@ -1290,7 +1326,7 @@ table tr td {
 
 #today_inner_left_headline{		
 	padding-top: 5px;	
-	width: 80%;
+	width: 85%;
    white-space: nowrap;
    overflow: hidden;
    text-overflow: ellipsis;	
@@ -1313,4 +1349,15 @@ table tr td {
   border-bottom: 1px solid #FFF;      
   margin: 0 0 0 0px;
   color: #FFFFFF;    
+}
+
+#today_inner_middle_right_news_first{
+	font-size: .9em;		
+	padding-top: 12px;
+	padding-bottom: 12px;		
+	width: 33%;
+	float: left;
+   white-space: nowrap;
+   overflow: hidden;
+   text-overflow: ellipsis;	
 }

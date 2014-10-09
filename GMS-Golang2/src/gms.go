@@ -79,7 +79,14 @@ type TodayPage struct {
 	ETToday       []Page
 }
 
-var templates = template.Must(template.ParseFiles("index.html", "news.html", "detailNews.html", "today.html"))
+var funcMap = template.FuncMap{
+        // The name "inc" is what the function will be called in the template text.
+        "inc": func(i int) int {
+            return i + 1
+        },
+}
+
+var templates = template.Must(template.New("test").Funcs(funcMap).ParseFiles("index.html", "news.html", "detailNews.html", "today.html"))
 
 func renderTemplate(w http.ResponseWriter, tmpl string, p *TopPage) {
 	// Execute the template for each recipient.
@@ -178,7 +185,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	currenttime := time.Now().Local()
 
 	//fmt.Println("Current time : ", currenttime.Format("02/01/2006"))
-	fmt.Println("Previous Day : ", currenttime.AddDate(0,0,-1).Format("02/01/2006"))
+	//fmt.Println("Previous Day : ", currenttime.AddDate(0,0,-1).Format("02/01/2006"))
 	
 	
 	bbcTodayResult := []Page{}
@@ -466,45 +473,46 @@ func todayHandler(w http.ResponseWriter, r *http.Request) {
 	
 	scotResult := []Page{}	
 	//err = c.Find(bson.M{"source": "http://www.scotsman.com"}).Sort("-$natural").Limit(5).All(&scotResult)
-	err = c.Find(bson.M{"$and": []bson.M{{"source": "http://www.scotsman.com"}, {"timeStamp":bson.M{"$regex":currenttime.Format("02/01/2006"), "$options":"i"}}}}).Limit(5).All(&scotResult)	
+	err = c.Find(bson.M{"$and": []bson.M{{"source": "http://www.scotsman.com"}, {"timeStamp":bson.M{"$regex":currenttime.Format("02/01/2006"), "$options":"i"}}}}).All(&scotResult)	
 	
 	if err != nil {
 		log.Fatal(err)
 	}
 		
-	if utf8.RuneCountInString(scotResult[0].Description) > 110 {
+	if len(scotResult) > 0 && utf8.RuneCountInString(scotResult[0].Description) > 110 {
 		scotResult[0].Description = scotResult[0].Description[:110] + "..."
 	}
 	
-	bbcResult := []Page{}		
-	err = c.Find(bson.M{"$and": []bson.M{{"source": "http://www.bbc.co.uk"}, {"timeStamp":bson.M{"$regex":currenttime.Format("02/01/2006"), "$options":"i"}}}}).Limit(5).All(&bbcResult)
 	
-	if utf8.RuneCountInString(bbcResult[0].Description) > 110 {
+	bbcResult := []Page{}		
+	err = c.Find(bson.M{"$and": []bson.M{{"source": "http://www.bbc.co.uk"}, {"timeStamp":bson.M{"$regex":currenttime.Format("02/01/2006"), "$options":"i"}}}}).All(&bbcResult)
+	
+	if len(bbcResult) > 0 &&  utf8.RuneCountInString(bbcResult[0].Description) > 110 {
 		bbcResult[0].Description = bbcResult[0].Description[:110] + "..."
 	}
 	
 	if err != nil {
 		log.Fatal(err)
-	}	
+	}
 	
 	drResult := []Page{}		
-	err = c.Find(bson.M{"$and": []bson.M{{"source": "http://www.dailyrecord.co.uk"}, {"timeStamp":bson.M{"$regex":currenttime.Format("02/01/2006"), "$options":"i"}}}}).Limit(5).All(&drResult)
+	err = c.Find(bson.M{"$and": []bson.M{{"source": "http://www.dailyrecord.co.uk"}, {"timeStamp":bson.M{"$regex":currenttime.Format("02/01/2006"), "$options":"i"}}}}).All(&drResult)
 	
 	if err != nil {
 		log.Fatal(err)
 	}
-	if utf8.RuneCountInString(drResult[0].Description) > 110 {
+	if len(drResult) > 0 &&  utf8.RuneCountInString(drResult[0].Description) > 110 {
 		drResult[0].Description = drResult[0].Description[:110] + "..."
 	}
 	
 	etResult := []Page{}		
-	err = c.Find(bson.M{"$and": []bson.M{{"source": "Evening Times"}, {"timeStamp":bson.M{"$regex":currenttime.Format("02/01/2006"), "$options":"i"}}}}).Limit(5).All(&etResult)
+	err = c.Find(bson.M{"$and": []bson.M{{"source": "Evening Times"}, {"timeStamp":bson.M{"$regex":currenttime.Format("02/01/2006"), "$options":"i"}}}}).All(&etResult)
 	
 	if err != nil {
 		log.Fatal(err)
 	}
 	
-	if utf8.RuneCountInString(etResult[0].Description) > 110 {
+	if len(etResult) > 0 &&  utf8.RuneCountInString(etResult[0].Description) > 110 {
 		etResult[0].Description = etResult[0].Description[:110] + "..."
 	}
 	
@@ -840,6 +848,7 @@ func etDiscussedHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
   	w.Write(js)
 }
+
 func todayLatestHandler(w http.ResponseWriter, r *http.Request) {
 	session, err := mgo.Dial("localhost")
 	if err != nil {
@@ -852,9 +861,6 @@ func todayLatestHandler(w http.ResponseWriter, r *http.Request) {
 	session.SetMode(mgo.Monotonic, true)
 
 	currenttime := time.Now().Local()
-
-	//fmt.Println("Current time : ", currenttime.Format("02/01/2006"))
-	//fmt.Println("Previous Day : ", currenttime.AddDate(0,0,-1).Format("02/01/2006"))
 	
 	c := session.DB("gmsTry").C("gmsNews")
 	
@@ -888,7 +894,8 @@ func todayLatestHandler(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 	
-	todayPage := TodayPage{bbcResult, drResult, scotResult, etResult}	
+	todayPage := TodayPage{bbcResult, drResult, scotResult, etResult}
+		
 	todayPageArray := []TodayPage{todayPage}
 		
 	js, err := json.Marshal(todayPageArray)
@@ -1085,6 +1092,10 @@ func todayDiscussedHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("ET Today Discussed : %d\n", len(results))
 	///////////ET////////////////////
 	
+	//todayPage := TodayPage{bbcResult, drResult, scotResult, etResult}
+	
+	//todayPage := TodayPage{bbcBelow, bbcFirst, bbcSecond, bbcThird, drBelow, drFirst, drSecond, drThird, etBelow, etFirst, etSecond, etThird, scotBelow, scotFirst, scotSecond, scotThird, bbcSortResult, drSortResult, scotSortResult, etSortResult}
+	
 	todayPage := TodayPage{bbcSortResult, drSortResult, scotSortResult, etSortResult}
 	todayPageArray := []TodayPage{todayPage}
 	
@@ -1097,8 +1108,6 @@ func todayDiscussedHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
   	w.Write(js)
 }
-
-//source: ''
 
 var validPath = regexp.MustCompile("^/(index|save|view)$")
 

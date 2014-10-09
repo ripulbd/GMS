@@ -95,3 +95,71 @@ db.gmsNews.aggregate([
   $limit : 5
 }
 ])
+
+
+db.gmsNews.find({$and:[{source:'http://www.bbc.co.uk'},{timeStamp:{$regex:'29/09/2014', $options:'i'}}]}).limit(5).pretty()
+
+db.gmsNews.find({$and:[{source:'http://www.bbc.co.uk'},{timeStamp:{$regex:'29/09/2014', $options:'i'}}]}).limit(5).pretty()
+db.gmsNews.find({$and:[{source:'http://www.dailyrecord.co.uk'},{timeStamp:{$regex:'29/09/2014', $options:'i'}}]}).limit(5).pretty()
+db.gmsNews.find({$and:[{source:'http://www.scotsman.com'},{timeStamp:{$regex:'29/09/2014', $options:'i'}}]}).limit(5).pretty()
+db.gmsNews.find({$and:[{source:'Evening Times'},{timeStamp:{$regex:'29/09/2014', $options:'i'}}]}).limit(5).pretty()
+
+
+db.gmsNews.find({$and:[{source:'http://www.scotsman.com'},{timeStamp:{$regex:'02/10/2014', $options:'i'}}]}).limit(5).pretty()
+
+
+db.gmsNews.find(
+  {
+    $and:[
+	  {source:'http://www.scotsman.com'},
+  	  {timeStamp:{
+	    $regex:'02/10/2014', $options:'i'}
+	  }
+        ]
+  }
+).limit(5).pretty()
+
+db.gmsNews.find(
+  {
+    $and:[
+      {
+	$or:[
+            {source:'http://www.scotsman.com'},
+            {source:'http://www.bbc.co.uk'},
+            {source:'http://www.dailyrecord.co.uk'},
+            {source:'Evening Times'}
+        ]
+      },
+      {timeStamp:
+        {$regex:'02/10/2014',$options:'i'}
+      }
+    ]
+  }
+).count()
+
+db.gmsNews.find(
+  {
+    $and:[
+      {
+	$or:[
+            {source:'http://www.scotsman.com'},
+            {source:'http://www.bbc.co.uk'},
+            {source:'http://www.dailyrecord.co.uk'},
+            {source:'Evening Times'}
+        ]
+      },
+      {timeStamp:
+        {$regex:'(02|03|04|05|06|07|08)/10/2014',$options:'i'}
+      }
+    ]
+  }
+).count()
+
+
+mongoexport -d gmsTry -c gmsNews -q '{$and:[{$or:[{source:"http://www.scotsman.com"},{source:"http://www.bbc.co.uk"},{source:"http://www.dailyrecord.co.uk"},{source:"Evening Times"}]},{timeStamp:{$regex:"(02|03|04|05|06|07|08)/10/2014",$options:"i"}}]}' --out myRecords.json
+
+
+
+
+
+

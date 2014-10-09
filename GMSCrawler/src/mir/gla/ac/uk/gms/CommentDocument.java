@@ -19,7 +19,7 @@ import com.mongodb.BasicDBObject;
  */
 public class CommentDocument extends BasicDBObject {
 	private static final long serialVersionUID = 3604113644826493375L;
-	private String userName, timeStamp, commentBody;
+	private String userName, timeStamp, commentBody, id, parent;
 	private int upVote, downVote;
 	private ArrayList<CommentDocument> replies;
 	
@@ -27,6 +27,8 @@ public class CommentDocument extends BasicDBObject {
 		userName = "";
 		timeStamp = "";
 		commentBody = "";
+		id = "";
+		parent = "";
 		replies = new ArrayList<CommentDocument>();
 	}
 	
@@ -103,6 +105,54 @@ public class CommentDocument extends BasicDBObject {
 		return returnString;
 	}*/
 	
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getParent() {
+		return parent;
+	}
+
+	public void setParent(String parent) {
+		this.parent = parent;
+	}
+	
+	public boolean hasReply(){		
+		return replies.size() != 0;
+	}
+	
+	public String recursiveString(CommentDocument doc, int plusIndex){
+		String returnString = "";
+			int plusLoop = 0;
+			while(plusLoop < plusIndex){
+				returnString += "+";
+				plusLoop++;
+			}
+			returnString += "++This comment has following replies:\n";
+			for(CommentDocument comment: doc.getReplies()){
+				returnString += "++++++++++++++++++++++++++++++++++++++++\n";
+				returnString += "UserName:" + comment.userName + ", TimeStamp:" + comment.timeStamp + ", UpVote:" + comment.upVote + ", DownVote:" + comment.downVote + "\n";
+				returnString += "Reply Comment:\n";
+				returnString += "++---------------------------------------\n";
+				returnString += comment.commentBody + "\n";
+				plusLoop = 0;
+				while(plusLoop < plusIndex){
+					returnString += "+";
+					plusLoop++;
+				}
+				returnString += "++---------------------------------------\n";
+				if(comment.hasReply()){
+					returnString += recursiveString(comment, plusIndex + 2);
+				}
+			}
+		
+		return returnString;
+	}
+
 	@Override
 	public String toString(){
 		String returnString = "[++======================================================================================\n";
@@ -111,9 +161,9 @@ public class CommentDocument extends BasicDBObject {
 		returnString += "++---------------------------------------\n";
 		returnString += "++" + super.get("commentBody") + "\n";
 		returnString += "++---------------------------------------\n";
-		ArrayList<CommentDocument> replyComment = (ArrayList<CommentDocument>) super.get("replies");
+		//ArrayList<CommentDocument> replyComment = (ArrayList<CommentDocument>) super.get("replies");
 		if(replies.size() > 0){
-			returnString += "++This comment has the following replies:\n";
+			returnString += "++This comment has following replies:\n";
 			for(CommentDocument comment: replies){
 				returnString += "++++++++++++++++++++++++++++++++++++++++\n";
 				returnString += "UserName:" + comment.userName + ", TimeStamp:" + comment.timeStamp + ", UpVote:" + comment.upVote + ", DownVote:" + comment.downVote + "\n";
@@ -121,6 +171,9 @@ public class CommentDocument extends BasicDBObject {
 				returnString += "++---------------------------------------\n";
 				returnString += comment.commentBody + "\n";
 				returnString += "++---------------------------------------\n";
+				if(comment.hasReply()){
+					returnString += recursiveString(comment, 2);
+				}
 			}
 		}
 		returnString += "++======================================================================================]\n";

@@ -1,10 +1,16 @@
 package mir.gla.ac.uk.gms;
 
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
@@ -140,6 +146,7 @@ public class ETCrawler extends AbstractCrawler {
 	        if(commentNumText.equals("Loading")){
 	        	if(loopCounter == 5)break;
 	        	System.out.println("Found Loading, trying out again!");
+	        	loopCounter++;
 	        	/**
 				 * The following code implements the politeness policy. It pauses for 10 seconds
 				 * after crawling each URL as per the policy of the robots.txt
@@ -151,111 +158,211 @@ public class ETCrawler extends AbstractCrawler {
 				}
 	        }
 		}
-		
-		int commentNumber = Integer.parseInt(commentNumText);
+		int commentNumber = 0;
+		if(!commentNumText.contains("Loading"))commentNumber = Integer.parseInt(commentNumText);
         //System.out.println("Comment Number:" + commentNumText);
         if(commentNumber > 0){
-        	processComment(URL, etNews);
+        	processComment(URL, etNews, commentNumber);
         }
 		
 		return etNews;
 	}
 	
-	private void processComment(String URL, GMSNewsDocument etNews) throws FailingHttpStatusCodeException, MalformedURLException, IOException{
+	private void processComment(String URL, GMSNewsDocument etNews, int commentNumber) throws FailingHttpStatusCodeException, MalformedURLException, IOException{
 		String commentURL = "http://disqus.com/embed/comments/?base=default&disqus_version=ede5214f&f=eveningtimes&t_i=" + URL + "&t_u=" + URL;
+		int commentLoop = commentNumber / 50;
+		if(commentNumber % 50 != 0)commentLoop++;
+		
 		Page page = webClient.getPage(commentURL);
-        System.out.println("The whole page:=======================================");
+        //System.out.println("The whole page:=======================================");
         
         String threadPage = page.getWebResponse().getContentAsString();
         threadPage = threadPage.substring(threadPage.indexOf("\"thread\":"));
         String thread = threadPage.substring(threadPage.indexOf("\":\"") + 3, threadPage.indexOf("\",\""));
         
         commentURL = "https://disqus.com/api/3.0/threads/listPosts.json?api_key=E8Uh5l5fHZ6gD8U3KycjAIAk46f68Zw7C6eW8WSjZvCLXebZ7p0r1yrYDrLilk2F&thread=" + thread;
-        page = webClient.getPage(commentURL);
         
-        String commentResponse = page.getWebResponse().getContentAsString();
+        //if(commentNumber > 0)commentURL = "https://disqus.com/api/3.0/threads/listPosts.json?api_key=E8Uh5l5fHZ6gD8U3KycjAIAk46f68Zw7C6eW8WSjZvCLXebZ7p0r1yrYDrLilk2F&thread=" + thread + "&cursor=" + commentLoop +":0:0";        
+        //else commentURL = "https://disqus.com/api/3.0/threads/listPosts.json?api_key=E8Uh5l5fHZ6gD8U3KycjAIAk46f68Zw7C6eW8WSjZvCLXebZ7p0r1yrYDrLilk2F&thread=" + thread;
         
-        WebResponse response = page.getWebResponse();
-        if (response.getContentType().equals("application/json")) {
-            String json = response.getContentAsString();
-            //System.out.println("JSON Response" + json);
+        if(commentLoop > 0){
+        	commentURL = "http://disqus.com/api/3.0/threads/listPostsThreaded?limit=50&thread=" + thread + "&forum=eveningtimes&order=asc&api_key=E8Uh5l5fHZ6gD8U3KycjAIAk46f68Zw7C6eW8WSjZvCLXebZ7p0r1yrYDrLilk2F&cursor=";
+        }
+        
+        ArrayList<HashMap<String, String>> commentList = new ArrayList<HashMap<String, String>>();
+        ArrayList<HashMap<String, String>> tempCommentList = new ArrayList<HashMap<String, String>>();
+        
+        for(int i = 0; i < commentLoop; i++){
+        	String commentURLTemp = commentURL + "&cursor=" + (i + 1) +":0:0";
+        	System.out.println("The comment URL:" + commentURLTemp);
+            page = webClient.getPage(commentURLTemp);
             
-            ArrayList<HashMap<String, String>> commentList = new ArrayList<HashMap<String, String>>();
-            ArrayList<HashMap<String, String>> tempCommentList = new ArrayList<HashMap<String, String>>();
-            
-            JsonParser parser = new JsonParser();
-            JsonObject obj = parser.parse(json).getAsJsonObject();
-            //JsonArray array = parser.fromJson(obj.get("response")).;
-            for (Entry<String, JsonElement> entry : obj.entrySet()) {
-            	String key = entry.getKey();
-                JsonElement value = entry.getValue();
-                if(key.equals("response")){
-                	if(value.isJsonArray()){
-                		//System.out.println("Found JSON Array!");
-                		for(JsonElement elem : value.getAsJsonArray()){
-                			JsonObject tempObj = elem.getAsJsonObject();
-                			String upVote = tempObj.get("likes").getAsString();
-                			String totalVote = tempObj.get("points").getAsString();
-                			String downVote = "" + (Integer.parseInt(totalVote) - Integer.parseInt(upVote));
-                			String timeStamp = tempObj.get("createdAt").getAsString();
-                			String mainComment = tempObj.get("raw_message").getAsString();
-                			String parent = "";
-                			if(!tempObj.get("parent").isJsonNull())parent = tempObj.get("parent").getAsString();
-                			String id = tempObj.get("id").getAsString();
-                			
-                			JsonObject authorObject = tempObj.get("author").getAsJsonObject();
-                			String name = authorObject.get("name").getAsString();
-                			
-                			
-                			
-                			HashMap<String, String> tmpMap = new HashMap<String, String>();
-                			tmpMap.put("upVote", upVote);
-                			tmpMap.put("downVote", downVote);
-                			tmpMap.put("commentBody", mainComment);
-                			tmpMap.put("timeStamp", timeStamp);
-                			tmpMap.put("userName", name);
-                			tmpMap.put("id", id);
-                			tmpMap.put("parent", parent);
-                			if(parent.length() > 2)tempCommentList.add(tmpMap);
-                			commentList.add(tmpMap);	                			
-                			//System.out.println("UpVote:" + upVote + ", DownVote:" + downVote + ", User Name:" + name +", Comment Body:" + mainComment + ", Time Stamp:" + timeStamp + ", id:" + id + ", Parent:" + parent);
-                		}
-                	}
+            String commentResponse = page.getWebResponse().getContentAsString();
+            WebResponse response = page.getWebResponse();
+            if (response.getContentType().equals("application/json")) {
+            	String json = response.getContentAsString();
+                JsonParser parser = new JsonParser();
+                JsonObject obj = parser.parse(json).getAsJsonObject();
+                for (Entry<String, JsonElement> entry : obj.entrySet()) {
+                	String key = entry.getKey();
+                    JsonElement value = entry.getValue();
+                    if(key.equals("response")){
+                    	if(value.isJsonArray()){
+                    		for(JsonElement elem : value.getAsJsonArray()){
+                    			JsonObject tempObj = elem.getAsJsonObject();
+                    			String upVote = "", downVote = "", totalVote = "";
+                    			if(tempObj.has("likes"))upVote = tempObj.get("likes").getAsString();
+                    			if(upVote.equals("") && tempObj.has("dislikes"))downVote = tempObj.get("likes").getAsString();
+                    			if(!upVote.equals("")){
+                    				totalVote = tempObj.get("points").getAsString();
+                        			downVote = "" + (Integer.parseInt(totalVote) - Integer.parseInt(upVote));
+                    			}else if(!downVote.equals("")){
+                    				totalVote = tempObj.get("points").getAsString();
+                        			upVote = "" + (Integer.parseInt(totalVote) - Integer.parseInt(upVote));
+                    			}                    			
+                    			String timeStamp = tempObj.get("createdAt").getAsString();
+                    			
+                    			String[] splitDate = timeStamp.split("T"); 
+                    			try {
+    								String date = modifyDateLayout(splitDate[0]);
+    								timeStamp = date + " " + splitDate[1];
+    							} catch (ParseException e) {
+    								// TODO Auto-generated catch block
+    								e.printStackTrace();
+    							}
+                    			
+                    			String mainComment = tempObj.get("raw_message").getAsString();
+                    			String parent = "";
+                    			if(!tempObj.get("parent").isJsonNull())parent = tempObj.get("parent").getAsString();
+                    			String id = tempObj.get("id").getAsString();
+                    			
+                    			JsonObject authorObject = tempObj.get("author").getAsJsonObject();
+                    			String name = authorObject.get("name").getAsString();
+                    			
+                    			
+                    			
+                    			HashMap<String, String> tmpMap = new HashMap<String, String>();
+                    			tmpMap.put("upVote", upVote);
+                    			tmpMap.put("downVote", downVote);
+                    			tmpMap.put("commentBody", mainComment);
+                    			tmpMap.put("timeStamp", timeStamp);
+                    			tmpMap.put("userName", name);
+                    			tmpMap.put("id", id);
+                    			tmpMap.put("parent", parent);
+                    			if(parent.length() > 2)tempCommentList.add(tmpMap);
+                    			commentList.add(tmpMap);	                			
+                    		}
+                    	}
+                    }
                 }
-                
-                ArrayList<CommentDocument> commList = new ArrayList<CommentDocument>();
-                
-                for(HashMap<String, String> tmpMap : commentList){
-                	String userName = tmpMap.get("userName");
-                	String timeStamp = tmpMap.get("timeStamp");
-                	String upVote = tmpMap.get("upVote");
-                	String downVote = tmpMap.get("downVote");
-                	String commentBody = tmpMap.get("commentBody");
-                	String id = tmpMap.get("id");
-                	
-                	CommentDocument tempDoc = new CommentDocument();
-                	
-                	tempDoc.setCommentBody(commentBody);
-                	tempDoc.setUpVote(Integer.parseInt(upVote));
-                	tempDoc.setDownVote(Integer.parseInt(downVote));
-                	tempDoc.setTimeStamp(timeStamp);
-                	tempDoc.setUserName(userName);
-                	ArrayList<CommentDocument> replyList = retrieveCommentFromId(id, tempCommentList);
-                	if(replyList.size() > 0){
-                		tempDoc.setReplies(replyList);
-                	}
-                	commList.add(tempDoc);
-                }
-                
-                /*for(CommentDocument tempDoc : commList){
-                	System.out.println(tempDoc);
-                }*/
-                etNews.setComments(commList);
             }
         }
+        ArrayList<String> idAlreadyDone = new ArrayList<String>();
+        ArrayList<CommentDocument> commentDocList = new ArrayList<CommentDocument>();
+        for(int i = 0; i < commentList.size(); i++){
+        	HashMap<String, String> tmpMap = commentList.get(i);
+        	if(tmpMap.get("parent").equals("")){
+        		
+        		String userName = tmpMap.get("userName");
+            	String timeStamp = tmpMap.get("timeStamp");
+            	String upVote = tmpMap.get("upVote");
+            	String downVote = tmpMap.get("downVote");
+            	String commentBody = tmpMap.get("commentBody");
+            	String id = tmpMap.get("id");
+            	String parent = tmpMap.get("parent");
+            	
+        		CommentDocument tempDoc = new CommentDocument();
+        		
+            	tempDoc.setCommentBody(commentBody);
+            	tempDoc.setUpVote(Integer.parseInt(upVote));
+            	tempDoc.setDownVote(Integer.parseInt(downVote));
+            	tempDoc.setTimeStamp(timeStamp);
+            	tempDoc.setUserName(userName);
+            	tempDoc.setId(id);
+            	tempDoc.setParent(parent);
+            	
+            	commentDocList.add(tempDoc);
+            	idAlreadyDone.add(id);
+        	}
+        }
+        
+        int count = commentList.size();
+        int innerCount = commentDocList.size();
+        int i = 0;
+        while(true){
+        	HashMap<String, String> tmpMap = commentList.get(i);
+        	
+        	if(!tmpMap.get("parent").equals("")){
+        		String userName = tmpMap.get("userName");
+                String timeStamp = tmpMap.get("timeStamp");
+                String upVote = tmpMap.get("upVote");
+                String downVote = tmpMap.get("downVote");
+                String commentBody = tmpMap.get("commentBody");
+                String id = tmpMap.get("id");
+                String parent = tmpMap.get("parent");
+                
+               boolean flag = false;
+                for(String tmpString : idAlreadyDone){
+                	if(tmpString.equals(id))flag = true;
+                }
+            	
+            	if(!flag){            		
+            		CommentDocument replyDoc = new CommentDocument();
+                	replyDoc.setCommentBody(commentBody);
+                	replyDoc.setUpVote(Integer.parseInt(upVote));
+                	replyDoc.setDownVote(Integer.parseInt(downVote));
+                	replyDoc.setTimeStamp(timeStamp);
+                	replyDoc.setUserName(userName);
+                	replyDoc.setId(id);
+                	replyDoc.setParent(parent);
+            		for(CommentDocument mainDocument:commentDocList){
+                		if(addReplyToDocument(mainDocument, replyDoc)){
+                			innerCount++;
+                			idAlreadyDone.add(id);
+                		}
+                	}
+            	}
+        	}
+        	
+        	if(innerCount >= count)break;
+        	i++;
+        	if(i >= count)i = 0;
+        }
+        etNews.setComments(commentDocList);
 	}
 	
-private ArrayList<CommentDocument> retrieveCommentFromId(String id, ArrayList<HashMap<String, String>> tempCommentList){
+	private boolean addReplyToDocument(CommentDocument mainDocument, CommentDocument replyDoc){
+		boolean flag = false;
+		
+		String mainDocId = mainDocument.getId();
+		String replyDocParent = replyDoc.getParent();
+		if(mainDocId.equals(replyDocParent)){
+			ArrayList<CommentDocument> replyList = mainDocument.getReplies();
+			if(replyList == null){
+				replyList = new ArrayList<CommentDocument>();
+				replyList.add(replyDoc);
+				mainDocument.setReplies(replyList);
+			} else {
+				replyList.add(replyDoc);
+			}			
+			return true;
+		} else {
+			if(mainDocument.hasReply()){
+				for(CommentDocument tempDocument : mainDocument.getReplies()){
+					boolean reply = addReplyToDocument(tempDocument, replyDoc);
+					if(reply)return reply;
+				}
+			}
+		}
+		return flag;
+	}
+	
+	private String modifyDateLayout(String inputDate) throws ParseException{
+		Date date = new SimpleDateFormat("yyyy-MM-dd").parse(inputDate);
+		return new SimpleDateFormat("dd/MM/yyyy").format(date);
+	}
+	
+	private ArrayList<CommentDocument> retrieveCommentFromId(String id, ArrayList<HashMap<String, String>> tempCommentList){
 		
 		ArrayList<CommentDocument> replyList = new ArrayList<CommentDocument>();
 		

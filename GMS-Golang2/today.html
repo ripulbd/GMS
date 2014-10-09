@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Glasgow Memory Server (GMS)</title>
+    <!--meta(name='description', content='website description')-->
+    <!--meta(name='keywords', content='website keywords, website keywords')-->
+    <meta content="text/html; charset=utf-8" http-equiv="content-type">
+    <link href="resources/stylesheets/style.css" rel="stylesheet" type="text/css">
+    <!--modernizr enables HTML5 elements and feature detects -->
+    <script src="resources/javascripts/modernizr-1.5.min.js" type="text/javascript"></script>
+</head>
+
+<body>
+    <div id="bg"><img alt="home" src="resources/images/glasgow.jpg"></div>
+
+    <div id="main">
+        <header>
+            <div id="logo">
+                <div id="logo_text">
+                    <!--class="logo_colour", allows you to change the colour of the text -->
+
+                    <h1><a href="index.html">Glasgow Memory Server
+                    (GMS)</a></h1>
+                </div>
+            </div>
+            
+            <div id="invisible">
+                <div id="invisible_text">
+                    <form class="form-wrapper cf">
+                		<button type="submit">Search</button><input placeholder="Search here..." required="required" type= "text" aligh="right">
+            		  </form>
+                </div>
+            </div>            
+            
+                <div id="menu_container">
+                    <ul id="menu-bar">
+                        <li >
+                            <a href="/">Home</a>
+                        </li>
+								<li class="active">
+                            <a href="/today">Today</a>
+                        </li>
+                        <li>
+                            <a href="/news">News</a>
+
+                            <ul>
+                                <li>
+                                    <a href="/bbc">BBC</a>
+                                </li>
+								<li>
+                                    <a href="/dr">DailyRecord</a>
+                                </li>
+                                <li>
+                                    <a href="/scotsman">The Scotsman</a>
+                                </li>
+
+                                <li>
+                                    <a href="/et">Evening Times</a>
+                                </li>
+                                
+                            </ul>
+                        </li>
+
+                        <li>
+                            <a href="/blog">Blog</a>
+
+                            <ul>
+                                <li>
+                                    <a href="/blogger">Blogger</a>
+                                </li>
+
+                                <li>
+                                    <a href="/wordpress">Wordpress</a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li>
+                            <a href="/image">Image</a>
+
+                            <ul>
+                                <li>
+                                    <a href="/imgur">imgur</a>
+                                </li>
+
+                                <li>
+                                    <a href="/flickr">flickr</a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li>
+                            <a href="/video">Video</a>
+
+                            <ul>
+                                <li>
+                                    <a href="/bbcvid">BBC</a>
+                                </li>
+
+                                <li>
+                                    <a href="/youtube">Youtube</a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li>
+                            <a href="/twitter">Twitter</a>
+                        </li>
+
+                        <li>
+                            <a href="#">Contact Us</a>
+                        </li>
+                    </ul>
+                </div>            
+        </header>
+
+        <div id="site_content">            
+
+            <div class="content">
+                <h1>Glasgow Memory Server (GMS): Home Page!</h1>
+                <h2>Glasgow Today: News from all sources</h2>             
+            </div> 
+
+            <div class="today_contents" id="today_content_container">
+            			<div class="inner_top">
+            				<div class="inner_top_font">All BBC News</a></div>            				
+            				            				
+            				<hr class="inner_separator">            				
+            			</div>
+            			<div id="today_first_news"> 
+            			{{range $index, $element := .BBCToday}}            			           			            			            			
+            			 
+            				{{if eq $index 0}}           				            					
+            					{{if $element.Title}}
+            			   		<div id="today_inner_left_headline"><a href="/indiNews?url={{$element.Url}}">{{$element.Title}}</a> </div>            					            					
+            					{{else}}
+            						<div id="today_inner_left_headline"><a href="/indiNews?url={{$element.Url}}">{{$element.Description}}</a> </div>
+            					{{end}}
+            			   	{{if $element.Images}}
+            						{{$images := index $element.Images 0 }}
+            						<img alt= "{{printf "%s" $images.Caption}}" id="today_inner_left_image" src="resources/images/{{printf "%s" $images.Name}}">
+            					{{else}}
+            						<img alt= "missing image" id="today_inner_left_image" src="resources/images/tryImage.jpg">
+            					{{end}}            				          				            				
+            					<div id="inner_left_descr" class="bbcFirstDescrition">{{$element.Description}}</div>
+            				{{end}}
+            				{{if eq $index 1}}	            				            				            					            					            				            				            				            				            			               				          				            			            				
+            					<hr class="today_separator">
+            					<div id="today_space"></div>            					
+            					<div id="inner_middle_right_news_first">
+            						{{if $element.Title}}
+            			   			<div id="today_inner_left_headline"><a href="/indiNews?url={{$element.Url}}">{{$element.Title}}</a> </div>            					            					
+            						{{else}}
+            							<div id="today_inner_left_headline"><a href="/indiNews?url={{$element.Url}}">{{$element.Description}}</a> </div>
+            						{{end}}
+            					</div>
+            				{{end}}	            					            													            			
+            			{{end}}
+            			</div>
+            			<div id="today_other_news">            			            			
+            			{{range $index, $element := .BBCToday}}
+            			
+            					{{if gt $index 1}}            						            					
+            						<div id="today_inner_middle_right_news_first">
+            							{{if $element.Title}}
+            								<a href="/indiNews?url={{$element.Url}}">{{$element.Title}}</a>
+            							{{else}}
+            								<a href="/indiNews?url={{$element.Url}}">{{$element.Description}}</a>
+            							{{end}}	
+            						</div>
+            					{{end}}            														            			
+            			{{end}}
+            			</div>
+            			<!--<div id="today_other_news">									           					
+            					<div id="inner_middle_right_news_first">
+            						<a href="#">First News First News First News</a>
+            					</div>
+            					<div id="inner_middle_right_news_first">
+            						<a href="#">Second News Second News Second News</a>
+            					</div>
+									<div id="inner_middle_right_news_first">
+            						<a href="#">Third News Third News Third News</a>
+            					</div>
+            					<div id="inner_middle_right_news_first">
+            						<a href="#">Fourth News Fourth News Fourth News</a>
+            					</div>
+            					<div id="inner_middle_right_news_first">
+            						<a href="#">Fifth News Fifth News Fifth News</a>
+            					</div>									
+            			</div>
+            			<div id="today_other_news">									            					
+            					<div id="inner_middle_right_news_first">
+            						<a href="#">First News First News First News</a>
+            					</div>
+            					<div id="inner_middle_right_news_first">
+            						<a href="#">Second News Second News Second News</a>
+            					</div>
+									<div id="inner_middle_right_news_first">
+            						<a href="#">Third News Third News Third News</a>
+            					</div>
+            					<div id="inner_middle_right_news_first">
+            						<a href="#">Fourth News Fourth News Fourth News</a>
+            					</div>
+            					<div id="inner_middle_right_news_first">
+            						<a href="#">Fifth News Fifth News Fifth News</a>
+            					</div>									
+            			</div>-->            			            			           			
+        			           			
+        			</div>
+        			<div class="today_contents" id="today_content_container">
+            			<div class="inner_top">
+            				<div class="inner_top_font">All Daily Record News</a></div>            				            				            				
+            				<hr class="inner_separator">            				
+            			</div>            			            			            			
+            			 <div id="today_first_news"> 
+            			{{range $index, $element := .DRToday}}            			           			            			            			
+            			 
+            				{{if eq $index 0}}           				            					
+            					{{if $element.Title}}
+            			   		<div id="today_inner_left_headline"><a href="/indiNews?url={{$element.Url}}">{{$element.Title}}</a> </div>            					            					
+            					{{else}}
+            						<div id="today_inner_left_headline"><a href="/indiNews?url={{$element.Url}}">{{$element.Description}}</a> </div>
+            					{{end}}
+            			   	{{if $element.Images}}
+            						{{$images := index $element.Images 0 }}
+            						<img alt= "{{printf "%s" $images.Caption}}" id="today_inner_left_image" src="resources/images/{{printf "%s" $images.Name}}">
+            					{{else}}
+            						<img alt= "missing image" id="today_inner_left_image" src="resources/images/tryImage.jpg">
+            					{{end}}            				          				            				
+            					<div id="inner_left_descr" class="bbcFirstDescrition">{{$element.Description}}</div>
+            				{{end}}
+            				{{if eq $index 1}}	            				            				            					            					            				            				            				            				            			               				          				            			            				
+            					<hr class="today_separator">
+            					<div id="today_space"></div>            					
+            					<div id="inner_middle_right_news_first">
+            						{{if $element.Title}}
+            			   			<div id="today_inner_left_headline"><a href="/indiNews?url={{$element.Url}}">{{$element.Title}}</a> </div>            					            					
+            						{{else}}
+            							<div id="today_inner_left_headline"><a href="/indiNews?url={{$element.Url}}">{{$element.Description}}</a> </div>
+            						{{end}}
+            					</div>
+            				{{end}}	            					            													            			
+            			{{end}}
+            			</div>
+            			<div id="today_other_news">            			            			
+            			{{range $index, $element := .DRToday}}
+            			
+            					{{if gt $index 1}}            						            					
+            						<div id="today_inner_middle_right_news_first">
+            							{{if $element.Title}}
+            								<a href="/indiNews?url={{$element.Url}}">{{$element.Title}}</a>
+            							{{else}}
+            								<a href="/indiNews?url={{$element.Url}}">{{$element.Description}}</a>
+            							{{end}}	
+            						</div>
+            					{{end}}            														            			
+            			{{end}}
+            			</div>           			            			           			
+        			           			
+        			</div>
+        			<div class="today_contents" id="today_content_container">
+            			<div class="inner_top">
+            				<div class="inner_top_font">All Scotsman News</a></div>            				
+            				            				
+            				<hr class="inner_separator">            				
+            			</div>            			            			            			
+            			<div id="today_first_news"> 
+            			{{range $index, $element := .ScotToday}}            			           			            			            			
+            			 
+            				{{if eq $index 0}}           				            					
+            					{{if $element.Title}}
+            			   		<div id="today_inner_left_headline"><a href="/indiNews?url={{$element.Url}}">{{$element.Title}}</a> </div>            					            					
+            					{{else}}
+            						<div id="today_inner_left_headline"><a href="/indiNews?url={{$element.Url}}">{{$element.Description}}</a> </div>
+            					{{end}}
+            			   	{{if $element.Images}}
+            						{{$images := index $element.Images 0 }}
+            						<img alt= "{{printf "%s" $images.Caption}}" id="today_inner_left_image" src="resources/images/{{printf "%s" $images.Name}}">
+            					{{else}}
+            						<img alt= "missing image" id="today_inner_left_image" src="resources/images/tryImage.jpg">
+            					{{end}}            				          				            				
+            					<div id="inner_left_descr" class="bbcFirstDescrition">{{$element.Description}}</div>
+            				{{end}}
+            				{{if eq $index 1}}	            				            				            					            					            				            				            				            				            			               				          				            			            				
+            					<hr class="today_separator">
+            					<div id="today_space"></div>            					
+            					<div id="inner_middle_right_news_first">
+            						{{if $element.Title}}
+            			   			<div id="today_inner_left_headline"><a href="/indiNews?url={{$element.Url}}">{{$element.Title}}</a> </div>            					            					
+            						{{else}}
+            							<div id="today_inner_left_headline"><a href="/indiNews?url={{$element.Url}}">{{$element.Description}}</a> </div>
+            						{{end}}
+            					</div>
+            				{{end}}	            					            													            			
+            			{{end}}
+            			</div>
+            			<div id="today_other_news">            			            			
+            			{{range $index, $element := .ScotToday}}
+            			
+            					{{if gt $index 1}}            						            					
+            						<div id="today_inner_middle_right_news_first">
+            							{{if $element.Title}}
+            								<a href="/indiNews?url={{$element.Url}}">{{$element.Title}}</a>
+            							{{else}}
+            								<a href="/indiNews?url={{$element.Url}}">{{$element.Description}}</a>
+            							{{end}}	
+            						</div>
+            					{{end}}            														            			
+            			{{end}}
+            			</div>           			            			           			
+        			           			
+        			</div>
+        			<div class="today_contents" id="today_content_container">
+            			<div class="inner_top">
+            				<div class="inner_top_font">All Evening Times News</a></div>            				
+            				            				
+            				<hr class="inner_separator">            				
+            			</div>            			            			            			
+            			<div id="today_first_news"> 
+            			{{range $index, $element := .ETToday}}            			           			            			            			
+            			 
+            				{{if eq $index 0}}           				            					
+            					{{if $element.Title}}
+            			   		<div id="today_inner_left_headline"><a href="/indiNews?url={{$element.Url}}">{{$element.Title}}</a> </div>            					            					
+            					{{else}}
+            						<div id="today_inner_left_headline"><a href="/indiNews?url={{$element.Url}}">{{$element.Description}}</a> </div>
+            					{{end}}
+            			   	{{if $element.Images}}
+            						{{$images := index $element.Images 0 }}
+            						<img alt= "{{printf "%s" $images.Caption}}" id="today_inner_left_image" src="resources/images/{{printf "%s" $images.Name}}">
+            					{{else}}
+            						<img alt= "missing image" id="today_inner_left_image" src="resources/images/tryImage.jpg">
+            					{{end}}            				          				            				
+            					<div id="inner_left_descr" class="bbcFirstDescrition">{{$element.Description}}</div>
+            				{{end}}
+            				{{if eq $index 1}}	            				            				            					            					            				            				            				            				            			               				          				            			            				
+            					<hr class="today_separator">
+            					<div id="today_space"></div>            					
+            					<div id="inner_middle_right_news_first">
+            						{{if $element.Title}}
+            			   			<div id="today_inner_left_headline"><a href="/indiNews?url={{$element.Url}}">{{$element.Title}}</a> </div>            					            					
+            						{{else}}
+            							<div id="today_inner_left_headline"><a href="/indiNews?url={{$element.Url}}">{{$element.Description}}</a> </div>
+            						{{end}}
+            					</div>
+            				{{end}}	            					            													            			
+            			{{end}}
+            			</div>
+            			<div id="today_other_news">            			            			
+            			{{range $index, $element := .ETToday}}
+            			
+            					{{if gt $index 1}}            						            					
+            						<div id="today_inner_middle_right_news_first">
+            							{{if $element.Title}}
+            								<a href="/indiNews?url={{$element.Url}}">{{$element.Title}}</a>
+            							{{else}}
+            								<a href="/indiNews?url={{$element.Url}}">{{$element.Description}}</a>
+            							{{end}}	
+            						</div>
+            					{{end}}            														            			
+            			{{end}}
+            			</div>            			            			           			
+        			           			
+        			</div>
+        			<div class="old_news">Today's News based on location:</div>
+        			<hr class="old_news_separator">
+        			<div id="map_canvas"></div> 
+        </div>
+
+        <div id="scroll">
+            <a class="top" href="#" title="Scroll to the top"><img alt="top"
+            src="resources/images/top.png"></a>
+        </div>
+
+        <footer>
+            <p><img alt="twitter" src="resources/images/twitter.png"> <img alt="facebook"
+            src="resources/images/facebook.png"> <img alt="rss" src="resources/images/rss.png"></p>
+
+            <p><a href="/">Home</a>|<a href="/news">News</a>|<a href=
+            "/blog">Blog</a>|<a href="/image">Image</a>|<a href=
+            "/video">Video</a>|<a href="/twitter">Twitter</a>|<a href=
+            "#">Contact Us</a></p>
+        </footer>
+    </div><!--javascript at the bottom for fast page loading --><script src=
+    "resources/javascripts/jquery.js" type="text/javascript"></script>
+    <script src="https://maps.googleapis.com/maps/api/js"></script>
+    <script>
+      function initialize() {
+        var mapCanvas = document.getElementById('map_canvas');
+        var mapOptions = {
+          center: new google.maps.LatLng(55.8580,-4.2590),          
+          zoom: 10,
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+        }
+        var map = new google.maps.Map(mapCanvas, mapOptions)
+      }
+      google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
+</body>
+</html>

@@ -35,9 +35,20 @@ public class ETCrawlerTest {
 		
 		try {
 			ArrayList<HashMap<String, String>> urlInfos = etCrawler.crawlURLs();
+			
+			/*HashMap<String, String> tmpHashMap = new HashMap<String, String>();
+			
+			tmpHashMap.put("url", "http://www.eveningtimes.co.uk/news/sturgeon-scotland-will-become-independent-182371n.25446017");
+			tmpHashMap.put("title", "Sturgeon: 'Scotland will become independent...'");
+			
+			
+			GMSNewsDocument etDoc = (GMSNewsDocument) etCrawler.crawlNews(tmpHashMap);
+			System.out.println(etDoc);
+			etCrawler.store(etDoc);*/
+			
 			System.out.println("Total News Fetched:" + urlInfos.size());
 			for(HashMap<String, String> tmpHashMap : urlInfos){
-				System.out.println("Added URL:" + tmpHashMap.get("url"));
+				System.out.println("Added URL:" + tmpHashMap.get("url"));				
 				GMSNewsDocument etDoc = (GMSNewsDocument) etCrawler.crawlNews(tmpHashMap);
 				//System.out.println(etDoc);
 				etCrawler.store(etDoc);

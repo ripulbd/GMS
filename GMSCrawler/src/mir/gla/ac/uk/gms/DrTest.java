@@ -40,6 +40,7 @@ public class DrTest {
 			System.out.println("Total News Fetched:" + urlInfos.size());
 			for(HashMap<String, String> tmpHashMap : urlInfos){
 				System.out.println("Added URL:" + tmpHashMap.get("url"));
+				if(tmpHashMap.get("url").contains("http://www.dailyrecord.co.uk/lifestyle/money/judge-estate-agent-customers-oblivious-4298779"))continue;
 				GMSNewsDocument scotDoc = drCrawler.crawlNews(tmpHashMap);
 							
 				drCrawler.store(scotDoc);
@@ -57,7 +58,7 @@ public class DrTest {
 			/**
 			 * Now, copy the newly saved images from the java image folder to the Go-Lang image folder 
 			 */
-			if(urlInfos.size() > 0) {
+			//if(urlInfos.size() > 0) {
 				File srcFolder = new File("/home/ripul/images/dr/");
 		    	File destFolder = new File("/home/ripul/resources/images/");
 		    	
@@ -80,7 +81,7 @@ public class DrTest {
 		           }
 		        }
 		    	System.out.println("Coying is Done!");
-			}
+			//}
 			
 		} catch (HttpStatusException e) {
 			// TODO Auto-generated catch block

@@ -859,7 +859,7 @@
             	$.get("/etLatest", "", function(data, status) {
             			//alert()
             			$("#etFirstTitle").text(data[0].Title);
-            			$("#etFirstTitle").attr("href",data[0].Url);
+            			$("#etFirstTitle").attr("href", "http://localhost:8090/indiNews?url=" + data[0].Url);
             			$(".etInnerImage").attr('src', 'resources/images/' + data[0].Images[0].Name);
 							$(".etInnerImage").attr('alt', 'resources/images/' + data[0].Images[0].Caption);
 							$(".etFirstDescrition").text(data[0].Description);
@@ -883,7 +883,7 @@
 					$("#etDiscussed").css('textDecoration','underline');
             	$.get("/etDiscussed", "", function(data, status) {
             			$("#etFirstTitle").text(data[0].Title);
-            			$("#etFirstTitle").attr("href",data[0].Url);
+            			$("#etFirstTitle").attr("href", "http://localhost:8090/indiNews?url=" + data[0].Url);
             			$(".etInnerImage").attr('src', 'resources/images/' + data[0].Images[0].Name);
             			$(".etInnerImage").attr('alt', 'resources/images/' + data[0].Images[0].Caption);
             			$(".etFirstDescrition").text(data[0].Description);
