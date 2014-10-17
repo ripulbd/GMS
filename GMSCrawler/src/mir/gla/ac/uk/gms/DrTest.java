@@ -41,6 +41,12 @@ public class DrTest {
 			for(HashMap<String, String> tmpHashMap : urlInfos){
 				System.out.println("Added URL:" + tmpHashMap.get("url"));
 				if(tmpHashMap.get("url").contains("http://www.dailyrecord.co.uk/lifestyle/money/judge-estate-agent-customers-oblivious-4298779"))continue;
+				if(tmpHashMap.get("url").contains("http://www.dailyrecord.co.uk/news/local-news/oktoberwest-your-rotm-pictures-4429211"))continue;
+				if(tmpHashMap.get("url").contains("http://www.dailyrecord.co.uk/news/scottish-news/pop-pod-share-your-record-4412539"))continue;
+				if(tmpHashMap.get("url").contains("http://www.dailyrecord.co.uk/news/scottish-news/pictures-take-look-inside-dawn-4451534"))continue;
+				if(tmpHashMap.get("url").contains("http://www.dailyrecord.co.uk/news/scottish-news/pictures-daily-record-join-police-4451423"))continue;
+				if(tmpHashMap.get("url").contains("http://www.dailyrecord.co.uk/news/crime/pictures-watch-cops-mount-dramatic-4446428"))continue;
+				
 				GMSNewsDocument scotDoc = drCrawler.crawlNews(tmpHashMap);
 							
 				drCrawler.store(scotDoc);

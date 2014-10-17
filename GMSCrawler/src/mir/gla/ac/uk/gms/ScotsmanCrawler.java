@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -70,7 +71,7 @@ public class ScotsmanCrawler extends AbstractCrawler {
 	 * 
 	 */
 	@Override
-	public ArrayList<HashMap<String, String>> crawlURLs() throws IOException, HttpStatusException {
+	public ArrayList<HashMap<String, String>> crawlURLs() throws IOException, HttpStatusException, SocketTimeoutException {
 		// TODO Auto-generated method stub
 		System.out.println("URLs being fetched....");
 		int count = 0;
@@ -108,15 +109,17 @@ public class ScotsmanCrawler extends AbstractCrawler {
 				
 				for(Element elem : articleElement){
 					int size = elem.select("a").size();
-					Element anchor = elem.select("a").get(1);
-					String title = anchor.text();
-					String URL = anchor.attr("href");
-					if(title.length() == 0)title = elem.select("a").get(2).text();
-					if(!dbUtils.find("url", URL)){
-						urlQueue.add(URL);
-						crawURLsFromHomePage(title, URL, count);
-						retrieveRelatedStory(URL);
-						count++;
+					if(size > 1){
+						Element anchor = elem.select("a").get(1);
+						String title = anchor.text();
+						String URL = anchor.attr("href");
+						if(title.length() == 0)title = elem.select("a").get(2).text();
+						if(!dbUtils.find("url", URL)){
+							urlQueue.add(URL);
+							crawURLsFromHomePage(title, URL, count);
+							retrieveRelatedStory(URL);
+							count++;
+						}
 					}
 				}
 			} else {

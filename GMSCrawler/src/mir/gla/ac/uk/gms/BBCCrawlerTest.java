@@ -40,7 +40,7 @@ public class BBCCrawlerTest {
 			for(HashMap<String, String> tmpHashMap : urlInfos){
 				System.out.println("Added URL:" + tmpHashMap.get("url"));
 				GMSNewsDocument bbcDoc = (GMSNewsDocument) bbcCrawler.crawlNews(tmpHashMap);
-				System.out.println(bbcDoc);
+				//System.out.println(bbcDoc);
 				bbcCrawler.store(bbcDoc);
 				pauseCount++;
 				/**
